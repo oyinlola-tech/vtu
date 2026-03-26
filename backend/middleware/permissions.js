@@ -1,6 +1,6 @@
 const rolePermissions = {
   superadmin: ['*'],
-  operations: ['users:read', 'users:kyc', 'transactions:read', 'bills:read', 'bills:write', 'accounts:write'],
+  operations: ['users:read', 'users:kyc', 'transactions:read', 'bills:read', 'bills:write', 'accounts:write', 'monnify:read', 'monnify:retry'],
   support: ['users:read', 'users:kyc'],
   finance: ['transactions:read', 'pricing:read', 'pricing:write', 'bills:read', 'finance:read', 'monnify:read'],
   compliance: ['audit:read', 'users:read'],

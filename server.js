@@ -20,6 +20,9 @@ import adminManagementRoutes from './backend/routes/adminManagement.js';
 import adminAuditRoutes from './backend/routes/adminAudit.js';
 import adminFinanceRoutes from './backend/routes/adminFinance.js';
 import monnifyWebhookRoutes from './backend/routes/monnifyWebhook.js';
+import adminMonnifyRoutes from './backend/routes/adminMonnify.js';
+import { pool } from './backend/config/db.js';
+import { processMonnifyEvent } from './backend/utils/monnifyProcessor.js';
 import { authLimiter, otpLimiter, adminAuthLimiter } from './backend/middleware/rateLimiters.js';
 
 dotenv.config();
@@ -98,6 +101,7 @@ const adminPages = [
   'transactions',
   'settings',
   'audit',
+  'monnify',
 ];
 
 adminPages.forEach((page) => {
@@ -120,6 +124,7 @@ app.use('/api/admin/manage', adminManagementRoutes);
 app.use('/api/admin/audit', adminAuditRoutes);
 app.use('/api/admin/finance', adminFinanceRoutes);
 app.use('/api/monnify/webhook', monnifyWebhookRoutes);
+app.use('/api/admin/monnify', adminMonnifyRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
@@ -137,6 +142,29 @@ initDatabase()
     app.listen(PORT, () => {
       console.log(`GLY VTU API running on http://localhost:${PORT}`);
     });
+
+    const retryInterval = Number(process.env.MONNIFY_RETRY_INTERVAL_MS || 60000);
+    const retryBatch = Number(process.env.MONNIFY_RETRY_BATCH || 20);
+    const retryMax = Number(process.env.MONNIFY_RETRY_MAX_ATTEMPTS || 5);
+    setInterval(async () => {
+      try {
+        const [rows] = await pool.query(
+          `SELECT payment_reference, raw_payload, attempts
+           FROM monnify_events
+           WHERE status = 'failed' AND attempts < ?
+           ORDER BY updated_at ASC
+           LIMIT ?`,
+          [retryMax, retryBatch]
+        );
+        for (const row of rows) {
+          if (!row.raw_payload) continue;
+          const payload = JSON.parse(row.raw_payload);
+          await processMonnifyEvent(payload, { ip: 'system', userAgent: 'retry-job' });
+        }
+      } catch (err) {
+        console.error('Monnify retry job error:', err.message);
+      }
+    }, retryInterval);
   })
   .catch((err) => {
     console.error('Database init failed:', err);
