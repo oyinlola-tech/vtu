@@ -50,4 +50,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       showLoader(false);
     }
   });
+
+  const reserveForm = document.querySelector('[data-reserve-form]');
+  reserveForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const payload = Object.fromEntries(new FormData(reserveForm).entries());
+    try {
+      showLoader(true, 'Creating reserved account...');
+      await api(`/api/admin/users/${payload.userId}/reserved-account`, {
+        method: 'POST',
+      });
+      alert('Reserved account created');
+      reserveForm.reset();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      showLoader(false);
+    }
+  });
 });

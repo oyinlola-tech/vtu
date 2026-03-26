@@ -217,7 +217,11 @@ export async function initDatabase() {
         currency VARCHAR(10) NOT NULL DEFAULT 'NGN',
         paid_on TIMESTAMP NULL,
         raw_payload JSON NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        status ENUM('received','processed','failed') NOT NULL DEFAULT 'received',
+        attempts INT NOT NULL DEFAULT 0,
+        last_error VARCHAR(255) NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
 
       CREATE TABLE IF NOT EXISTS transactions (

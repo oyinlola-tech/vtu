@@ -57,11 +57,30 @@ router.post('/', async (req, res) => {
   }
 
   const [existing] = await pool.query(
-    'SELECT id FROM monnify_events WHERE payment_reference = ? LIMIT 1',
+    'SELECT id, status, attempts FROM monnify_events WHERE payment_reference = ? LIMIT 1',
     [paymentReference]
   );
-  if (existing.length) {
+  if (!existing.length) {
+    await pool.query(
+      `INSERT INTO monnify_events
+       (id, payment_reference, account_reference, amount, currency, paid_on, raw_payload, status, attempts)
+       VALUES (UUID(), ?, ?, ?, ?, ?, ?, 'received', 1)`,
+      [
+        paymentReference,
+        accountReference || null,
+        amount,
+        currency,
+        paidOn || null,
+        JSON.stringify(payload),
+      ]
+    );
+  } else if (existing[0].status === 'processed') {
     return res.json({ received: true, duplicate: true });
+  } else {
+    await pool.query(
+      'UPDATE monnify_events SET attempts = attempts + 1, raw_payload = ?, status = ? WHERE payment_reference = ?',
+      [JSON.stringify(payload), 'received', paymentReference]
+    );
   }
 
   const [accounts] = await pool.query(
@@ -73,15 +92,8 @@ router.post('/', async (req, res) => {
   );
   if (!accounts.length) {
     await pool.query(
-      'INSERT INTO monnify_events (id, payment_reference, account_reference, amount, currency, paid_on, raw_payload) VALUES (UUID(), ?, ?, ?, ?, ?, ?)',
-      [
-        paymentReference,
-        accountReference || null,
-        amount,
-        currency,
-        paidOn || null,
-        JSON.stringify(payload),
-      ]
+      'UPDATE monnify_events SET status = ?, last_error = ? WHERE payment_reference = ?',
+      ['failed', 'Account not found', paymentReference]
     );
     return res.json({ received: true, unmatched: true });
   }
@@ -92,15 +104,8 @@ router.post('/', async (req, res) => {
   try {
     await conn.beginTransaction();
     await conn.query(
-      'INSERT INTO monnify_events (id, payment_reference, account_reference, amount, currency, paid_on, raw_payload) VALUES (UUID(), ?, ?, ?, ?, ?, ?)',
-      [
-        paymentReference,
-        accountReference || accounts[0].account_reference,
-        amount,
-        currency,
-        paidOn || null,
-        JSON.stringify(payload),
-      ]
+      'UPDATE monnify_events SET status = ?, last_error = NULL WHERE payment_reference = ?',
+      ['received', paymentReference]
     );
     await conn.query('UPDATE wallets SET balance = balance + ? WHERE user_id = ?', [
       amount,
@@ -121,6 +126,10 @@ router.post('/', async (req, res) => {
       ]
     );
     await conn.commit();
+    await pool.query(
+      'UPDATE monnify_events SET status = ? WHERE payment_reference = ?',
+      ['processed', paymentReference]
+    );
 
     const [[user]] = await pool.query('SELECT full_name, email FROM users WHERE id = ?', [
       userId,
@@ -149,6 +158,10 @@ router.post('/', async (req, res) => {
     }).catch(console.error);
   } catch (err) {
     await conn.rollback();
+    await pool.query(
+      'UPDATE monnify_events SET status = ?, last_error = ? WHERE payment_reference = ?',
+      ['failed', String(err.message || 'Processing error').slice(0, 255), paymentReference]
+    );
     return res.status(500).json({ error: 'Processing failed' });
   } finally {
     conn.release();

@@ -40,6 +40,11 @@ router.put('/kyc', requireUser, async (req, res) => {
       return res.status(400).json({ error: 'BVN or NIN is required for Level 1' });
     }
   }
+  if (Number(level) === 2) {
+    if (!payload.dob || !payload.address) {
+      return res.status(400).json({ error: 'DOB and address required for Level 2' });
+    }
+  }
 
   await pool.query(
     'UPDATE users SET kyc_level = ?, kyc_status = ?, kyc_payload = ? WHERE id = ?',
