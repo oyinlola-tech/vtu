@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="" />
+    <title>GLY VTU | KYC</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/kyc.css" />
+  </head>
+  <body class="app" data-page="kyc">
+    <header class="topbar">
+      <div class="brand">GLY VTU</div>
+      <div class="top-actions">
+        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+      </div>
+    </header>
+    <main class="content">
+      <section class="card">
+        <h3>KYC Verification</h3>
+        <p class="muted">Upgrade to Level 2 for higher limits.</p>
+        <form>
+          <div>
+            <label>KYC Level</label>
+            <select name="level">
+              <option value="1">Level 1 - Basic</option>
+              <option value="2">Level 2 - Full Verification</option>
+            </select>
+          </div>
+          <div>
+            <label>BVN</label>
+            <input type="text" name="bvn" required />
+          </div>
+          <div>
+            <label>NIN</label>
+            <input type="text" name="nin" required />
+          </div>
+          <div>
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required />
+          </div>
+          <div>
+            <label>Residential Address</label>
+            <input type="text" name="address" required />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-id-card"></i>
+            Submit KYC
+          </button>
+        </form>
+      </section>
+    </main>
+    <nav class="bottom-nav">
+      <a class="nav-link" data-page="dashboard" href="/dashboard">
+        <i class="fa-solid fa-house"></i>
+        Home
+      </a>
+      <a class="nav-link" data-page="wallet" href="/wallet">
+        <i class="fa-solid fa-wallet"></i>
+        Wallet
+      </a>
+      <a class="nav-link" data-page="bills" href="/bills">
+        <i class="fa-solid fa-bolt"></i>
+        Bills
+      </a>
+      <a class="nav-link" data-page="transactions" href="/transactions">
+        <i class="fa-solid fa-receipt"></i>
+        Activity
+      </a>
+      <a class="nav-link" data-page="settings" href="/settings">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+    </nav>
+    <div class="overlay">
+      <div class="loader"></div>
+      <div data-loader-text>Loading...</div>
+    </div>
+    <script type="module" src="/js/kyc.js"></script>
+  </body>
+</html>

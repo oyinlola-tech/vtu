@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="" />
+    <title>GLY VTU | Verify Device</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/verify-device.css" />
+  </head>
+  <body class="app" data-page="verify-device">
+    <header class="topbar">
+      <div class="brand">GLY VTU</div>
+      <div class="top-actions">
+        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+      </div>
+    </header>
+    <main class="content">
+      <section class="card">
+        <h3>Verify This Device</h3>
+        <p class="muted">
+          We sent a one-time code to <strong data-email>your email</strong>.
+        </p>
+        <form>
+          <div>
+            <label>OTP Code</label>
+            <input type="text" name="code" inputmode="numeric" required />
+          </div>
+          <div>
+            <label>Device Label (optional)</label>
+            <input type="text" name="label" placeholder="My iPhone, Office Laptop" />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-shield-check"></i>
+            Verify Device
+          </button>
+        </form>
+      </section>
+    </main>
+    <div class="overlay">
+      <div class="loader"></div>
+      <div data-loader-text>Loading...</div>
+    </div>
+    <script type="module" src="/js/verify-device.js"></script>
+  </body>
+</html>

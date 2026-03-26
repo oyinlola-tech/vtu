@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="" />
+    <title>GLY VTU | Request Money</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/receive.css" />
+  </head>
+  <body class="app" data-page="receive">
+    <header class="topbar">
+      <div class="brand">GLY VTU</div>
+      <div class="top-actions">
+        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+      </div>
+    </header>
+    <main class="content">
+      <section class="card">
+        <h3>Request Money</h3>
+        <p class="muted">Create a payment request you can share.</p>
+        <form>
+          <div>
+            <label>Amount (₦)</label>
+            <input type="number" name="amount" min="100" step="0.01" required />
+          </div>
+          <div>
+            <label>Note</label>
+            <input type="text" name="note" placeholder="School fees, airtime, etc." />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            Create Request
+          </button>
+        </form>
+      </section>
+    </main>
+    <nav class="bottom-nav">
+      <a class="nav-link" data-page="dashboard" href="/dashboard">
+        <i class="fa-solid fa-house"></i>
+        Home
+      </a>
+      <a class="nav-link" data-page="wallet" href="/wallet">
+        <i class="fa-solid fa-wallet"></i>
+        Wallet
+      </a>
+      <a class="nav-link" data-page="bills" href="/bills">
+        <i class="fa-solid fa-bolt"></i>
+        Bills
+      </a>
+      <a class="nav-link" data-page="transactions" href="/transactions">
+        <i class="fa-solid fa-receipt"></i>
+        Activity
+      </a>
+      <a class="nav-link" data-page="settings" href="/settings">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+    </nav>
+    <div class="overlay">
+      <div class="loader"></div>
+      <div data-loader-text>Loading...</div>
+    </div>
+    <script type="module" src="/js/receive.js"></script>
+  </body>
+</html>

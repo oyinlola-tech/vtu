@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="" />
+    <title>GLY VTU | Activity</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/transactions.css" />
+  </head>
+  <body class="app" data-page="transactions">
+    <header class="topbar">
+      <div class="brand">GLY VTU</div>
+      <div class="top-actions">
+        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+      </div>
+    </header>
+    <main class="content">
+      <section class="card">
+        <h3>Transaction History</h3>
+        <p class="muted">Your latest payments and transfers.</p>
+      </section>
+      <section class="grid section-gap" data-transactions></section>
+    </main>
+    <nav class="bottom-nav">
+      <a class="nav-link" data-page="dashboard" href="/dashboard">
+        <i class="fa-solid fa-house"></i>
+        Home
+      </a>
+      <a class="nav-link" data-page="wallet" href="/wallet">
+        <i class="fa-solid fa-wallet"></i>
+        Wallet
+      </a>
+      <a class="nav-link" data-page="bills" href="/bills">
+        <i class="fa-solid fa-bolt"></i>
+        Bills
+      </a>
+      <a class="nav-link" data-page="transactions" href="/transactions">
+        <i class="fa-solid fa-receipt"></i>
+        Activity
+      </a>
+      <a class="nav-link" data-page="settings" href="/settings">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+    </nav>
+    <div class="overlay">
+      <div class="loader"></div>
+      <div data-loader-text>Loading...</div>
+    </div>
+    <script type="module" src="/js/transactions.js"></script>
+  </body>
+</html>
