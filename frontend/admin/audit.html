@@ -22,6 +22,37 @@
       <section class="card">
         <h3>Audit Logs</h3>
         <p class="muted">Track sensitive actions across the platform.</p>
+        <form class="section-gap" data-filter-form>
+          <div>
+            <label>From</label>
+            <input type="datetime-local" name="from" />
+          </div>
+          <div>
+            <label>To</label>
+            <input type="datetime-local" name="to" />
+          </div>
+          <div>
+            <label>Actor Type</label>
+            <select name="actorType">
+              <option value="">Any</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+              <option value="system">System</option>
+            </select>
+          </div>
+          <div>
+            <label>Actor ID</label>
+            <input type="text" name="actorId" />
+          </div>
+          <div>
+            <label>Action</label>
+            <input type="text" name="action" placeholder="e.g. admin.login" />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-filter"></i>
+            Apply Filters
+          </button>
+        </form>
         <table class="table">
           <thead>
             <tr>

@@ -6,6 +6,8 @@ const BASE_URL = process.env.MONNIFY_BASE_URL || 'https://api.monnify.com';
 const API_KEY = process.env.MONNIFY_API_KEY || '';
 const SECRET_KEY = process.env.MONNIFY_SECRET_KEY || '';
 const CONTRACT_CODE = process.env.MONNIFY_CONTRACT_CODE || '';
+const RESERVE_PATH =
+  process.env.MONNIFY_RESERVE_PATH || '/api/v2/bank-transfer/reserved-accounts';
 
 function authHeader() {
   const token = Buffer.from(`${API_KEY}:${SECRET_KEY}`).toString('base64');
@@ -56,7 +58,7 @@ export async function createReservedAccount({
   if (bvn) payload.bvn = bvn;
   if (nin) payload.nin = nin;
 
-  const res = await fetch(`${BASE_URL}/api/v2/bank-transfer/reserved-accounts`, {
+  const res = await fetch(`${BASE_URL}${RESERVE_PATH}`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

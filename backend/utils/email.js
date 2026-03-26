@@ -124,6 +124,18 @@ export async function sendWelcomeEmail({ to, name, accountNumber, bankName }) {
   await sendEmail({ to, subject: 'Welcome to GLY VTU', html });
 }
 
+export async function sendReservedAccountEmail({ to, name, accountNumber, bankName }) {
+  const html = baseTemplate({
+    title: 'Your Reserved Account is Ready',
+    body: `<p>Hello ${name || 'there'},</p>
+      <p>Your GLY VTU reserved account has been created successfully.</p>
+      <p><strong>${bankName || 'Bank'}:</strong> ${accountNumber}</p>`,
+    highlight: '<strong>Tip:</strong> Use this account number to top up your wallet anytime.',
+    footer: 'If you did not request this, please contact support immediately.',
+  });
+  await sendEmail({ to, subject: `${BRAND} Reserved Account Created`, html });
+}
+
 export async function sendOtpEmail({ to, code, purpose }) {
   const title =
     purpose === 'password_reset' ? 'Reset Your Password' : 'Verify New Device';

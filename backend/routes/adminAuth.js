@@ -5,6 +5,8 @@ import { pool } from '../config/db.js';
 import { signAccessToken, issueRefreshToken, rotateRefreshToken, revokeRefreshToken } from '../utils/tokens.js';
 import { requireAdmin } from '../middleware/adminAuth.js';
 import { logAudit } from '../utils/audit.js';
+import { createOtp, verifyOtp } from '../utils/otp.js';
+import { sendOtpEmail, sendSecurityEmail } from '../utils/email.js';
 
 const router = express.Router();
 
@@ -100,6 +102,72 @@ router.get('/me', requireAdmin, async (req, res) => {
   );
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
   return res.json(rows[0]);
+});
+
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body || {};
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  const [rows] = await pool.query('SELECT id FROM admin_users WHERE email = ? LIMIT 1', [email]);
+  if (!rows.length) return res.json({ message: 'OTP sent if account exists' });
+  try {
+    const { code } = await createOtp({
+      userId: rows[0].id,
+      email,
+      purpose: 'admin_password_reset',
+    });
+    await sendOtpEmail({ to: email, code, purpose: 'password_reset' });
+    logAudit({
+      actorType: 'admin',
+      actorId: rows[0].id,
+      action: 'admin.password_reset.requested',
+      entityType: 'admin',
+      entityId: rows[0].id,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    }).catch(console.error);
+  } catch (err) {
+    if (err.code === 'OTP_COOLDOWN' || err.code === 'OTP_LIMIT') {
+      return res.status(429).json({ error: 'Too many OTP requests. Try later.' });
+    }
+    throw err;
+  }
+  return res.json({ message: 'OTP sent if account exists' });
+});
+
+router.post('/reset-password', async (req, res) => {
+  const { email, code, newPassword } = req.body || {};
+  if (!email || !code || !newPassword) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: 'Password too short' });
+  }
+  const otp = await verifyOtp({ email, purpose: 'admin_password_reset', code });
+  if (!otp) return res.status(400).json({ error: 'Invalid or expired OTP' });
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+  await pool.query('UPDATE admin_users SET password_hash = ? WHERE email = ?', [
+    passwordHash,
+    email,
+  ]);
+  await pool.query('UPDATE refresh_tokens SET revoked_at = NOW() WHERE admin_id = ?', [
+    otp.user_id,
+  ]);
+  sendSecurityEmail({
+    to: email,
+    title: 'Admin Password Updated',
+    message: 'Your admin password was changed successfully.',
+  }).catch(console.error);
+  logAudit({
+    actorType: 'admin',
+    actorId: otp.user_id,
+    action: 'admin.password_reset',
+    entityType: 'admin',
+    entityId: otp.user_id,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+  }).catch(console.error);
+  return res.json({ message: 'Password reset successful' });
 });
 
 export default router;

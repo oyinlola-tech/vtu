@@ -38,9 +38,6 @@ router.post('/register', async (req, res) => {
   if (!fullName || !email || !phone || !password) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-  if (!bvn && !nin) {
-    return res.status(400).json({ error: 'BVN or NIN is required' });
-  }
 
   const [existing] = await pool.query('SELECT id FROM users WHERE email = ? OR phone = ?', [
     email,
@@ -62,42 +59,46 @@ router.post('/register', async (req, res) => {
       'NGN',
     ]);
 
-    const accountReference = `GLY-${userId}`;
-    const accountName = fullName;
-    const reserved = await createReservedAccount({
-      accountReference,
-      accountName,
-      customerName: fullName,
-      customerEmail: email,
-      bvn,
-      nin,
-    });
-
-    const account = reserved?.accounts?.[0] || {};
-    await pool.query(
-      `INSERT INTO reserved_accounts
-       (id, user_id, provider, account_reference, reservation_reference, account_name, account_number, bank_name, bank_code, status, raw_response)
-       VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        userId,
-        'monnify',
+    if (bvn || nin) {
+      const accountReference = `GLY-${userId}`;
+      const accountName = fullName;
+      const reserved = await createReservedAccount({
         accountReference,
-        reserved?.reservationReference || null,
-        reserved?.accountName || accountName,
-        account.accountNumber || reserved?.accountNumber || '',
-        account.bankName || reserved?.bankName || '',
-        account.bankCode || null,
-        reserved?.status || 'ACTIVE',
-        JSON.stringify(reserved || {}),
-      ]
-    );
+        accountName,
+        customerName: fullName,
+        customerEmail: email,
+        bvn,
+        nin,
+      });
 
-    sendWelcomeEmail({
-      to: email,
-      name: fullName,
-      accountNumber: account.accountNumber || reserved?.accountNumber,
-      bankName: account.bankName || reserved?.bankName,
-    }).catch(console.error);
+      const account = reserved?.accounts?.[0] || {};
+      await pool.query(
+        `INSERT INTO reserved_accounts
+         (id, user_id, provider, account_reference, reservation_reference, account_name, account_number, bank_name, bank_code, status, raw_response)
+         VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          userId,
+          'monnify',
+          accountReference,
+          reserved?.reservationReference || null,
+          reserved?.accountName || accountName,
+          account.accountNumber || reserved?.accountNumber || '',
+          account.bankName || reserved?.bankName || '',
+          account.bankCode || null,
+          reserved?.status || 'ACTIVE',
+          JSON.stringify(reserved || {}),
+        ]
+      );
+
+      sendWelcomeEmail({
+        to: email,
+        name: fullName,
+        accountNumber: account.accountNumber || reserved?.accountNumber,
+        bankName: account.bankName || reserved?.bankName,
+      }).catch(console.error);
+    } else {
+      sendWelcomeEmail({ to: email, name: fullName }).catch(console.error);
+    }
     logAudit({
       actorType: 'user',
       actorId: userId,

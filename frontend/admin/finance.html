@@ -50,6 +50,27 @@
         </div>
       </section>
       <section class="card section-gap">
+        <h3>Export Finance Report</h3>
+        <form data-export-form>
+          <div>
+            <label>From</label>
+            <input type="date" name="from" />
+          </div>
+          <div>
+            <label>To</label>
+            <input type="date" name="to" />
+          </div>
+          <button class="btn btn-primary" type="submit" data-export="csv">
+            <i class="fa-solid fa-file-csv"></i>
+            Export CSV
+          </button>
+          <button class="btn btn-ghost" type="button" data-export="pdf">
+            <i class="fa-solid fa-file-pdf"></i>
+            Export PDF
+          </button>
+        </form>
+      </section>
+      <section class="card section-gap">
         <h3>User Balances</h3>
         <table class="table">
           <thead>

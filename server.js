@@ -19,6 +19,7 @@ import adminTransactionsRoutes from './backend/routes/adminTransactions.js';
 import adminManagementRoutes from './backend/routes/adminManagement.js';
 import adminAuditRoutes from './backend/routes/adminAudit.js';
 import adminFinanceRoutes from './backend/routes/adminFinance.js';
+import monnifyWebhookRoutes from './backend/routes/monnifyWebhook.js';
 import { authLimiter, otpLimiter, adminAuthLimiter } from './backend/middleware/rateLimiters.js';
 
 dotenv.config();
@@ -33,7 +34,14 @@ const corsOrigin = process.env.CORS_ORIGIN
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: corsOrigin, credentials: true }));
-app.use(express.json({ limit: '1mb' }));
+app.use(
+  express.json({
+    limit: '1mb',
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    },
+  })
+);
 app.use(cookieParser());
 
 const globalLimiter = rateLimit({
@@ -79,6 +87,8 @@ app.get('/admin', (req, res) => res.redirect('/admin/splash'));
 const adminPages = [
   'splash',
   'login',
+  'forgot-password',
+  'reset-password',
   'dashboard',
   'finance',
   'users',
@@ -109,6 +119,7 @@ app.use('/api/admin/transactions', adminTransactionsRoutes);
 app.use('/api/admin/manage', adminManagementRoutes);
 app.use('/api/admin/audit', adminAuditRoutes);
 app.use('/api/admin/finance', adminFinanceRoutes);
+app.use('/api/monnify/webhook', monnifyWebhookRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

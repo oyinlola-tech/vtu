@@ -41,4 +41,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error(err);
   }
+
+  const form = document.querySelector('[data-export-form]');
+  const exportButtons = document.querySelectorAll('[data-export]');
+  exportButtons.forEach((btn) => {
+    btn.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const params = new URLSearchParams();
+      if (data.from) params.set('from', data.from);
+      if (data.to) params.set('to', data.to);
+      params.set('format', btn.dataset.export);
+      window.location.href = `/api/admin/finance/export?${params.toString()}`;
+    });
+  });
 });

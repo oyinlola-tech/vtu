@@ -169,7 +169,7 @@ export async function initDatabase() {
         id CHAR(36) PRIMARY KEY,
         user_id CHAR(36) NULL,
         email VARCHAR(120) NOT NULL,
-        purpose ENUM('device_login','password_reset') NOT NULL,
+        purpose ENUM('device_login','password_reset','admin_password_reset') NOT NULL,
         code_hash CHAR(64) NOT NULL,
         expires_at TIMESTAMP NOT NULL,
         consumed_at TIMESTAMP NULL,
@@ -207,6 +207,17 @@ export async function initDatabase() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE KEY uniq_reserved_user (user_id),
         FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+
+      CREATE TABLE IF NOT EXISTS monnify_events (
+        id CHAR(36) PRIMARY KEY,
+        payment_reference VARCHAR(120) NOT NULL UNIQUE,
+        account_reference VARCHAR(120) NULL,
+        amount DECIMAL(14,2) NOT NULL,
+        currency VARCHAR(10) NOT NULL DEFAULT 'NGN',
+        paid_on TIMESTAMP NULL,
+        raw_payload JSON NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE TABLE IF NOT EXISTS transactions (
