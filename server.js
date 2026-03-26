@@ -16,6 +16,9 @@ import transactionsRoutes from './backend/routes/transactions.js';
 import adminUsersRoutes from './backend/routes/adminUsers.js';
 import adminBillsRoutes from './backend/routes/adminBills.js';
 import adminTransactionsRoutes from './backend/routes/adminTransactions.js';
+import adminManagementRoutes from './backend/routes/adminManagement.js';
+import adminAuditRoutes from './backend/routes/adminAudit.js';
+import adminFinanceRoutes from './backend/routes/adminFinance.js';
 import { authLimiter, otpLimiter, adminAuthLimiter } from './backend/middleware/rateLimiters.js';
 
 dotenv.config();
@@ -35,7 +38,7 @@ app.use(cookieParser());
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 600,
+  max: Number(process.env.RATE_LIMIT_GLOBAL_MAX || 600),
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -77,11 +80,14 @@ const adminPages = [
   'splash',
   'login',
   'dashboard',
+  'finance',
   'users',
+  'admins',
   'bills',
   'pricing',
   'transactions',
   'settings',
+  'audit',
 ];
 
 adminPages.forEach((page) => {
@@ -100,6 +106,9 @@ app.use('/api/admin/auth', adminAuthLimiter, adminAuthRoutes);
 app.use('/api/admin/users', adminUsersRoutes);
 app.use('/api/admin/bills', adminBillsRoutes);
 app.use('/api/admin/transactions', adminTransactionsRoutes);
+app.use('/api/admin/manage', adminManagementRoutes);
+app.use('/api/admin/audit', adminAuditRoutes);
+app.use('/api/admin/finance', adminFinanceRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

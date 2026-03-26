@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="api-base" content="" />
-    <title>GLY VTU | Bills Management</title>
+    <title>GLY VTU | Admins</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="/admin/css/bills.css" />
+    <link rel="stylesheet" href="/admin/css/admins.css" />
   </head>
-  <body class="app" data-page="bills">
+  <body class="app" data-page="admins">
     <header class="topbar">
       <div class="brand">GLY VTU Admin</div>
       <div class="top-actions">
@@ -20,72 +20,61 @@
     </header>
     <main class="content">
       <section class="card">
-        <h3>Bill Categories</h3>
+        <h3>Admin Accounts</h3>
+        <p class="muted">Super Admins can create and manage admins.</p>
         <table class="table">
           <thead>
             <tr>
               <th>Name</th>
-              <th>Code</th>
-              <th>Status</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Created</th>
             </tr>
           </thead>
-          <tbody data-categories></tbody>
+          <tbody data-admin-table></tbody>
         </table>
       </section>
+
       <section class="card section-gap">
-        <h3>Add Category</h3>
-        <form data-category-form>
-          <div>
-            <label>Code</label>
-            <input type="text" name="code" required />
-          </div>
+        <h3>Create Admin</h3>
+        <form data-admin-form>
           <div>
             <label>Name</label>
             <input type="text" name="name" required />
           </div>
           <div>
-            <label>Description</label>
-            <input type="text" name="description" required />
+            <label>Email</label>
+            <input type="email" name="email" required />
+          </div>
+          <div>
+            <label>Password</label>
+            <input type="password" name="password" required />
+          </div>
+          <div>
+            <label>Role</label>
+            <select name="role" data-role-select></select>
           </div>
           <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-plus"></i>
-            Add Category
+            <i class="fa-solid fa-user-plus"></i>
+            Create Admin
           </button>
         </form>
       </section>
 
       <section class="card section-gap">
-        <h3>Bill Providers</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Category</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody data-providers></tbody>
-        </table>
-      </section>
-      <section class="card section-gap">
-        <h3>Add Provider</h3>
-        <form data-provider-form>
+        <h3>Update Role</h3>
+        <form data-role-form>
           <div>
-            <label>Category ID</label>
-            <input type="number" name="categoryId" required />
+            <label>Admin ID</label>
+            <input type="text" name="adminId" required />
           </div>
           <div>
-            <label>Name</label>
-            <input type="text" name="name" required />
-          </div>
-          <div>
-            <label>Code</label>
-            <input type="text" name="code" required />
+            <label>Role</label>
+            <select name="role" data-role-select></select>
           </div>
           <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-plus"></i>
-            Add Provider
+            <i class="fa-solid fa-user-gear"></i>
+            Update Role
           </button>
         </form>
       </section>
@@ -116,6 +105,6 @@
       <div class="loader"></div>
       <div data-loader-text>Loading...</div>
     </div>
-    <script type="module" src="/admin/js/bills.js"></script>
+    <script type="module" src="/admin/js/admins.js"></script>
   </body>
 </html>

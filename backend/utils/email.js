@@ -159,3 +159,42 @@ export async function sendSecurityEmail({ to, title, message }) {
   });
   await sendEmail({ to, subject: `${BRAND} Security Alert`, html });
 }
+
+export async function sendKycStatusEmail({ to, name, status, reason = '' }) {
+  const pretty = status === 'verified' ? 'Approved' : status === 'rejected' ? 'Rejected' : 'Pending';
+  const html = baseTemplate({
+    title: `KYC ${pretty}`,
+    highlight: `<strong>Status:</strong> ${pretty}`,
+    body: `<p>Hello ${name || 'there'},</p>
+      <p>Your KYC verification is now <strong>${pretty}</strong>.</p>
+      ${reason ? `<p>Reason: ${reason}</p>` : ''}`,
+    footer: 'Thanks for keeping your account secure.',
+  });
+  await sendEmail({ to, subject: `${BRAND} KYC ${pretty}`, html });
+}
+
+export async function sendBillFailedEmail({ to, name, details }) {
+  const html = baseTemplate({
+    title: 'Bill Payment Failed',
+    highlight: '<strong>Status:</strong> Failed',
+    body: `<p>Hello ${name || 'there'},</p>
+      <p>Your bill payment could not be completed.</p>
+      <ul style="padding-left:18px;line-height:1.6;">${details
+        .map((d) => `<li>${d}</li>`)
+        .join('')}</ul>`,
+    footer: 'You can try again or contact support if this persists.',
+  });
+  await sendEmail({ to, subject: `${BRAND} Bill Payment Failed`, html });
+}
+
+export async function sendLoginFailedEmail({ to, ip, userAgent }) {
+  const html = baseTemplate({
+    title: 'Failed Login Attempt',
+    highlight: '<strong>Security notice</strong>',
+    body: `<p>We detected a failed login attempt on your account.</p>
+      <p>IP: ${ip || 'Unknown'}<br/>Device: ${userAgent || 'Unknown'}</p>
+      <p>If this wasn’t you, reset your password immediately.</p>`,
+    footer: 'We’re watching for suspicious activity to protect your account.',
+  });
+  await sendEmail({ to, subject: `${BRAND} Failed Login Attempt`, html });
+}

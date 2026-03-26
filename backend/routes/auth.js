@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { pool } from '../config/db.js';
 import { signAccessToken, issueRefreshToken, rotateRefreshToken, revokeRefreshToken } from '../utils/tokens.js';
 import { createOtp, verifyOtp } from '../utils/otp.js';
-import { sendOtpEmail, sendWelcomeEmail, sendSecurityEmail } from '../utils/email.js';
+import { sendOtpEmail, sendWelcomeEmail, sendSecurityEmail, sendLoginFailedEmail } from '../utils/email.js';
 import { logAudit } from '../utils/audit.js';
 import { requireUser } from '../middleware/auth.js';
 
@@ -80,7 +80,23 @@ router.post('/login', async (req, res) => {
 
   const user = rows[0];
   const ok = await bcrypt.compare(password, user.password_hash);
-  if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
+  if (!ok) {
+    sendLoginFailedEmail({
+      to: user.email,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    }).catch(console.error);
+    logAudit({
+      actorType: 'user',
+      actorId: user.id,
+      action: 'login.failed',
+      entityType: 'user',
+      entityId: user.id,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    }).catch(console.error);
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
 
   const [devices] = await pool.query(
     'SELECT id FROM user_devices WHERE user_id = ? AND device_id = ? LIMIT 1',

@@ -2,11 +2,14 @@ import { getToken } from '/admin/api/client.js';
 
 const protectedPages = new Set([
   'dashboard',
+  'finance',
   'users',
+  'admins',
   'bills',
   'pricing',
   'transactions',
   'settings',
+  'audit',
 ]);
 
 function showLoader(show, text = 'Processing...') {

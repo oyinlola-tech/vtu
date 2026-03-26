@@ -2,7 +2,7 @@ import express from 'express';
 import { pool } from '../config/db.js';
 import { requireUser } from '../middleware/auth.js';
 import { nanoid } from 'nanoid';
-import { sendReceiptEmail } from '../utils/email.js';
+import { sendReceiptEmail, sendBillFailedEmail } from '../utils/email.js';
 import { logAudit } from '../utils/audit.js';
 
 const router = express.Router();
@@ -85,6 +85,9 @@ router.post('/pay', requireUser, async (req, res) => {
   const fee = Number(pricing.base_fee) + markup;
   const total = numericAmount + fee;
 
+  const [[user]] = await pool.query('SELECT full_name, email FROM users WHERE id = ?', [
+    req.user.sub,
+  ]);
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
@@ -95,6 +98,17 @@ router.post('/pay', requireUser, async (req, res) => {
     if (!walletRows.length) throw new Error('Wallet missing');
     if (Number(walletRows[0].balance) < total) {
       await conn.rollback();
+      if (user?.email) {
+        sendBillFailedEmail({
+          to: user.email,
+          name: user.full_name,
+          details: [
+            `Service: ${pricing.name}`,
+            `Amount: NGN ${numericAmount.toFixed(2)}`,
+            `Reason: Insufficient balance`,
+          ],
+        }).catch(console.error);
+      }
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
@@ -122,18 +136,15 @@ router.post('/pay', requireUser, async (req, res) => {
       ]
     );
     await conn.commit();
-    const [[user]] = await pool.query('SELECT full_name, email FROM users WHERE id = ?', [
-      req.user.sub,
-    ]);
     sendReceiptEmail({
       to: user.email,
       name: user.full_name,
       title: 'Bill Payment Successful',
       details: [
         `Service: ${pricing.name}`,
-        `Amount: ₦${numericAmount.toFixed(2)}`,
-        `Fee: ₦${fee.toFixed(2)}`,
-        `Total: ₦${total.toFixed(2)}`,
+        `Amount: NGN ${numericAmount.toFixed(2)}`,
+        `Fee: NGN ${fee.toFixed(2)}`,
+        `Total: NGN ${total.toFixed(2)}`,
         `Reference: ${reference}`,
       ],
     }).catch(console.error);
@@ -150,6 +161,17 @@ router.post('/pay', requireUser, async (req, res) => {
     return res.json({ message: 'Bill paid', reference, total });
   } catch (err) {
     await conn.rollback();
+    if (user?.email) {
+      sendBillFailedEmail({
+        to: user.email,
+        name: user.full_name,
+        details: [
+          `Service: ${pricing?.name || providerCode}`,
+          `Amount: NGN ${numericAmount.toFixed(2)}`,
+          `Reason: ${err.message || 'Processing error'}`,
+        ],
+      }).catch(console.error);
+    }
     return res.status(500).json({ error: 'Payment failed' });
   } finally {
     conn.release();

@@ -76,17 +76,17 @@ router.post('/refresh', async (req, res) => {
   });
 });
 
-router.post('/logout', async (req, res) => {
+router.post('/logout', requireAdmin, async (req, res) => {
   const incoming = req.cookies?.admin_refresh_token || req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('admin_refresh_token');
   res.clearCookie('admin_access_token');
   logAudit({
     actorType: 'admin',
-    actorId: null,
+    actorId: req.admin?.sub || null,
     action: 'admin.logout',
     entityType: 'admin',
-    entityId: null,
+    entityId: req.admin?.sub || null,
     ip: req.ip,
     userAgent: req.headers['user-agent'],
   }).catch(console.error);

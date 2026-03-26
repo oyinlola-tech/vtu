@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="api-base" content="" />
-    <title>GLY VTU | Admin Dashboard</title>
+    <title>GLY VTU | Audit Logs</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="/admin/css/dashboard.css" />
+    <link rel="stylesheet" href="/admin/css/audit.css" />
   </head>
-  <body class="app" data-page="dashboard">
+  <body class="app" data-page="audit">
     <header class="topbar">
       <div class="brand">GLY VTU Admin</div>
       <div class="top-actions">
@@ -19,39 +19,21 @@
       </div>
     </header>
     <main class="content">
-      <section class="hero">
-        <h1>Operations Overview</h1>
-        <p class="muted">Monitor activity across Nigeria.</p>
-      </section>
-      <section class="grid two section-gap">
-        <div class="card">
-          <h3>Total Users</h3>
-          <div class="balance" data-users>0</div>
-        </div>
-        <div class="card">
-          <h3>Total Transactions</h3>
-          <div class="balance" data-transactions>0</div>
-        </div>
-        <div class="card">
-          <h3>Transaction Volume</h3>
-          <div class="balance" data-volume>₦0.00</div>
-        </div>
-        <a class="card" href="/admin/bills">
-          <h3>Bill Providers</h3>
-          <p class="muted">Manage bill categories and providers.</p>
-        </a>
-        <a class="card" href="/admin/pricing">
-          <h3>Manage Pricing</h3>
-          <p class="muted">Set admin markups for bill payments.</p>
-        </a>
-        <a class="card" href="/admin/finance">
-          <h3>Financial Dashboard</h3>
-          <p class="muted">Revenue and balance sheet.</p>
-        </a>
-        <a class="card" href="/admin/admins">
-          <h3>Admin Management</h3>
-          <p class="muted">Create and manage admin roles.</p>
-        </a>
+      <section class="card">
+        <h3>Audit Logs</h3>
+        <p class="muted">Track sensitive actions across the platform.</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Actor</th>
+              <th>Action</th>
+              <th>Entity</th>
+              <th>IP</th>
+            </tr>
+          </thead>
+          <tbody data-audit-table></tbody>
+        </table>
       </section>
     </main>
     <nav class="bottom-nav">
@@ -80,6 +62,6 @@
       <div class="loader"></div>
       <div data-loader-text>Loading...</div>
     </div>
-    <script type="module" src="/admin/js/dashboard.js"></script>
+    <script type="module" src="/admin/js/audit.js"></script>
   </body>
 </html>
