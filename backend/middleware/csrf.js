@@ -8,6 +8,23 @@ export function csrfMiddleware(req, res, next) {
   const method = req.method.toUpperCase();
   if (['GET', 'HEAD', 'OPTIONS'].includes(method)) return next();
 
+  const csrfExemptPaths = [
+    '/api/monnify/webhook',
+    '/api/auth/login',
+    '/api/auth/register',
+    '/api/auth/verify-device',
+    '/api/auth/forgot-password',
+    '/api/auth/reset-password',
+    '/api/auth/refresh',
+    '/api/auth/csrf',
+    '/api/admin/auth/login',
+    '/api/admin/auth/forgot-password',
+    '/api/admin/auth/reset-password',
+    '/api/admin/auth/refresh',
+    '/api/admin/auth/csrf',
+  ];
+  if (csrfExemptPaths.some((p) => req.path?.startsWith(p))) return next();
+
   const authHeader = req.headers.authorization;
   if (authHeader) return next();
 

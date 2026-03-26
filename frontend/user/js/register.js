@@ -1,4 +1,4 @@
-import { api, setToken, getDeviceId } from '/api/client.js';
+import { api, setToken, getDeviceId, setCsrfToken } from '/api/client.js';
 import { showLoader, initTheme } from '/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       setToken(login.accessToken);
+      setCsrfToken(login.csrfToken);
       window.location.href = '/dashboard';
     } catch (err) {
       alert(err.message);

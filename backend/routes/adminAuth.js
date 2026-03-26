@@ -1,24 +1,26 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { pool } from '../config/db.js';
 import { signAccessToken, issueRefreshToken, rotateRefreshToken, revokeRefreshToken } from '../utils/tokens.js';
 import { requireAdmin } from '../middleware/adminAuth.js';
 import { logAudit } from '../utils/audit.js';
 import { createOtp, verifyOtp } from '../utils/otp.js';
 import { sendOtpEmail, sendSecurityEmail } from '../utils/email.js';
+import { generateCsrfToken } from '../middleware/csrf.js';
+import { otpLimiter } from '../middleware/rateLimiters.js';
 
 const router = express.Router();
 
 const JWT_ADMIN_SECRET = process.env.JWT_ADMIN_SECRET || process.env.JWT_SECRET || 'dev_secret_change_me';
 const USE_COOKIE_REFRESH = (process.env.COOKIE_REFRESH || 'true') === 'true';
+const isProd = process.env.NODE_ENV === 'production';
 
 function setRefreshCookie(res, token, expiresAt) {
   if (!USE_COOKIE_REFRESH) return;
   res.cookie('admin_refresh_token', token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false,
+    secure: isProd,
     expires: expiresAt,
   });
 }
@@ -27,12 +29,27 @@ function setAccessCookie(res, token) {
   res.cookie('admin_access_token', token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false,
+    secure: isProd,
     maxAge: 1000 * 60 * 15,
   });
 }
 
-router.post('/login', async (req, res) => {
+function setCsrfCookie(res, token) {
+  res.cookie('csrf_token', token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProd,
+    maxAge: 1000 * 60 * 60 * 6,
+  });
+}
+
+function issueCsrf(res) {
+  const token = generateCsrfToken();
+  setCsrfCookie(res, token);
+  return token;
+}
+
+router.post('/login', otpLimiter, async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
 
@@ -47,10 +64,21 @@ router.post('/login', async (req, res) => {
   const refresh = await issueRefreshToken({ adminId: admin.id });
   setAccessCookie(res, accessToken);
   setRefreshCookie(res, refresh.raw, refresh.expiresAt);
+  const csrfToken = issueCsrf(res);
+  logAudit({
+    actorType: 'admin',
+    actorId: admin.id,
+    action: 'admin.login',
+    entityType: 'admin',
+    entityId: admin.id,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+  }).catch(console.error);
 
   return res.json({
     accessToken,
     refreshToken: USE_COOKIE_REFRESH ? null : refresh.raw,
+    csrfToken,
     admin: { id: admin.id, name: admin.name, email: admin.email, role: admin.role },
   });
 });
@@ -71,10 +99,12 @@ router.post('/refresh', async (req, res) => {
   const accessToken = signAccessToken({ type: 'admin', sub: tokenRow[0].admin_id }, JWT_ADMIN_SECRET);
   setAccessCookie(res, accessToken);
   setRefreshCookie(res, rotated.raw, rotated.expiresAt);
+  const csrfToken = issueCsrf(res);
 
   return res.json({
     accessToken,
     refreshToken: USE_COOKIE_REFRESH ? null : rotated.raw,
+    csrfToken,
   });
 });
 
@@ -83,6 +113,7 @@ router.post('/logout', requireAdmin, async (req, res) => {
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('admin_refresh_token');
   res.clearCookie('admin_access_token');
+  res.clearCookie('csrf_token');
   logAudit({
     actorType: 'admin',
     actorId: req.admin?.sub || null,
@@ -104,7 +135,7 @@ router.get('/me', requireAdmin, async (req, res) => {
   return res.json(rows[0]);
 });
 
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', otpLimiter, async (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
   const [rows] = await pool.query('SELECT id FROM admin_users WHERE email = ? LIMIT 1', [email]);
@@ -170,13 +201,9 @@ router.post('/reset-password', async (req, res) => {
   return res.json({ message: 'Password reset successful' });
 });
 
+router.get('/csrf', (req, res) => {
+  const token = issueCsrf(res);
+  return res.json({ csrfToken: token });
+});
+
 export default router;
-  logAudit({
-    actorType: 'admin',
-    actorId: admin.id,
-    action: 'admin.login',
-    entityType: 'admin',
-    entityId: admin.id,
-    ip: req.ip,
-    userAgent: req.headers['user-agent'],
-  }).catch(console.error);

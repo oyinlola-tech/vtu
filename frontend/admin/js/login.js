@@ -1,4 +1,4 @@
-import { api, setToken } from '/admin/api/client.js';
+import { api, setToken, setCsrfToken } from '/admin/api/client.js';
 import { showLoader, initTheme } from '/admin/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(payload),
       });
       setToken(data.accessToken);
+      setCsrfToken(data.csrfToken);
       window.location.href = '/admin/dashboard';
     } catch (err) {
       alert(err.message);

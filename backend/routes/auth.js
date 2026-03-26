@@ -8,18 +8,21 @@ import { sendOtpEmail, sendWelcomeEmail, sendSecurityEmail, sendLoginFailedEmail
 import { createReservedAccount } from '../utils/monnify.js';
 import { logAudit } from '../utils/audit.js';
 import { requireUser } from '../middleware/auth.js';
+import { generateCsrfToken } from '../middleware/csrf.js';
+import { otpLimiter } from '../middleware/rateLimiters.js';
 
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
 const USE_COOKIE_REFRESH = (process.env.COOKIE_REFRESH || 'true') === 'true';
+const isProd = process.env.NODE_ENV === 'production';
 
 function setRefreshCookie(res, token, expiresAt) {
   if (!USE_COOKIE_REFRESH) return;
   res.cookie('refresh_token', token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false,
+    secure: isProd,
     expires: expiresAt,
   });
 }
@@ -28,9 +31,24 @@ function setAccessCookie(res, token) {
   res.cookie('access_token', token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false,
+    secure: isProd,
     maxAge: 1000 * 60 * 15,
   });
+}
+
+function setCsrfCookie(res, token) {
+  res.cookie('csrf_token', token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProd,
+    maxAge: 1000 * 60 * 60 * 6,
+  });
+}
+
+function issueCsrf(res) {
+  const token = generateCsrfToken();
+  setCsrfCookie(res, token);
+  return token;
 }
 
 router.post('/register', async (req, res) => {
@@ -116,7 +134,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', otpLimiter, async (req, res) => {
   const { email, password, deviceId } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
 
@@ -182,15 +200,17 @@ router.post('/login', async (req, res) => {
   const refresh = await issueRefreshToken({ userId: user.id });
   setAccessCookie(res, accessToken);
   setRefreshCookie(res, refresh.raw, refresh.expiresAt);
+  const csrfToken = issueCsrf(res);
 
   return res.json({
     accessToken,
     refreshToken: USE_COOKIE_REFRESH ? null : refresh.raw,
+    csrfToken,
     user: { id: user.id, fullName: user.full_name, email: user.email, phone: user.phone },
   });
 });
 
-router.post('/verify-device', async (req, res) => {
+router.post('/verify-device', otpLimiter, async (req, res) => {
   const { email, code, deviceId, label } = req.body || {};
   if (!email || !code || !deviceId) {
     return res.status(400).json({ error: 'Missing fields' });
@@ -215,11 +235,12 @@ router.post('/verify-device', async (req, res) => {
   const refresh = await issueRefreshToken({ userId: user.id });
   setAccessCookie(res, accessToken);
   setRefreshCookie(res, refresh.raw, refresh.expiresAt);
+  const csrfToken = issueCsrf(res);
 
   sendSecurityEmail({
     to: user.email,
     title: 'New Device Verified',
-    message: `A new device was verified for your account. If this wasn’t you, reset your password immediately.`,
+    message: `A new device was verified for your account. If this wasn't you, reset your password immediately.`,
   }).catch(console.error);
 
   logAudit({
@@ -235,11 +256,12 @@ router.post('/verify-device', async (req, res) => {
   return res.json({
     accessToken,
     refreshToken: USE_COOKIE_REFRESH ? null : refresh.raw,
+    csrfToken,
     user,
   });
 });
 
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', otpLimiter, async (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
   const [rows] = await pool.query('SELECT id FROM users WHERE email = ? LIMIT 1', [email]);
@@ -313,10 +335,12 @@ router.post('/refresh', async (req, res) => {
   const accessToken = signAccessToken({ type: 'user', sub: tokenRow[0].user_id }, JWT_SECRET);
   setAccessCookie(res, accessToken);
   setRefreshCookie(res, rotated.raw, rotated.expiresAt);
+  const csrfToken = issueCsrf(res);
 
   return res.json({
     accessToken,
     refreshToken: USE_COOKIE_REFRESH ? null : rotated.raw,
+    csrfToken,
   });
 });
 
@@ -325,7 +349,13 @@ router.post('/logout', async (req, res) => {
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('refresh_token');
   res.clearCookie('access_token');
+  res.clearCookie('csrf_token');
   return res.json({ message: 'Logged out' });
+});
+
+router.get('/csrf', (req, res) => {
+  const token = issueCsrf(res);
+  return res.json({ csrfToken: token });
 });
 
 router.get('/me', requireUser, async (req, res) => {

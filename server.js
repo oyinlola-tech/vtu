@@ -23,7 +23,8 @@ import monnifyWebhookRoutes from './backend/routes/monnifyWebhook.js';
 import adminMonnifyRoutes from './backend/routes/adminMonnify.js';
 import { pool } from './backend/config/db.js';
 import { processMonnifyEvent } from './backend/utils/monnifyProcessor.js';
-import { authLimiter, otpLimiter, adminAuthLimiter } from './backend/middleware/rateLimiters.js';
+import { authLimiter, adminAuthLimiter, webhookLimiter } from './backend/middleware/rateLimiters.js';
+import { csrfMiddleware } from './backend/middleware/csrf.js';
 
 dotenv.config();
 
@@ -31,11 +32,35 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.disable('x-powered-by');
+
+const isProd = process.env.NODE_ENV === 'production';
+if (isProd) {
+  const jwtSecret = process.env.JWT_SECRET;
+  const jwtAdminSecret = process.env.JWT_ADMIN_SECRET || process.env.JWT_SECRET;
+  if (!jwtSecret || jwtSecret === 'dev_secret_change_me') {
+    console.error('JWT_SECRET must be set to a strong value in production.');
+    process.exit(1);
+  }
+  if (!jwtAdminSecret || jwtAdminSecret === 'dev_secret_change_me') {
+    console.error('JWT_ADMIN_SECRET must be set to a strong value in production.');
+    process.exit(1);
+  }
+}
+const trustProxy = Number(process.env.TRUST_PROXY || 0);
+if (trustProxy) {
+  app.set('trust proxy', trustProxy);
+}
+
+const defaultOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+const extraOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',')
       .map((o) => o.trim())
       .filter((o) => o.length > 0)
-  : [];
+  : [...defaultOrigins, ...extraOrigins];
+const normalizedOrigins = allowedOrigins.filter((o) => o !== '*');
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -44,13 +69,16 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    if (allowedOrigins.includes(origin)) {
+    if (normalizedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    return callback(null, false);
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+  maxAge: 600,
 };
 
 app.use(helmet());
@@ -64,6 +92,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(csrfMiddleware);
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -141,7 +170,7 @@ app.use('/api/admin/transactions', adminTransactionsRoutes);
 app.use('/api/admin/manage', adminManagementRoutes);
 app.use('/api/admin/audit', adminAuditRoutes);
 app.use('/api/admin/finance', adminFinanceRoutes);
-app.use('/api/monnify/webhook', monnifyWebhookRoutes);
+app.use('/api/monnify/webhook', webhookLimiter, monnifyWebhookRoutes);
 app.use('/api/admin/monnify', adminMonnifyRoutes);
 
 app.use((req, res) => {
@@ -149,6 +178,9 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err?.message === 'Not allowed by CORS') {
+    return res.status(403).json({ error: 'CORS blocked' });
+  }
   console.error(err);
   res.status(500).json({ error: 'Server error' });
 });

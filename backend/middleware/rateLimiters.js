@@ -9,7 +9,14 @@ export const authLimiter = rateLimit({
 
 export const otpLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 8,
+  max: Number(process.env.RATE_LIMIT_OTP_MAX || 10),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+export const webhookLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: Number(process.env.RATE_LIMIT_WEBHOOK_MAX || 120),
   standardHeaders: true,
   legacyHeaders: false,
 });

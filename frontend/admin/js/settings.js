@@ -1,4 +1,4 @@
-import { api, clearToken } from '/admin/api/client.js';
+import { api, clearToken, clearCsrfToken } from '/admin/api/client.js';
 import { initTheme, initNav, ensureAuth } from '/admin/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   logoutBtn?.addEventListener('click', async () => {
     await api('/api/admin/auth/logout', { method: 'POST' });
     clearToken();
+    clearCsrfToken();
     window.location.href = '/admin/login';
   });
 });
