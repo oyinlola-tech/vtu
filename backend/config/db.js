@@ -191,6 +191,24 @@ export async function initDatabase() {
         FOREIGN KEY (user_id) REFERENCES users(id)
       );
 
+      CREATE TABLE IF NOT EXISTS reserved_accounts (
+        id CHAR(36) PRIMARY KEY,
+        user_id CHAR(36) NOT NULL,
+        provider VARCHAR(40) NOT NULL DEFAULT 'monnify',
+        account_reference VARCHAR(120) NOT NULL UNIQUE,
+        reservation_reference VARCHAR(120) NULL,
+        account_name VARCHAR(120) NOT NULL,
+        account_number VARCHAR(20) NOT NULL,
+        bank_name VARCHAR(120) NOT NULL,
+        bank_code VARCHAR(20) NULL,
+        status VARCHAR(40) NOT NULL DEFAULT 'ACTIVE',
+        raw_response JSON NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uniq_reserved_user (user_id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+
       CREATE TABLE IF NOT EXISTS transactions (
         id CHAR(36) PRIMARY KEY,
         user_id CHAR(36) NOT NULL,

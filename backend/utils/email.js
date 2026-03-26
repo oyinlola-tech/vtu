@@ -106,12 +106,18 @@ function createReceiptPdf({ title, name, details }) {
   });
 }
 
-export async function sendWelcomeEmail({ to, name }) {
+export async function sendWelcomeEmail({ to, name, accountNumber, bankName }) {
   const html = baseTemplate({
     title: 'Welcome to GLY VTU',
     body: `<p>Hello ${name || 'there'},</p>
       <p>Welcome to GLY VTU, your Nigerian wallet for airtime, data, TV, electricity, and more.</p>
-      <p>We are ready to help you pay bills faster and smarter.</p>`,
+      <p>We are ready to help you pay bills faster and smarter.</p>
+      ${
+        accountNumber
+          ? `<p>Your reserved account is ready:</p>
+             <p><strong>${bankName || 'Bank'}:</strong> ${accountNumber}</p>`
+          : ''
+      }`,
     highlight: '<strong>Quick tip:</strong> Complete your KYC to unlock higher limits.',
     footer: 'If you did not create this account, please contact support immediately.',
   });

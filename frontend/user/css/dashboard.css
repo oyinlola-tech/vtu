@@ -1,1 +1,10 @@
 @import url('/css/base.css');
+
+[data-account-number] {
+  font-weight: 700;
+  color: var(--wine);
+}
+
+.account-line {
+  margin-top: 10px;
+}

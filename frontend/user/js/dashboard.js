@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('[data-wallet-balance]').textContent = `₦${Number(
       wallet.balance
     ).toFixed(2)}`;
+    const accountNumber = document.querySelector('[data-account-number]');
+    const accountBank = document.querySelector('[data-account-bank]');
+    if (accountNumber && profile.account_number) {
+      accountNumber.textContent = profile.account_number;
+    }
+    if (accountBank && profile.bank_name) {
+      accountBank.textContent = `• ${profile.bank_name}`;
+    }
     renderTransactions(transactions.slice(0, 5), document.querySelector('[data-transactions]'));
   } catch (err) {
     console.error(err);

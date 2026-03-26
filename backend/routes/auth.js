@@ -5,6 +5,7 @@ import { pool } from '../config/db.js';
 import { signAccessToken, issueRefreshToken, rotateRefreshToken, revokeRefreshToken } from '../utils/tokens.js';
 import { createOtp, verifyOtp } from '../utils/otp.js';
 import { sendOtpEmail, sendWelcomeEmail, sendSecurityEmail, sendLoginFailedEmail } from '../utils/email.js';
+import { createReservedAccount } from '../utils/monnify.js';
 import { logAudit } from '../utils/audit.js';
 import { requireUser } from '../middleware/auth.js';
 
@@ -33,9 +34,12 @@ function setAccessCookie(res, token) {
 }
 
 router.post('/register', async (req, res) => {
-  const { fullName, email, phone, password } = req.body || {};
+  const { fullName, email, phone, password, bvn, nin } = req.body || {};
   if (!fullName || !email || !phone || !password) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+  if (!bvn && !nin) {
+    return res.status(400).json({ error: 'BVN or NIN is required' });
   }
 
   const [existing] = await pool.query('SELECT id FROM users WHERE email = ? OR phone = ?', [
@@ -48,27 +52,67 @@ router.post('/register', async (req, res) => {
 
   const passwordHash = await bcrypt.hash(password, 12);
   const userId = crypto.randomUUID();
+  try {
+    await pool.query(
+      'INSERT INTO users (id, full_name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?)',
+      [userId, fullName, email, phone, passwordHash]
+    );
+    await pool.query('INSERT INTO wallets (id, user_id, balance, currency) VALUES (UUID(), ?, 0, ?)', [
+      userId,
+      'NGN',
+    ]);
 
-  await pool.query(
-    'INSERT INTO users (id, full_name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?)',
-    [userId, fullName, email, phone, passwordHash]
-  );
-  await pool.query('INSERT INTO wallets (id, user_id, balance, currency) VALUES (UUID(), ?, 0, ?)', [
-    userId,
-    'NGN',
-  ]);
+    const accountReference = `GLY-${userId}`;
+    const accountName = fullName;
+    const reserved = await createReservedAccount({
+      accountReference,
+      accountName,
+      customerName: fullName,
+      customerEmail: email,
+      bvn,
+      nin,
+    });
 
-  sendWelcomeEmail({ to: email, name: fullName }).catch(console.error);
-  logAudit({
-    actorType: 'user',
-    actorId: userId,
-    action: 'user.register',
-    entityType: 'user',
-    entityId: userId,
-    ip: req.ip,
-    userAgent: req.headers['user-agent'],
-  }).catch(console.error);
-  return res.status(201).json({ message: 'Registered successfully' });
+    const account = reserved?.accounts?.[0] || {};
+    await pool.query(
+      `INSERT INTO reserved_accounts
+       (id, user_id, provider, account_reference, reservation_reference, account_name, account_number, bank_name, bank_code, status, raw_response)
+       VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        userId,
+        'monnify',
+        accountReference,
+        reserved?.reservationReference || null,
+        reserved?.accountName || accountName,
+        account.accountNumber || reserved?.accountNumber || '',
+        account.bankName || reserved?.bankName || '',
+        account.bankCode || null,
+        reserved?.status || 'ACTIVE',
+        JSON.stringify(reserved || {}),
+      ]
+    );
+
+    sendWelcomeEmail({
+      to: email,
+      name: fullName,
+      accountNumber: account.accountNumber || reserved?.accountNumber,
+      bankName: account.bankName || reserved?.bankName,
+    }).catch(console.error);
+    logAudit({
+      actorType: 'user',
+      actorId: userId,
+      action: 'user.register',
+      entityType: 'user',
+      entityId: userId,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    }).catch(console.error);
+    return res.status(201).json({ message: 'Registered successfully' });
+  } catch (err) {
+    await pool.query('DELETE FROM wallets WHERE user_id = ?', [userId]);
+    await pool.query('DELETE FROM users WHERE id = ?', [userId]);
+    return res.status(500).json({ error: 'Account creation failed' });
+  }
 });
 
 router.post('/login', async (req, res) => {

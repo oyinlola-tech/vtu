@@ -6,7 +6,11 @@ const router = express.Router();
 
 router.get('/profile', requireUser, async (req, res) => {
   const [rows] = await pool.query(
-    'SELECT id, full_name, email, phone, kyc_level, kyc_status, kyc_payload FROM users WHERE id = ?',
+    `SELECT u.id, u.full_name, u.email, u.phone, u.kyc_level, u.kyc_status, u.kyc_payload,
+            r.account_number, r.bank_name, r.account_name
+     FROM users u
+     LEFT JOIN reserved_accounts r ON r.user_id = u.id
+     WHERE u.id = ?`,
     [req.user.sub]
   );
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
