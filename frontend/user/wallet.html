@@ -13,15 +13,25 @@
   </head>
   <body class="app" data-page="wallet">
     <header class="topbar">
-      <div class="brand">GLY VTU</div>
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Enterprise Wallet Suite</span>
+        </div>
+      </div>
       <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
       </div>
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-wallet"></i> Wallet Overview</span>
         <h1>Wallet Overview</h1>
-        <p class="muted">Your available balance and quick actions.</p>
+        <p class="muted">Live balance, reserved accounts, and operational shortcuts.</p>
         <div class="balance" data-wallet-balance>NGN 0.00</div>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/send">
@@ -37,13 +47,15 @@
 
       <section class="grid two section-gap">
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-shield-halved"></i></span>
           <h3>Account Security</h3>
-          <p class="muted">Use your transaction PIN for transfers and bill payments.</p>
+          <p class="muted">Transaction PIN and device checks protect every transfer.</p>
           <a class="btn btn-ghost" href="/settings">Manage Security</a>
         </div>
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-list-check"></i></span>
           <h3>Daily Operations</h3>
-          <p class="muted">Review recent activity and monitor transfer status.</p>
+          <p class="muted">Review activity, status updates, and settlement details.</p>
           <a class="btn btn-ghost" href="/transactions">View Activity</a>
         </div>
       </section>

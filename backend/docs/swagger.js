@@ -589,7 +589,7 @@ const doc = {
         paid_on: '2026-03-27T10:00:00Z',
         status: 'success',
         attempts: 1,
-        last_error: null,
+        last_error: '',
         updated_at: '2026-03-27T10:00:00Z',
       },
     },

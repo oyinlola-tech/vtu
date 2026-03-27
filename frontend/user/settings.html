@@ -13,19 +13,30 @@
   </head>
   <body class="app" data-page="settings">
     <header class="topbar">
-      <div class="brand">GLY VTU</div>
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Enterprise Wallet Suite</span>
+        </div>
+      </div>
       <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
       </div>
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-gear"></i> Security Controls</span>
         <h1>Settings & Security</h1>
-        <p class="muted">Manage your security, preferences, and KYC status.</p>
+        <p class="muted">Manage security policies, approvals, and KYC status.</p>
       </section>
 
       <section class="grid two section-gap">
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-user-shield"></i></span>
           <h3>Account Essentials</h3>
           <p class="muted">Keep your verification and transaction limits updated.</p>
           <div class="grid two section-gap">
@@ -40,6 +51,7 @@
           </div>
         </div>
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-key"></i></span>
           <h3>Transaction PIN</h3>
           <p class="muted">A PIN is required for every transfer and bill payment.</p>
           <form data-pin-setup>
@@ -81,6 +93,7 @@
       </section>
 
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-shield"></i></span>
         <h3>Security Question</h3>
         <p class="muted">Add an extra verification step for sensitive actions.</p>
         <label class="toggle section-gap">
@@ -105,6 +118,7 @@
       </section>
 
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
         <h3>Session Controls</h3>
         <p class="muted">Log out from this device when you are done.</p>
         <button class="btn btn-primary section-gap" data-logout type="button">

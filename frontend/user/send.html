@@ -13,21 +13,32 @@
   </head>
   <body class="app" data-page="send">
     <header class="topbar">
-      <div class="brand">GLY VTU</div>
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Enterprise Wallet Suite</span>
+        </div>
+      </div>
       <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
       </div>
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-paper-plane"></i> Outbound Transfers</span>
         <h1>Send Money</h1>
-        <p class="muted">Fast, verified transfers with bank account validation.</p>
+        <p class="muted">Fast, verified transfers with automatic account name validation.</p>
       </section>
 
       <section class="grid two section-gap">
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-building-columns"></i></span>
           <h3>Transfer Details</h3>
-          <p class="muted">Choose bank transfer (default) or GLY VTU user.</p>
+          <p class="muted">Choose bank transfer (default) or GLY VTU internal transfer.</p>
           <form>
             <div class="grid two">
               <label class="radio">
@@ -76,6 +87,7 @@
           </form>
         </div>
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-shield-halved"></i></span>
           <h3>Security & Compliance</h3>
           <p class="muted">Account names are verified automatically before transfer.</p>
           <div class="section-gap">

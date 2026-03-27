@@ -13,19 +13,30 @@
   </head>
   <body class="app" data-page="receive">
     <header class="topbar">
-      <div class="brand">GLY VTU</div>
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Enterprise Wallet Suite</span>
+        </div>
+      </div>
       <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
       </div>
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-qrcode"></i> Inbound Payments</span>
         <h1>Receive Money</h1>
-        <p class="muted">Share QR or account details for instant payments.</p>
+        <p class="muted">Share QR or reserved account details for instant payments.</p>
       </section>
 
       <section class="grid two section-gap">
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-qrcode"></i></span>
           <h3>Your Receive QR</h3>
           <p class="muted">Share this QR to receive transfers into your reserved account.</p>
           <div class="grid two section-gap">
@@ -41,6 +52,7 @@
           </div>
         </div>
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-file-invoice"></i></span>
           <h3>Create Request QR</h3>
           <p class="muted">Generate a payment request with amount and note.</p>
           <form>

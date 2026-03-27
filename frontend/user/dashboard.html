@@ -13,15 +13,25 @@
   </head>
   <body class="app" data-page="dashboard">
     <header class="topbar">
-      <div class="brand">GLY VTU</div>
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Enterprise Wallet Suite</span>
+        </div>
+      </div>
       <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>Dark Mode</button>
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
       </div>
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> Treasury Snapshot</span>
         <h1>Hello, <span data-user-name>Customer</span></h1>
-        <p class="muted">Your secure fintech wallet for transfers, bills, and virtual accounts.</p>
+        <p class="muted">Your secure fintech command center for transfers, bills, and reserved accounts.</p>
         <div class="balance" data-wallet-balance>NGN 0.00</div>
         <p class="muted account-line">
           Account: <strong data-account-number>----</strong>
@@ -41,26 +51,31 @@
 
       <section class="grid two section-gap">
         <a class="card" href="/send">
+          <span class="card-icon"><i class="fa-solid fa-paper-plane"></i></span>
           <h3>Send Money</h3>
-          <p class="muted">Verify bank account and transfer securely.</p>
+          <p class="muted">Verified bank transfers with instant name validation.</p>
         </a>
         <a class="card" href="/receive">
+          <span class="card-icon"><i class="fa-solid fa-qrcode"></i></span>
           <h3>Receive Money</h3>
-          <p class="muted">Share QR or account details instantly.</p>
+          <p class="muted">Share QR or reserved account details instantly.</p>
         </a>
         <a class="card" href="/bills">
+          <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
           <h3>Pay Bills</h3>
-          <p class="muted">Airtime, data, TV, electricity and more.</p>
+          <p class="muted">Airtime, data, TV, electricity and more in seconds.</p>
         </a>
         <a class="card" href="/kyc">
+          <span class="card-icon"><i class="fa-solid fa-id-card"></i></span>
           <h3>Complete KYC</h3>
-          <p class="muted">Unlock higher limits and premium features.</p>
+          <p class="muted">Unlock higher limits, faster approvals, premium support.</p>
         </a>
       </section>
 
       <section class="section-gap-lg">
         <h3>Recent Activity</h3>
-        <div class="grid" data-transactions></div>
+        <p class="muted">Monitor transfers, bill payments, and wallet movements.</p>
+        <div class="grid section-gap" data-transactions></div>
       </section>
     </main>
 

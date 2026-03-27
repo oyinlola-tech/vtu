@@ -98,6 +98,11 @@ app.use(
 app.use(cookieParser());
 app.use(csrfMiddleware);
 
+// Silence Chrome DevTools probe that can show up as a 404 + CSP warning in console.
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+  res.status(204).end();
+});
+
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: Number(process.env.RATE_LIMIT_GLOBAL_MAX || 600),
@@ -213,7 +218,7 @@ async function setupSwaggerDocs(appInstance) {
   appInstance.use('/api-docs', (req, res, next) => {
     res.setHeader(
       'Content-Security-Policy',
-      "default-src 'self' 'unsafe-inline' https: http: data:; img-src 'self' data: https: http:; script-src 'self' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline' https: http:; font-src 'self' data: https: http:;"
+      "default-src 'self' 'unsafe-inline' https: http: data:; img-src 'self' data: https: http:; script-src 'self' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline' https: http:; font-src 'self' data: https: http:; connect-src 'self' https: http:;"
     );
     next();
   });

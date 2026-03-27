@@ -2,7 +2,7 @@
 
 [data-account-number] {
   font-weight: 700;
-  color: var(--wine);
+  color: var(--accent-strong);
 }
 
 .account-line {
