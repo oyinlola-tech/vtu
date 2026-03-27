@@ -310,3 +310,17 @@ textarea {
     box-shadow: var(--shadow);
   }
 }
+
+.radio,
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+}
+
+.radio input,
+.toggle input {
+  width: 18px;
+  height: 18px;
+}

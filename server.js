@@ -21,6 +21,7 @@ import adminAuditRoutes from './backend/routes/adminAudit.js';
 import adminFinanceRoutes from './backend/routes/adminFinance.js';
 import monnifyWebhookRoutes from './backend/routes/monnifyWebhook.js';
 import adminMonnifyRoutes from './backend/routes/adminMonnify.js';
+import banksRoutes from './backend/routes/banks.js';
 import { pool } from './backend/config/db.js';
 import { processMonnifyEvent } from './backend/utils/monnifyProcessor.js';
 import { authLimiter, adminAuthLimiter, webhookLimiter } from './backend/middleware/rateLimiters.js';
@@ -162,6 +163,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/wallet', walletRoutes);
 app.use('/api/bills', billsRoutes);
 app.use('/api/transactions', transactionsRoutes);
+app.use('/api/banks', banksRoutes);
 
 app.use('/api/admin/auth', adminAuthLimiter, adminAuthRoutes);
 app.use('/api/admin/users', adminUsersRoutes);

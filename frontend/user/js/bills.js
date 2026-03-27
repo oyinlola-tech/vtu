@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const categories = await api('/api/bills/categories');
     categorySelect.innerHTML =
-      '<option value="">Select category</option>' +
-      categories.map((c) => `<option value="${c.code}">${c.name}</option>`).join('');
+      '<option value=\"\">Select category</option>' +
+      categories.map((c) => `<option value=\"${c.code}\">${c.name}</option>`).join('');
   } catch (err) {
     console.error(err);
   }
@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!code) return;
     const providers = await api(`/api/bills/providers?category=${code}`);
     providerSelect.innerHTML =
-      '<option value="">Select provider</option>' +
-      providers.map((p) => `<option value="${p.code}">${p.name}</option>`).join('');
+      '<option value=\"\">Select provider</option>' +
+      providers.map((p) => `<option value=\"${p.code}\">${p.name}</option>`).join('');
   });
 
   const quoteBtn = document.querySelector('[data-quote-btn]');
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ providerCode, amount }),
       });
-      quoteBox.textContent = `Fee ₦${quote.fee.toFixed(2)} • Total ₦${quote.total.toFixed(2)}`;
+      quoteBox.textContent = `Fee NGN ${quote.fee.toFixed(2)} • Total NGN ${quote.total.toFixed(2)}`;
     } catch (err) {
       quoteBox.textContent = err.message;
     }

@@ -32,6 +32,44 @@
             <p class="muted">Review all bill payments.</p>
           </a>
         </div>
+      </section>
+
+      <section class="card">
+        <h3>Transaction PIN</h3>
+        <p class="muted">Set a PIN to authorize transfers and bill payments.</p>
+        <form data-pin-setup>
+          <div>
+            <label>New PIN</label>
+            <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-key"></i>
+            Create PIN
+          </button>
+        </form>
+        <form data-pin-change hidden>
+          <div>
+            <label>Current PIN</label>
+            <input type="password" name="currentPin" inputmode="numeric" minlength="4" maxlength="6" required />
+          </div>
+          <div>
+            <label>New PIN</label>
+            <input type="password" name="newPin" inputmode="numeric" minlength="4" maxlength="6" required />
+          </div>
+          <button class="btn btn-ghost" type="submit">
+            <i class="fa-solid fa-rotate"></i>
+            Update PIN
+          </button>
+        </form>
+        <div class="section-gap">
+          <label class="toggle">
+            <input type="checkbox" data-biometric />
+            Enable biometric approval (when available)
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
         <button class="btn btn-primary section-gap" data-logout type="button">
           <i class="fa-solid fa-right-from-bracket"></i>
           Log Out

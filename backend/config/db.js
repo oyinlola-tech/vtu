@@ -70,6 +70,30 @@ async function seedDefaults(conn) {
      SELECT id, 0, 'flat', 10, 'NGN', 1 FROM bill_providers`
   );
 
+  await conn.query(
+    `INSERT IGNORE INTO banks (name, code, active) VALUES
+      ('Access Bank', '044', 1),
+      ('First Bank of Nigeria', '011', 1),
+      ('Guaranty Trust Bank', '058', 1),
+      ('United Bank for Africa', '033', 1),
+      ('Zenith Bank', '057', 1),
+      ('Fidelity Bank', '070', 1),
+      ('Union Bank', '032', 1),
+      ('Stanbic IBTC', '221', 1),
+      ('Wema Bank', '035', 1),
+      ('Sterling Bank', '232', 1),
+      ('Polaris Bank', '076', 1),
+      ('FCMB', '214', 1),
+      ('EcoBank', '050', 1),
+      ('Keystone Bank', '082', 1),
+      ('Unity Bank', '215', 1),
+      ('Jaiz Bank', '301', 1),
+      ('Kuda Microfinance Bank', '50211', 1),
+      ('PalmPay', '999991', 1),
+      ('Moniepoint', '999992', 1),
+      ('OPay', '999993', 1)`
+  );
+
   await conn.query('UPDATE schema_meta SET seeded = 1 WHERE id = 1');
 }
 
@@ -111,6 +135,11 @@ export async function initDatabase() {
         email VARCHAR(120) NOT NULL UNIQUE,
         phone VARCHAR(20) NOT NULL UNIQUE,
         password_hash VARCHAR(255) NOT NULL,
+        transaction_pin_hash VARCHAR(255) NULL,
+        pin_failed_attempts INT NOT NULL DEFAULT 0,
+        pin_locked_until TIMESTAMP NULL,
+        biometric_enabled TINYINT NOT NULL DEFAULT 0,
+        pin_updated_at TIMESTAMP NULL,
         kyc_level TINYINT NOT NULL DEFAULT 1,
         kyc_status ENUM('pending','verified','rejected') NOT NULL DEFAULT 'pending',
         kyc_payload JSON NULL,
@@ -280,14 +309,39 @@ export async function initDatabase() {
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (provider_id) REFERENCES bill_providers(id)
       );
+
+      CREATE TABLE IF NOT EXISTS banks (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(120) NOT NULL,
+        code VARCHAR(20) NOT NULL UNIQUE,
+        active TINYINT NOT NULL DEFAULT 1
+      );
     `);
 
     await conn.query('INSERT IGNORE INTO schema_meta (id, seeded) VALUES (1, 0)');
     await seedDefaults(conn);
     await seedAdmin(conn);
+    await ensureUserSecurityColumns(conn);
   } finally {
     conn.release();
   }
 }
 
 export { hashToken };
+
+async function ensureUserSecurityColumns(conn) {
+  const [cols] = await conn.query(
+    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users'`,
+    [DB_NAME]
+  );
+  const existing = new Set(cols.map((c) => c.COLUMN_NAME));
+  const alters = [];
+  if (!existing.has('transaction_pin_hash')) alters.push('ADD COLUMN transaction_pin_hash VARCHAR(255) NULL');
+  if (!existing.has('pin_failed_attempts')) alters.push('ADD COLUMN pin_failed_attempts INT NOT NULL DEFAULT 0');
+  if (!existing.has('pin_locked_until')) alters.push('ADD COLUMN pin_locked_until TIMESTAMP NULL');
+  if (!existing.has('biometric_enabled')) alters.push('ADD COLUMN biometric_enabled TINYINT NOT NULL DEFAULT 0');
+  if (!existing.has('pin_updated_at')) alters.push('ADD COLUMN pin_updated_at TIMESTAMP NULL');
+  if (alters.length) {
+    await conn.query(`ALTER TABLE users ${alters.join(', ')}`);
+  }
+}

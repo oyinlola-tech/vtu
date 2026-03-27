@@ -3,6 +3,8 @@ import { pool } from '../config/db.js';
 import { requireUser } from '../middleware/auth.js';
 import { createReservedAccount } from '../utils/monnify.js';
 import { sendReservedAccountEmail } from '../utils/email.js';
+import { isValidPin, setTransactionPin, verifyTransactionPin, getPinStatus } from '../utils/pin.js';
+import { logAudit } from '../utils/audit.js';
 
 const router = express.Router();
 
@@ -107,6 +109,92 @@ router.put('/kyc', requireUser, async (req, res) => {
     }
   }
   return res.json({ message: 'KYC submitted' });
+});
+
+router.get('/security', requireUser, async (req, res) => {
+  const status = await getPinStatus(req.user.sub);
+  if (!status) return res.status(404).json({ error: 'Not found' });
+  return res.json(status);
+});
+
+router.post('/pin/setup', requireUser, async (req, res) => {
+  const { pin } = req.body || {};
+  if (!isValidPin(pin)) return res.status(400).json({ error: 'PIN must be 4-6 digits' });
+  const [[row]] = await pool.query(
+    'SELECT transaction_pin_hash FROM users WHERE id = ?',
+    [req.user.sub]
+  );
+  if (row?.transaction_pin_hash) {
+    return res.status(409).json({ error: 'Transaction PIN already set' });
+  }
+  await setTransactionPin(req.user.sub, pin);
+  logAudit({
+    actorType: 'user',
+    actorId: req.user.sub,
+    action: 'pin.setup',
+    entityType: 'user',
+    entityId: req.user.sub,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+  }).catch(console.error);
+  return res.json({ message: 'Transaction PIN created' });
+});
+
+router.post('/pin/change', requireUser, async (req, res) => {
+  const { currentPin, newPin } = req.body || {};
+  if (!isValidPin(newPin)) return res.status(400).json({ error: 'PIN must be 4-6 digits' });
+  try {
+    await verifyTransactionPin(req.user.sub, currentPin);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+  await setTransactionPin(req.user.sub, newPin);
+  logAudit({
+    actorType: 'user',
+    actorId: req.user.sub,
+    action: 'pin.changed',
+    entityType: 'user',
+    entityId: req.user.sub,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+  }).catch(console.error);
+  return res.json({ message: 'Transaction PIN updated' });
+});
+
+router.post('/pin/verify', requireUser, async (req, res) => {
+  const { pin } = req.body || {};
+  if (!isValidPin(pin)) return res.status(400).json({ error: 'PIN must be 4-6 digits' });
+  try {
+    await verifyTransactionPin(req.user.sub, pin);
+    return res.json({ valid: true });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
+router.post('/biometric', requireUser, async (req, res) => {
+  const { enabled } = req.body || {};
+  const [[row]] = await pool.query(
+    'SELECT transaction_pin_hash FROM users WHERE id = ?',
+    [req.user.sub]
+  );
+  if (!row?.transaction_pin_hash) {
+    return res.status(400).json({ error: 'Set a transaction PIN first' });
+  }
+  await pool.query('UPDATE users SET biometric_enabled = ? WHERE id = ?', [
+    enabled ? 1 : 0,
+    req.user.sub,
+  ]);
+  logAudit({
+    actorType: 'user',
+    actorId: req.user.sub,
+    action: enabled ? 'biometric.enabled' : 'biometric.disabled',
+    entityType: 'user',
+    entityId: req.user.sub,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+  }).catch(console.error);
+  return res.json({ message: 'Biometric preference updated' });
 });
 
 export default router;

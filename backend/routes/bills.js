@@ -4,6 +4,7 @@ import { requireUser } from '../middleware/auth.js';
 import { nanoid } from 'nanoid';
 import { sendReceiptEmail, sendBillFailedEmail } from '../utils/email.js';
 import { logAudit } from '../utils/audit.js';
+import { verifyTransactionPin, isValidPin } from '../utils/pin.js';
 
 const router = express.Router();
 
@@ -62,10 +63,16 @@ router.post('/quote', requireUser, async (req, res) => {
 });
 
 router.post('/pay', requireUser, async (req, res) => {
-  const { providerCode, amount, account } = req.body || {};
+  const { providerCode, amount, account, pin } = req.body || {};
   const numericAmount = Number(amount);
   if (!providerCode || !numericAmount || numericAmount <= 0 || !account) {
     return res.status(400).json({ error: 'Invalid request' });
+  }
+  if (!isValidPin(pin)) return res.status(400).json({ error: 'Invalid transaction PIN' });
+  try {
+    await verifyTransactionPin(req.user.sub, pin);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
   }
 
   const [rows] = await pool.query(

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="api-base" content="" />
-    <title>GLY VTU | Request Money</title>
+    <title>GLY VTU | Receive Money</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -20,11 +20,27 @@
     </header>
     <main class="content">
       <section class="card">
-        <h3>Request Money</h3>
-        <p class="muted">Create a payment request you can share.</p>
+        <h3>Your Receive QR</h3>
+        <p class="muted">Share this QR so people can send money to your reserved account.</p>
+        <div class="grid two">
+          <div>
+            <div class="muted">Account Number</div>
+            <div data-account-number>-</div>
+            <div class="muted section-gap">Bank</div>
+            <div data-bank-name>-</div>
+          </div>
+          <div>
+            <div data-qr-account></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Create Request QR</h3>
+        <p class="muted">Generate a QR with amount and note for quick payments.</p>
         <form>
           <div>
-            <label>Amount (₦)</label>
+            <label>Amount (NGN)</label>
             <input type="number" name="amount" min="100" step="0.01" required />
           </div>
           <div>
@@ -32,10 +48,11 @@
             <input type="text" name="note" placeholder="School fees, airtime, etc." />
           </div>
           <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            Create Request
+            <i class="fa-solid fa-qrcode"></i>
+            Create QR
           </button>
         </form>
+        <div class="section-gap" data-qr-request></div>
       </section>
     </main>
     <nav class="bottom-nav">
@@ -64,6 +81,7 @@
       <div class="loader"></div>
       <div data-loader-text>Loading...</div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="/js/receive.js"></script>
   </body>
 </html>
