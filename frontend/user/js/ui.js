@@ -9,6 +9,9 @@ const protectedPages = new Set([
   'transactions',
   'kyc',
   'settings',
+  'terms',
+  'privacy',
+  'support',
 ]);
 
 function showLoader(show, text = 'Processing...') {

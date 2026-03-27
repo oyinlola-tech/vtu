@@ -139,6 +139,9 @@ const userPages = [
   'verify-device',
   'forgot-password',
   'reset-password',
+  'terms',
+  'privacy',
+  'support',
 ];
 
 userPages.forEach((page) => {

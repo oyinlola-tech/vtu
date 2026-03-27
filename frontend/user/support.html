@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLY VTU | Support</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/support.css" />
+  </head>
+  <body class="app" data-page="support">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5c3.63 0 6.65-2.58 7.34-6h-7.34v-3h10.7c.2 0 .36.16.36.36 0 6.07-4.93 11-11 11s-11-4.93-11-11 4.93-11 11-11c2.61 0 5.02.92 6.9 2.45l-2.4 2.4A7.44 7.44 0 0 0 12 4.5z"/></svg></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Premium Wallet Platform</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
+      </div>
+    </header>
+    <main class="content">
+      <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-headset"></i> Support Center</span>
+        <h1>Support & Help</h1>
+        <p class="muted">Get quick answers, report issues, and track requests in one place.</p>
+      </section>
+
+      <section class="grid two section-gap">
+        <article class="card">
+          <span class="card-icon"><i class="fa-solid fa-life-ring"></i></span>
+          <h3>How We Help</h3>
+          <p class="muted">Choose the best channel for your request.</p>
+          <ul>
+            <li>In-app support for account and transaction questions.</li>
+            <li>Issue tracking with real-time status updates.</li>
+            <li>Security reports for suspicious activity.</li>
+            <li>Billing support for reversals and charge inquiries.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="card-icon"><i class="fa-solid fa-list-check"></i></span>
+          <h3>Self-Service</h3>
+          <p class="muted">Resolve common issues instantly.</p>
+          <ul>
+            <li>Reset password and verify device access.</li>
+            <li>Review transaction history and receipts.</li>
+            <li>Update KYC details to unlock limits.</li>
+            <li>Manage security questions and PIN changes.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="card-icon"><i class="fa-solid fa-shield"></i></span>
+          <h3>Security First</h3>
+          <p class="muted">We will never ask for your OTP or PIN.</p>
+          <ul>
+            <li>Confirm any support request from within the app.</li>
+            <li>Report unexpected transactions immediately.</li>
+            <li>Enable device verification for every login.</li>
+            <li>Keep your email and phone number current.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="card-icon"><i class="fa-solid fa-clock"></i></span>
+          <h3>Response Time</h3>
+          <p class="muted">We aim to respond as quickly as possible.</p>
+          <ul>
+            <li>Most tickets are answered within 24 to 48 hours.</li>
+            <li>High-impact security issues are prioritized.</li>
+            <li>Status updates are shared in-app.</li>
+            <li>Escalations are available for unresolved cases.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-circle-question"></i></span>
+        <h3>Need More Help?</h3>
+        <p class="muted">Open a support request from your settings page to attach transaction references and screenshots.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/settings">Open Support Request</a>
+          <a class="btn btn-ghost" href="/transactions">View Transactions</a>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <a class="nav-link" data-page="dashboard" href="/dashboard">
+        <i class="fa-solid fa-house"></i>
+        Home
+      </a>
+      <a class="nav-link" data-page="wallet" href="/wallet">
+        <i class="fa-solid fa-wallet"></i>
+        Wallet
+      </a>
+      <a class="nav-link" data-page="bills" href="/bills">
+        <i class="fa-solid fa-bolt"></i>
+        Bills
+      </a>
+      <a class="nav-link" data-page="transactions" href="/transactions">
+        <i class="fa-solid fa-receipt"></i>
+        Activity
+      </a>
+      <a class="nav-link" data-page="settings" href="/settings">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+    </nav>
+
+    <div class="overlay">
+      <div class="loader"></div>
+      <div data-loader-text>Loading...</div>
+    </div>
+    <script type="module" src="/js/support.js"></script>
+  </body>
+</html>
