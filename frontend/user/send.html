@@ -38,10 +38,18 @@
         <div class="card">
           <span class="card-icon"><i class="fa-solid fa-building-columns"></i></span>
           <h3>Transfer Details</h3>
-          <p class="muted">Choose bank transfer (default) or GLY VTU internal transfer.</p>
+          <p class="muted">Follow the steps to complete a verified transfer.</p>
+          <div class="step-header">
+            <div>
+              <div class="muted">Step</div>
+              <div class="step-count" data-step-count>1 of 4</div>
+            </div>
+            <div class="step-track">
+              <div class="step-bar" data-step-bar></div>
+            </div>
+          </div>
           <form data-send-form>
             <input type="hidden" name="pin" data-pin-hidden />
-            <input type="hidden" name="securityAnswer" data-security-hidden />
             <div class="grid two">
               <label class="radio">
                 <input type="radio" name="transferType" value="bank" checked />
@@ -60,6 +68,7 @@
             <div class="step" data-step="bank" hidden>
               <label>Select Bank</label>
               <select name="bankCode" data-bank-select required></select>
+              <div class="bank-suggestions" data-bank-suggestions></div>
             </div>
             <div class="step" data-step="name" hidden>
               <label>Account Name</label>
@@ -90,9 +99,6 @@
               <div class="modal-body">
                 <label>Transaction PIN</label>
                 <input type="password" data-pin-input inputmode="numeric" minlength="4" maxlength="6" />
-                <label class="section-gap">Security Answer (if required)</label>
-                <input type="password" data-security-answer autocomplete="off" />
-                <small class="muted" data-security-question-text></small>
               </div>
               <button class="btn btn-primary section-gap" type="button" data-confirm-pin>
                 Send Now
@@ -115,6 +121,23 @@
       </section>
     </main>
     <nav class="bottom-nav">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5c3.63 0 6.65-2.58 7.34-6h-7.34v-3h10.7c.2 0 .36.16.36.36 0 6.07-4.93 11-11 11s-11-4.93-11-11 4.93-11 11-11c2.61 0 5.02.92 6.9 2.45l-2.4 2.4A7.44 7.44 0 0 0 12 4.5z"/></svg></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Wallet</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-profile">
+      <div class="avatar">GL</div>
+      <div>
+        <div class="name" data-user-name>Customer</div>
+        <div class="tier muted">Standard</div>
+      </div>
+    </div>
+
       <a class="nav-link" data-page="dashboard" href="/dashboard">
         <i class="fa-solid fa-house"></i>
         Home

@@ -31,12 +31,12 @@
       <section class="hero">
         <span class="eyebrow"><i class="fa-solid fa-shield-halved"></i> Secure Access</span>
         <h1>Welcome Back</h1>
-        <p class="muted">Sign in to manage your wallet, bills, and transfers.</p>
+        <p class="muted">Sign in to continue.</p>
       </section>
-      <section class="grid two section-gap">
-        <div class="card">
+      <section class="section-gap">
+        <div class="card compact-auth">
           <span class="card-icon"><i class="fa-solid fa-right-to-bracket"></i></span>
-          <h3>Secure Sign In</h3>
+          <h3>Sign In</h3>
           <form>
             <div>
               <label>Email</label>
@@ -51,23 +51,14 @@
               Sign In
             </button>
           </form>
-          <p class="muted">
-            Forgot password? <a href="/forgot-password">Reset here</a>
-          </p>
-          <p class="muted">
-            New here? <a href="/register">Create an account</a>
-          </p>
-        </div>
-        <div class="card">
-          <span class="card-icon"><i class="fa-solid fa-shield-check"></i></span>
-          <h3>Enterprise Security</h3>
-          <p class="muted">New devices require OTP verification.</p>
-          <div class="section-gap">
-            <span class="pill"><i class="fa-solid fa-shield-halved"></i> Device verification</span>
+          <div class="auth-links">
+            <a href="/forgot-password">Forgot password?</a>
+            <a href="/register">Create account</a>
           </div>
-          <p class="muted section-gap">
-            Never share your OTP or transaction PIN with anyone.
-          </p>
+          <div class="pill section-gap">
+            <i class="fa-solid fa-shield-halved"></i>
+            Device verification enabled
+          </div>
         </div>
       </section>
     </main>

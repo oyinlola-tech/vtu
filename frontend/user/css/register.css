@@ -1,1 +1,18 @@
 @import url('/css/base.css');
+
+.compact-auth {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.auth-links {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.auth-links a {
+  color: var(--accent);
+}

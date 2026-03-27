@@ -376,6 +376,11 @@ textarea:focus {
   box-shadow: none;
 }
 
+.sidebar-header,
+.sidebar-profile {
+  display: none;
+}
+
 .nav-link {
   display: flex;
   flex-direction: column;
@@ -483,6 +488,12 @@ textarea:focus {
   .content {
     padding: 28px 60px 28px 260px;
   }
+  .topbar {
+    margin-left: 220px;
+  }
+  .app {
+    flex-direction: row;
+  }
   .bottom-nav {
     top: 0;
     bottom: 0;
@@ -496,6 +507,50 @@ textarea:focus {
     padding: 20px 14px;
     gap: 8px;
     transform: none;
+    background: var(--panel);
+  }
+  .bottom-nav::before {
+    content: '';
+    display: block;
+    height: 16px;
+  }
+  .sidebar-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 6px 10px;
+  }
+  .sidebar-header .brand-title {
+    font-size: 18px;
+  }
+  .sidebar-header .brand-sub {
+    font-size: 10px;
+  }
+  .sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 6px 12px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: var(--bg);
+  }
+  .sidebar-profile .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+  }
+  .sidebar-profile .name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .sidebar-profile .tier {
+    font-size: 11px;
   }
   .nav-link {
     flex-direction: row;
@@ -504,6 +559,8 @@ textarea:focus {
     font-size: 13px;
     padding: 8px 10px;
     border-radius: 10px;
+    width: 100%;
+    align-items: center;
   }
   .nav-link.active {
     background: var(--accent);
@@ -511,6 +568,9 @@ textarea:focus {
   }
   .nav-link.active i {
     color: var(--bg);
+  }
+  .nav-link i {
+    font-size: 15px;
   }
 }
 

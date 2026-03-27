@@ -1,1 +1,23 @@
 @import url('/css/base.css');
+
+.section-title {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.compact-grid {
+  gap: 10px;
+}
+
+.compact-card {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.compact-card h3 {
+  margin: 0;
+  font-size: 13px;
+}

@@ -29,57 +29,90 @@
     </header>
     <main class="content">
       <section class="hero">
-        <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> Today at a glance</span>
-        <h1>Hello, <span data-user-name>Customer</span></h1>
-        <p class="muted">Quick access to transfers, bills, and your wallet balance.</p>
-        <div class="balance" data-wallet-balance>NGN 0.00</div>
-        <p class="muted account-line">
-          Account: <strong data-account-number>----</strong>
-          <span data-account-bank class="muted"></span>
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="/send">
-            <i class="fa-solid fa-paper-plane"></i>
-            Send Money
+        <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> Dashboard</span>
+        <h1>Hi, <span data-user-name>Customer</span></h1>
+        <p class="muted">Your wallet at a glance.</p>
+        <div class="balance-strip">
+          <div>
+            <div class="muted">Available Balance</div>
+            <div class="balance" data-wallet-balance>NGN 0.00</div>
+            <div class="muted account-line">
+              <strong data-account-number>----</strong>
+              <span data-account-bank class="muted"></span>
+            </div>
+          </div>
+          <div class="balance-actions">
+            <a class="btn btn-primary" href="/send">
+              <i class="fa-solid fa-paper-plane"></i>
+              Send
+            </a>
+            <a class="btn btn-ghost" href="/receive">
+              <i class="fa-solid fa-qrcode"></i>
+              Receive
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-gap">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="grid three compact-grid">
+          <a class="card compact-card" href="/send">
+            <span class="card-icon"><i class="fa-solid fa-paper-plane"></i></span>
+            <h3>Send</h3>
           </a>
-          <a class="btn" href="/receive">
-            <i class="fa-solid fa-qrcode"></i>
-            Receive via QR
+          <a class="card compact-card" href="/receive">
+            <span class="card-icon"><i class="fa-solid fa-qrcode"></i></span>
+            <h3>Receive</h3>
+          </a>
+          <a class="card compact-card" href="/transactions">
+            <span class="card-icon"><i class="fa-solid fa-receipt"></i></span>
+            <h3>History</h3>
           </a>
         </div>
       </section>
 
-      <section class="grid two section-gap">
-        <a class="card" href="/send">
-          <span class="card-icon"><i class="fa-solid fa-paper-plane"></i></span>
-          <h3>Send Money</h3>
-          <p class="muted">Send money fast with verified bank details.</p>
-        </a>
-        <a class="card" href="/receive">
-          <span class="card-icon"><i class="fa-solid fa-qrcode"></i></span>
-          <h3>Receive Money</h3>
-          <p class="muted">Share QR or account details in seconds.</p>
-        </a>
-        <a class="card" href="/bills">
-          <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
-          <h3>Pay Bills</h3>
-          <p class="muted">Airtime, data, TV, electricity and more.</p>
-        </a>
-        <a class="card" href="/kyc">
-          <span class="card-icon"><i class="fa-solid fa-id-card"></i></span>
-          <h3>Complete KYC</h3>
-          <p class="muted">Unlock higher limits with quick verification.</p>
-        </a>
+      <section class="section-gap">
+        <h3 class="section-title">Services</h3>
+        <div class="grid two compact-grid">
+          <a class="card" href="/bills">
+            <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
+            <h3>Pay Bills</h3>
+            <p class="muted">Airtime, data, TV, electricity.</p>
+          </a>
+          <a class="card" href="/kyc">
+            <span class="card-icon"><i class="fa-solid fa-id-card"></i></span>
+            <h3>KYC</h3>
+            <p class="muted">Upgrade limits and verification.</p>
+          </a>
+        </div>
       </section>
 
       <section class="section-gap-lg">
-        <h3>Recent Activity</h3>
-        <p class="muted">Track transfers, bill payments, and wallet activity.</p>
+        <h3 class="section-title">Recent Activity</h3>
+        <p class="muted">Transfers and bill payments.</p>
         <div class="grid section-gap" data-transactions></div>
       </section>
     </main>
 
     <nav class="bottom-nav">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5c3.63 0 6.65-2.58 7.34-6h-7.34v-3h10.7c.2 0 .36.16.36.36 0 6.07-4.93 11-11 11s-11-4.93-11-11 4.93-11 11-11c2.61 0 5.02.92 6.9 2.45l-2.4 2.4A7.44 7.44 0 0 0 12 4.5z"/></svg></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Wallet</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-profile">
+      <div class="avatar">GL</div>
+      <div>
+        <div class="name" data-user-name>Customer</div>
+        <div class="tier muted">Standard</div>
+      </div>
+    </div>
+
       <a class="nav-link" data-page="dashboard" href="/dashboard">
         <i class="fa-solid fa-house"></i>
         Home

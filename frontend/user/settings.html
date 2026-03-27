@@ -34,61 +34,57 @@
         <p class="muted">Manage security policies, approvals, and KYC status.</p>
       </section>
 
-      <section class="grid two section-gap">
-        <div class="card">
-          <span class="card-icon"><i class="fa-solid fa-user-shield"></i></span>
-          <h3>Account Essentials</h3>
-          <p class="muted">Keep your verification and transaction limits updated.</p>
-          <div class="grid two section-gap">
-            <a class="card" href="/kyc">
-              <h3>KYC Status</h3>
-              <p class="muted">Upgrade to unlock higher limits.</p>
-            </a>
-            <a class="card" href="/transactions">
-              <h3>Transaction History</h3>
-              <p class="muted">Monitor all transfers and bills.</p>
-            </a>
-          </div>
+      <section class="section-gap">
+        <h3 class="section-title">Quick Links</h3>
+        <div class="grid three compact-grid">
+          <a class="card compact-card" href="/kyc">
+            <span class="card-icon"><i class="fa-solid fa-id-card"></i></span>
+            <h3>KYC</h3>
+          </a>
+          <a class="card compact-card" href="/transactions">
+            <span class="card-icon"><i class="fa-solid fa-receipt"></i></span>
+            <h3>History</h3>
+          </a>
+          <a class="card compact-card" href="/support">
+            <span class="card-icon"><i class="fa-solid fa-headset"></i></span>
+            <h3>Support</h3>
+          </a>
         </div>
-        <div class="card">
-          <span class="card-icon"><i class="fa-solid fa-key"></i></span>
-          <h3>Transaction PIN</h3>
-          <p class="muted">A PIN is required for every transfer and bill payment.</p>
-          <form data-pin-setup>
-            <div>
-              <label>New PIN</label>
-              <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
-            </div>
-            <button class="btn btn-primary" type="submit">
-              <i class="fa-solid fa-key"></i>
-              Create PIN
-            </button>
-          </form>
-          <form data-pin-change hidden>
-            <div>
-              <label>Current PIN</label>
-              <input type="password" name="currentPin" inputmode="numeric" minlength="4" maxlength="6" required />
-            </div>
-            <div>
-              <label>New PIN</label>
-              <input type="password" name="newPin" inputmode="numeric" minlength="4" maxlength="6" required />
-            </div>
-            <div>
-              <label>Security Answer (if required)</label>
-              <input type="password" name="securityAnswer" autocomplete="off" />
-              <small class="muted" data-security-question-text></small>
-            </div>
-            <button class="btn btn-ghost" type="submit">
-              <i class="fa-solid fa-rotate"></i>
-              Update PIN
-            </button>
-          </form>
-          <div class="section-gap">
-            <label class="toggle">
-              <input type="checkbox" data-biometric />
-              Enable biometric approval (when available)
-            </label>
+      </section>
+
+      <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-key"></i></span>
+        <h3>Transaction PIN</h3>
+        <p class="muted">A PIN is required for every transfer and bill payment.</p>
+        <form data-pin-setup>
+          <div>
+            <label>New PIN</label>
+            <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
           </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-key"></i>
+            Create PIN
+          </button>
+        </form>
+        <form data-pin-change hidden>
+          <div>
+            <label>Current PIN</label>
+            <input type="password" name="currentPin" inputmode="numeric" minlength="4" maxlength="6" required />
+          </div>
+          <div>
+            <label>New PIN</label>
+            <input type="password" name="newPin" inputmode="numeric" minlength="4" maxlength="6" required />
+          </div>
+          <button class="btn btn-ghost" type="submit">
+            <i class="fa-solid fa-rotate"></i>
+            Update PIN
+          </button>
+        </form>
+        <div class="section-gap">
+          <label class="toggle">
+            <input type="checkbox" data-biometric />
+            Enable biometric approval (when available)
+          </label>
         </div>
       </section>
 
@@ -156,6 +152,23 @@
       </section>
     </main>
     <nav class="bottom-nav">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5c3.63 0 6.65-2.58 7.34-6h-7.34v-3h10.7c.2 0 .36.16.36.36 0 6.07-4.93 11-11 11s-11-4.93-11-11 4.93-11 11-11c2.61 0 5.02.92 6.9 2.45l-2.4 2.4A7.44 7.44 0 0 0 12 4.5z"/></svg></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Wallet</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-profile">
+      <div class="avatar">GL</div>
+      <div>
+        <div class="name" data-user-name>Customer</div>
+        <div class="tier muted">Standard</div>
+      </div>
+    </div>
+
       <a class="nav-link" data-page="dashboard" href="/dashboard">
         <i class="fa-solid fa-house"></i>
         Home

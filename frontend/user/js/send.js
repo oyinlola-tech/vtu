@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const amountInput = document.querySelector('[data-amount]');
   const balanceText = document.querySelector('[data-balance-text]');
   const internalToInput = document.querySelector('input[name="to"]');
+  const stepCount = document.querySelector('[data-step-count]');
+  const stepBar = document.querySelector('[data-step-bar]');
+  const bankSuggestions = document.querySelector('[data-bank-suggestions]');
   const openPinBtn = document.querySelector('[data-open-pin]');
   const pinModal = document.querySelector('[data-pin-modal]');
   const pinInput = document.querySelector('[data-pin-input]');
   const pinHidden = document.querySelector('[data-pin-hidden]');
-  const securityHidden = document.querySelector('[data-security-hidden]');
-  const securityAnswerInput = document.querySelector('[data-security-answer]');
-  const securityQuestionText = document.querySelector('[data-security-question-text]');
   const closePinBtn = document.querySelector('[data-close-pin]');
   const confirmPinBtn = document.querySelector('[data-confirm-pin]');
   const stepBank = document.querySelector('[data-step="bank"]');
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let walletBalance = null;
   let accountResolved = false;
+  let stepIndex = 1;
 
   function setAccountStatus(text) {
     if (accountStatus) accountStatus.textContent = text || '';
@@ -49,6 +50,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     show(stepName, false);
     show(stepAmount, false);
     if (openPinBtn) openPinBtn.disabled = true;
+    setStep(1, 4);
+  }
+
+  function setStep(current, total) {
+    stepIndex = current;
+    if (stepCount) stepCount.textContent = `${current} of ${total}`;
+    if (stepBar) stepBar.style.width = `${Math.min(100, (current / total) * 100)}%`;
   }
 
   function updateBalanceText() {
@@ -87,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       show(stepAmount, true);
       accountResolved = true;
       updateContinueState();
+      setStep(3, 4);
       return;
     }
     resetBankFlow();
@@ -105,6 +114,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         bankSelect.innerHTML =
           '<option value="">Select bank</option>' +
           banks.map((b) => `<option value="${b.code}">${b.name}</option>`).join('');
+      }
+      if (bankSuggestions) {
+        const topBanks = banks.slice(0, 5);
+        bankSuggestions.innerHTML = topBanks
+          .map(
+            (bank) =>
+              `<button type="button" data-bank-code="${bank.code}">${bank.name}</button>`
+          )
+          .join('');
+        bankSuggestions.querySelectorAll('button').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            if (!bankSelect) return;
+            bankSelect.value = btn.dataset.bankCode;
+            show(stepName, true);
+            await resolveAccount();
+          });
+        });
       }
     } catch (err) {
       if (bankSelect) bankSelect.innerHTML = '<option value="">Unable to load banks</option>';
@@ -127,18 +153,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         accountResolved = true;
         show(stepAmount, true);
         updateContinueState();
+        setStep(3, 4);
       } else {
         if (accountNameInput) accountNameInput.value = '';
         setAccountStatus('Unable to verify this account. Please check details.');
         accountResolved = false;
         show(stepAmount, false);
         updateContinueState();
+        setStep(2, 4);
       }
     } catch (err) {
       setAccountStatus(err.message);
       accountResolved = false;
       show(stepAmount, false);
       updateContinueState();
+      setStep(2, 4);
     }
   }
 
@@ -157,12 +186,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     accountNumberInput.value = digits;
     if (digits.length >= 10) {
       show(stepBank, true);
+      setStep(2, 4);
     } else {
       show(stepBank, false);
       show(stepName, false);
       show(stepAmount, false);
       accountResolved = false;
       updateContinueState();
+      setStep(1, 4);
     }
   });
 
@@ -180,21 +211,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     setAccountStatus('');
     updateContinueState();
+    setStep(4, 4);
   });
 
-  try {
-    const question = await api('/api/user/security-question');
-    if (question?.enabled && question.question) {
-      if (securityQuestionText) {
-        securityQuestionText.textContent = `Question: ${question.question}`;
-      }
-      if (securityAnswerInput) securityAnswerInput.required = true;
-    } else if (securityQuestionText) {
-      securityQuestionText.textContent = '';
-    }
-  } catch (err) {
-    if (securityQuestionText) securityQuestionText.textContent = '';
-  }
 
   function openPinModal() {
     if (!pinModal) return;
@@ -206,7 +225,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!pinModal) return;
     pinModal.hidden = true;
     if (pinInput) pinInput.value = '';
-    if (securityAnswerInput) securityAnswerInput.value = '';
   }
 
   openPinBtn?.addEventListener('click', () => {
@@ -226,9 +244,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     if (pinHidden) pinHidden.value = pinValue;
-    if (securityHidden && securityAnswerInput) {
-      securityHidden.value = securityAnswerInput.value || '';
-    }
     closePinModal();
     form?.requestSubmit();
   });
@@ -255,7 +270,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       showBanner(`${result.message}. Ref: ${result.reference}`, 'success');
       form.reset();
       if (pinHidden) pinHidden.value = '';
-      if (securityHidden) securityHidden.value = '';
       resetBankFlow();
       toggleFields('bank');
     } catch (err) {

@@ -5,6 +5,47 @@
   gap: 8px;
 }
 
+.step-header {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.step-count {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.step-track {
+  height: 6px;
+  background: var(--panel);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.step-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+}
+
+.bank-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.bank-suggestions button {
+  border: none;
+  background: var(--panel);
+  color: var(--accent);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
 .modal {
   position: fixed;
   inset: 0;

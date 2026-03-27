@@ -116,6 +116,27 @@ function initTheme() {
   initReveal();
   initStagger();
   initDevBanner();
+  updateUserBadge();
+}
+
+function getInitials(name) {
+  if (!name) return 'AD';
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return 'AD';
+  const first = parts[0][0] || '';
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return `${first}${last}`.toUpperCase();
+}
+
+function updateUserBadge() {
+  const nameEls = Array.from(document.querySelectorAll('[data-user-name]'));
+  const nameEl = nameEls.find((el) => el.textContent && el.textContent.trim() !== '');
+  if (!nameEl) return;
+  const name = nameEl.textContent.trim();
+  const avatar = document.querySelector('.sidebar-profile .avatar');
+  const profileName = document.querySelector('.sidebar-profile .name');
+  if (avatar) avatar.textContent = getInitials(name);
+  if (profileName) profileName.textContent = name;
 }
 
 function initNav() {
