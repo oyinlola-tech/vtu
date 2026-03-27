@@ -6,6 +6,12 @@ import { requirePermission } from '../middleware/permissions.js';
 const router = express.Router();
 
 router.get('/', requireAdmin, requirePermission('transactions:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Transactions']
+    #swagger.summary = 'List recent transactions'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Transactions', schema: { type: 'array', items: { $ref: '#/definitions/AdminTransaction' } } }
+  */
   const [rows] = await pool.query(
     `SELECT t.id, u.full_name, t.type, t.amount, t.fee, t.total, t.status, t.reference, t.created_at
      FROM transactions t
@@ -17,6 +23,22 @@ router.get('/', requireAdmin, requirePermission('transactions:read'), async (req
 });
 
 router.get('/metrics', requireAdmin, requirePermission('transactions:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Transactions']
+    #swagger.summary = 'Transaction metrics'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = {
+      description: 'Metrics',
+      schema: {
+        type: 'object',
+        properties: {
+          users: { type: 'number' },
+          transactions: { type: 'number' },
+          volume: { type: 'number' }
+        }
+      }
+    }
+  */
   const [[users]] = await pool.query('SELECT COUNT(*) as total FROM users');
   const [[tx]] = await pool.query('SELECT COUNT(*) as total FROM transactions');
   const [[volume]] = await pool.query('SELECT SUM(total) as total FROM transactions WHERE status = \"success\"');

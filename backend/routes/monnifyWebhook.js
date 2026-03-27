@@ -24,6 +24,14 @@ function ipAllowed(req) {
 }
 
 router.post('/', async (req, res) => {
+  /*
+    #swagger.tags = ['Monnify Webhook']
+    #swagger.summary = 'Receive Monnify webhook events'
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { type: 'object' } }
+    #swagger.responses[200] = { description: 'Processed', schema: { type: 'object' } }
+    #swagger.responses[401] = { description: 'Invalid signature' }
+    #swagger.responses[403] = { description: 'Forbidden' }
+  */
   if (!ipAllowed(req)) return res.status(403).send('Forbidden');
   if (!verifySignature(req)) return res.status(401).send('Invalid signature');
 

@@ -1,5 +1,5 @@
 import { api, clearToken, clearCsrfToken } from '/api/client.js';
-import { initTheme, initNav, ensureAuth, showLoader } from '/js/ui.js';
+import { initTheme, initNav, ensureAuth, showLoader, showBanner } from '/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const setupForm = document.querySelector('[data-pin-setup]');
   const changeForm = document.querySelector('[data-pin-change]');
   const biometricToggle = document.querySelector('[data-biometric]');
+  const questionForm = document.querySelector('[data-security-question-form]');
+  const questionSelect = document.querySelector('[data-security-question]');
+  const questionStatus = document.querySelector('[data-security-question-status]');
 
   async function refreshSecurity() {
     try {
@@ -22,6 +25,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         changeForm.hidden = true;
       }
       biometricToggle.checked = Boolean(status.biometricEnabled);
+
+      const questions = await api('/api/user/security-questions');
+      questionSelect.innerHTML =
+        '<option value=\"\">Select a question</option>' +
+        questions.map((q) => `<option value=\"${q}\">${q}</option>`).join('');
+      const current = await api('/api/user/security-question');
+      if (current.question) {
+        questionSelect.value = current.question;
+        if (questionStatus) {
+          questionStatus.textContent = `Last updated: ${new Date(
+            current.updatedAt
+          ).toLocaleString()}`;
+        }
+      }
     } catch (err) {
       console.error(err);
     }
@@ -37,11 +54,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      alert('Transaction PIN created.');
+      showBanner('Transaction PIN created.', 'success');
       setupForm.reset();
       await refreshSecurity();
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }
@@ -57,11 +74,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      alert('Transaction PIN updated.');
+      showBanner('Transaction PIN updated.', 'success');
       changeForm.reset();
       await refreshSecurity();
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }
@@ -75,8 +92,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         body: JSON.stringify({ enabled: biometricToggle.checked }),
       });
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
       biometricToggle.checked = !biometricToggle.checked;
+    }
+  });
+
+  questionForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const payload = Object.fromEntries(new FormData(questionForm).entries());
+    try {
+      showLoader(true, 'Saving security question...');
+      await api('/api/user/security-question/set', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      showBanner('Security question updated.', 'success');
+      questionForm.reset();
+      await refreshSecurity();
+    } catch (err) {
+      showBanner(err.message, 'error');
+    } finally {
+      showLoader(false);
     }
   });
 

@@ -19,9 +19,13 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
+      <section class="hero">
+        <h1>User Management</h1>
+        <p class="muted">KYC reviews, limits, and account provisioning.</p>
+      </section>
+      <section class="card section-gap">
         <h3>Users</h3>
-        <p class="muted">Manage KYC status and levels.</p>
+        <p class="muted">Manage KYC status and verification levels.</p>
         <table class="table">
           <thead>
             <tr>
@@ -35,47 +39,49 @@
           <tbody data-table></tbody>
         </table>
       </section>
-      <section class="card section-gap">
-        <h3>Update KYC</h3>
-        <form data-kyc-form>
-          <div>
-            <label>User ID</label>
-            <input type="text" name="userId" required />
-          </div>
-          <div>
-            <label>Level</label>
-            <select name="level">
-              <option value="1">Level 1</option>
-              <option value="2">Level 2</option>
-            </select>
-          </div>
-          <div>
-            <label>Status</label>
-            <select name="status">
-              <option value="verified">Verified</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-user-check"></i>
-            Update KYC
-          </button>
-        </form>
-      </section>
-      <section class="card section-gap">
-        <h3>Create Reserved Account</h3>
-        <p class="muted">Manually retry Monnify reserved account creation.</p>
-        <form data-reserve-form>
-          <div>
-            <label>User ID</label>
-            <input type="text" name="userId" required />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-building-columns"></i>
-            Create Reserved Account
-          </button>
-        </form>
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Update KYC</h3>
+          <form data-kyc-form>
+            <div>
+              <label>User ID</label>
+              <input type="text" name="userId" required />
+            </div>
+            <div>
+              <label>Level</label>
+              <select name="level">
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+              </select>
+            </div>
+            <div>
+              <label>Status</label>
+              <select name="status">
+                <option value="verified">Verified</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-user-check"></i>
+              Update KYC
+            </button>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Create Reserved Account</h3>
+          <p class="muted">Manually retry Monnify reserved account creation.</p>
+          <form data-reserve-form>
+            <div>
+              <label>User ID</label>
+              <input type="text" name="userId" required />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-building-columns"></i>
+              Create Reserved Account
+            </button>
+          </form>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

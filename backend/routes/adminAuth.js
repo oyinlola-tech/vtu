@@ -50,6 +50,13 @@ function issueCsrf(res) {
 }
 
 router.post('/login', otpLimiter, async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Admin login'
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AuthLoginRequest' } }
+    #swagger.responses[200] = { description: 'Logged in', schema: { $ref: '#/definitions/AdminLoginResponse' } }
+    #swagger.responses[401] = { description: 'Invalid credentials', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
 
@@ -84,6 +91,12 @@ router.post('/login', otpLimiter, async (req, res) => {
 });
 
 router.post('/refresh', async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Refresh admin access token'
+    #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/RefreshRequest' } }
+    #swagger.responses[200] = { description: 'Tokens refreshed', schema: { $ref: '#/definitions/AuthTokensResponse' } }
+  */
   const incoming = req.cookies?.admin_refresh_token || req.body?.refreshToken;
   if (!incoming) return res.status(400).json({ error: 'Refresh token required' });
 
@@ -109,6 +122,13 @@ router.post('/refresh', async (req, res) => {
 });
 
 router.post('/logout', requireAdmin, async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Admin logout'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/RefreshRequest' } }
+    #swagger.responses[200] = { description: 'Logged out', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const incoming = req.cookies?.admin_refresh_token || req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('admin_refresh_token');
@@ -127,6 +147,15 @@ router.post('/logout', requireAdmin, async (req, res) => {
 });
 
 router.get('/me', requireAdmin, async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Get current admin profile'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = {
+      description: 'Admin',
+      schema: { type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' }, email: { type: 'string' }, role: { type: 'string' } } }
+    }
+  */
   const [rows] = await pool.query(
     'SELECT id, name, email, role FROM admin_users WHERE id = ?',
     [req.admin.sub]
@@ -136,6 +165,12 @@ router.get('/me', requireAdmin, async (req, res) => {
 });
 
 router.post('/forgot-password', otpLimiter, async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Request admin password reset OTP'
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/ForgotPasswordRequest' } }
+    #swagger.responses[200] = { description: 'OTP dispatched', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
   const [rows] = await pool.query('SELECT id FROM admin_users WHERE email = ? LIMIT 1', [email]);
@@ -166,6 +201,12 @@ router.post('/forgot-password', otpLimiter, async (req, res) => {
 });
 
 router.post('/reset-password', async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Reset admin password using OTP'
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/ResetPasswordRequest' } }
+    #swagger.responses[200] = { description: 'Password reset', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { email, code, newPassword } = req.body || {};
   if (!email || !code || !newPassword) {
     return res.status(400).json({ error: 'Missing fields' });
@@ -202,6 +243,14 @@ router.post('/reset-password', async (req, res) => {
 });
 
 router.get('/csrf', (req, res) => {
+  /*
+    #swagger.tags = ['Admin Auth']
+    #swagger.summary = 'Get CSRF token for admin session'
+    #swagger.responses[200] = {
+      description: 'CSRF token',
+      schema: { type: 'object', properties: { csrfToken: { type: 'string' } } }
+    }
+  */
   const token = issueCsrf(res);
   return res.json({ csrfToken: token });
 });

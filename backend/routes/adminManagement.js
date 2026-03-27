@@ -8,6 +8,12 @@ import { logAudit } from '../utils/audit.js';
 const router = express.Router();
 
 router.get('/', requireAdmin, requirePermission('admin:manage'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Management']
+    #swagger.summary = 'List admin users'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Admins', schema: { type: 'array', items: { $ref: '#/definitions/AdminUser' } } }
+  */
   const [rows] = await pool.query(
     'SELECT id, name, email, role, created_at FROM admin_users ORDER BY created_at DESC'
   );
@@ -15,10 +21,23 @@ router.get('/', requireAdmin, requirePermission('admin:manage'), async (req, res
 });
 
 router.get('/roles', requireAdmin, requirePermission('admin:manage'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Management']
+    #swagger.summary = 'List available roles'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Roles', schema: { type: 'array', items: { type: 'string' } } }
+  */
   return res.json(Object.keys(rolePermissions));
 });
 
 router.post('/', requireAdmin, requirePermission('admin:manage'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Management']
+    #swagger.summary = 'Create an admin user'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AdminCreateRequest' } }
+    #swagger.responses[201] = { description: 'Created', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { name, email, password, role } = req.body || {};
   if (!name || !email || !password || !role) {
     return res.status(400).json({ error: 'Missing fields' });
@@ -51,6 +70,13 @@ router.post('/', requireAdmin, requirePermission('admin:manage'), async (req, re
 });
 
 router.put('/:id/role', requireAdmin, requirePermission('admin:manage'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Management']
+    #swagger.summary = 'Update admin role'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AdminRoleUpdateRequest' } }
+    #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { role } = req.body || {};
   if (!role || !rolePermissions[role]) {
     return res.status(400).json({ error: 'Invalid role' });

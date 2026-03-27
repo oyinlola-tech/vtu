@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <tr>
           <td>${t.full_name}</td>
           <td>${t.type}</td>
-          <td>₦${Number(t.total).toFixed(2)}</td>
+          <td>NGN ${Number(t.total).toFixed(2)}</td>
           <td>${t.status}</td>
           <td>${new Date(t.created_at).toLocaleString()}</td>
         </tr>`

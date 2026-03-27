@@ -6,6 +6,20 @@ import { requirePermission } from '../middleware/permissions.js';
 const router = express.Router();
 
 router.get('/', requireAdmin, requirePermission('audit:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Audit']
+    #swagger.summary = 'Query audit logs'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['limit'] = { in: 'query', type: 'number' }
+    #swagger.parameters['offset'] = { in: 'query', type: 'number' }
+    #swagger.parameters['actorType'] = { in: 'query', type: 'string' }
+    #swagger.parameters['actorId'] = { in: 'query', type: 'string' }
+    #swagger.parameters['action'] = { in: 'query', type: 'string' }
+    #swagger.parameters['entityType'] = { in: 'query', type: 'string' }
+    #swagger.parameters['from'] = { in: 'query', type: 'string' }
+    #swagger.parameters['to'] = { in: 'query', type: 'string' }
+    #swagger.responses[200] = { description: 'Audit logs', schema: { type: 'array', items: { $ref: '#/definitions/AuditLog' } } }
+  */
   const limit = Math.min(Number(req.query.limit || 100), 200);
   const offset = Number(req.query.offset || 0);
   const filters = [];

@@ -19,6 +19,32 @@ function showLoader(show, text = 'Processing...') {
   if (label) label.textContent = text;
 }
 
+function showBanner(message, type = 'success', timeout = 4000) {
+  let container = document.querySelector('[data-banner]');
+  if (!container) {
+    container = document.createElement('div');
+    container.setAttribute('data-banner', '');
+    container.className = 'banner';
+    document.body.appendChild(container);
+  }
+  container.textContent = message;
+  container.classList.remove('success', 'error');
+  container.classList.add(type);
+  container.classList.add('show');
+  window.clearTimeout(container._timer);
+  container._timer = window.setTimeout(() => {
+    container.classList.remove('show');
+  }, timeout);
+}
+
+function initReveal() {
+  const items = Array.from(document.querySelectorAll('.hero, .card, .table'));
+  items.forEach((el, idx) => {
+    el.classList.add('reveal');
+    window.setTimeout(() => el.classList.add('show'), 80 + idx * 60);
+  });
+}
+
 function initTheme() {
   const stored = localStorage.getItem('gly_vtu_theme') || 'light';
   document.documentElement.setAttribute('data-theme', stored);
@@ -32,6 +58,8 @@ function initTheme() {
       toggle.textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
     });
   }
+  document.body.classList.add('page-loaded');
+  initReveal();
 }
 
 function initNav() {
@@ -49,4 +77,4 @@ function ensureAuth() {
   }
 }
 
-export { showLoader, initTheme, initNav, ensureAuth };
+export { showLoader, showBanner, initTheme, initNav, ensureAuth };

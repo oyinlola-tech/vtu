@@ -8,19 +8,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const overview = await api('/api/admin/finance/overview');
-    document.querySelector('[data-revenue]').textContent = `₦${Number(
+    document.querySelector('[data-revenue]').textContent = `NGN ${Number(
       overview.revenue
     ).toFixed(2)}`;
-    document.querySelector('[data-volume]').textContent = `₦${Number(
+    document.querySelector('[data-volume]').textContent = `NGN ${Number(
       overview.volume
     ).toFixed(2)}`;
-    document.querySelector('[data-credits]').textContent = `₦${Number(
+    document.querySelector('[data-credits]').textContent = `NGN ${Number(
       overview.credits
     ).toFixed(2)}`;
-    document.querySelector('[data-debits]').textContent = `₦${Number(
+    document.querySelector('[data-debits]').textContent = `NGN ${Number(
       overview.debits
     ).toFixed(2)}`;
-    document.querySelector('[data-wallets]').textContent = `₦${Number(
+    document.querySelector('[data-wallets]').textContent = `NGN ${Number(
       overview.walletBalance
     ).toFixed(2)}`;
     document.querySelector('[data-users]').textContent = overview.users;
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <tr>
           <td>${b.full_name}</td>
           <td>${b.email}</td>
-          <td>₦${Number(b.balance).toFixed(2)}</td>
+          <td>NGN ${Number(b.balance).toFixed(2)}</td>
           <td>${new Date(b.updated_at).toLocaleString()}</td>
         </tr>`
       )

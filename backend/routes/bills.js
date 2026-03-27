@@ -9,6 +9,14 @@ import { verifyTransactionPin, isValidPin } from '../utils/pin.js';
 const router = express.Router();
 
 router.get('/categories', async (req, res) => {
+  /*
+    #swagger.tags = ['Bills']
+    #swagger.summary = 'List active bill categories'
+    #swagger.responses[200] = {
+      description: 'Categories',
+      schema: { type: 'array', items: { $ref: '#/definitions/BillCategory' } }
+    }
+  */
   const [rows] = await pool.query(
     'SELECT id, code, name, description FROM bill_categories WHERE active = 1 ORDER BY name'
   );
@@ -16,6 +24,20 @@ router.get('/categories', async (req, res) => {
 });
 
 router.get('/providers', async (req, res) => {
+  /*
+    #swagger.tags = ['Bills']
+    #swagger.summary = 'List bill providers by category code'
+    #swagger.parameters['category'] = {
+      in: 'query',
+      required: true,
+      type: 'string'
+    }
+    #swagger.responses[200] = {
+      description: 'Providers',
+      schema: { type: 'array', items: { $ref: '#/definitions/BillProvider' } }
+    }
+    #swagger.responses[400] = { description: 'Validation error', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { category } = req.query;
   if (!category) return res.status(400).json({ error: 'Category required' });
 
@@ -30,6 +52,16 @@ router.get('/providers', async (req, res) => {
 });
 
 router.post('/quote', requireUser, async (req, res) => {
+  /*
+    #swagger.tags = ['Bills']
+    #swagger.summary = 'Get bill payment quote'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/BillsQuoteRequest' } }
+    #swagger.responses[200] = {
+      description: 'Quote',
+      schema: { $ref: '#/definitions/BillQuoteResponse' }
+    }
+  */
   const { providerCode, amount } = req.body || {};
   const numericAmount = Number(amount);
   if (!providerCode || !numericAmount || numericAmount <= 0) {
@@ -63,6 +95,14 @@ router.post('/quote', requireUser, async (req, res) => {
 });
 
 router.post('/pay', requireUser, async (req, res) => {
+  /*
+    #swagger.tags = ['Bills']
+    #swagger.summary = 'Pay a bill'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/BillsPayRequest' } }
+    #swagger.responses[200] = { description: 'Payment success', schema: { $ref: '#/definitions/BillsPayResponse' } }
+    #swagger.responses[400] = { description: 'Validation error', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { providerCode, amount, account, pin } = req.body || {};
   const numericAmount = Number(amount);
   if (!providerCode || !numericAmount || numericAmount <= 0 || !account) {

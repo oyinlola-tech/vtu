@@ -19,9 +19,12 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
+      <section class="hero">
+        <h1>Admin Access</h1>
+        <p class="muted">Super Admins can create and manage admin roles.</p>
+      </section>
+      <section class="card section-gap">
         <h3>Admin Accounts</h3>
-        <p class="muted">Super Admins can create and manage admins.</p>
         <table class="table">
           <thead>
             <tr>
@@ -35,48 +38,49 @@
         </table>
       </section>
 
-      <section class="card section-gap">
-        <h3>Create Admin</h3>
-        <form data-admin-form>
-          <div>
-            <label>Name</label>
-            <input type="text" name="name" required />
-          </div>
-          <div>
-            <label>Email</label>
-            <input type="email" name="email" required />
-          </div>
-          <div>
-            <label>Password</label>
-            <input type="password" name="password" required />
-          </div>
-          <div>
-            <label>Role</label>
-            <select name="role" data-role-select></select>
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-user-plus"></i>
-            Create Admin
-          </button>
-        </form>
-      </section>
-
-      <section class="card section-gap">
-        <h3>Update Role</h3>
-        <form data-role-form>
-          <div>
-            <label>Admin ID</label>
-            <input type="text" name="adminId" required />
-          </div>
-          <div>
-            <label>Role</label>
-            <select name="role" data-role-select></select>
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-user-gear"></i>
-            Update Role
-          </button>
-        </form>
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Create Admin</h3>
+          <form data-admin-form>
+            <div>
+              <label>Name</label>
+              <input type="text" name="name" required />
+            </div>
+            <div>
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div>
+              <label>Password</label>
+              <input type="password" name="password" required />
+            </div>
+            <div>
+              <label>Role</label>
+              <select name="role" data-role-select></select>
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-user-plus"></i>
+              Create Admin
+            </button>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Update Role</h3>
+          <form data-role-form>
+            <div>
+              <label>Admin ID</label>
+              <input type="text" name="adminId" required />
+            </div>
+            <div>
+              <label>Role</label>
+              <select name="role" data-role-select></select>
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-user-gear"></i>
+              Update Role
+            </button>
+          </form>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

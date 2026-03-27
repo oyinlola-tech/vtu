@@ -1,5 +1,5 @@
 import { api } from '/api/client.js';
-import { showLoader, initTheme } from '/js/ui.js';
+import { showLoader, showBanner, initTheme } from '/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sessionStorage.setItem('reset_email', payload.email);
       window.location.href = '/reset-password';
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }

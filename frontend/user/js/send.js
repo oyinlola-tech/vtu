@@ -1,5 +1,5 @@
 import { api } from '/api/client.js';
-import { showLoader, initTheme, initNav, ensureAuth } from '/js/ui.js';
+import { showLoader, showBanner, initTheme, initNav, ensureAuth } from '/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -94,13 +94,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      alert(`${result.message}. Ref: ${result.reference}`);
+      showBanner(`${result.message}. Ref: ${result.reference}`, 'success');
       form.reset();
       accountNameInput.value = '';
       setAccountStatus('');
       toggleFields('bank');
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }

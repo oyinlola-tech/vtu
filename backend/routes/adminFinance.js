@@ -7,6 +7,15 @@ import { requirePermission } from '../middleware/permissions.js';
 const router = express.Router();
 
 router.get('/overview', requireAdmin, requirePermission('finance:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Finance']
+    #swagger.summary = 'Finance overview metrics'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = {
+      description: 'Overview',
+      schema: { $ref: '#/definitions/FinanceOverview' }
+    }
+  */
   const [[users]] = await pool.query('SELECT COUNT(*) as total FROM users');
   const [[volume]] = await pool.query('SELECT SUM(total) as total FROM transactions WHERE status = "success"');
   const [[revenue]] = await pool.query('SELECT SUM(fee) as total FROM transactions WHERE status = "success"');
@@ -29,6 +38,14 @@ router.get('/overview', requireAdmin, requirePermission('finance:read'), async (
 });
 
 router.get('/balances', requireAdmin, requirePermission('finance:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Finance']
+    #swagger.summary = 'List user wallet balances'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['limit'] = { in: 'query', type: 'number' }
+    #swagger.parameters['offset'] = { in: 'query', type: 'number' }
+    #swagger.responses[200] = { description: 'Balances', schema: { type: 'array', items: { $ref: '#/definitions/WalletBalanceRow' } } }
+  */
   const limit = Math.min(Number(req.query.limit || 100), 200);
   const offset = Number(req.query.offset || 0);
   const [rows] = await pool.query(
@@ -43,6 +60,15 @@ router.get('/balances', requireAdmin, requirePermission('finance:read'), async (
 });
 
 router.get('/export', requireAdmin, requirePermission('finance:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Finance']
+    #swagger.summary = 'Export finance report'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['format'] = { in: 'query', type: 'string', description: 'csv or pdf' }
+    #swagger.parameters['from'] = { in: 'query', type: 'string' }
+    #swagger.parameters['to'] = { in: 'query', type: 'string' }
+    #swagger.responses[200] = { description: 'CSV or PDF report' }
+  */
   const format = (req.query.format || 'csv').toString().toLowerCase();
   const from = req.query.from;
   const to = req.query.to;

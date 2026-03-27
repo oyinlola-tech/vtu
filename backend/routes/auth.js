@@ -52,6 +52,18 @@ function issueCsrf(res) {
 }
 
 router.post('/register', async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Register a new user'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      required: true,
+      schema: { $ref: '#/definitions/AuthRegisterRequest' }
+    }
+    #swagger.responses[201] = { description: 'Created', schema: { $ref: '#/definitions/MessageResponse' } }
+    #swagger.responses[400] = { description: 'Validation error', schema: { $ref: '#/definitions/ErrorResponse' } }
+    #swagger.responses[409] = { description: 'User exists', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { fullName, email, phone, password, bvn, nin } = req.body || {};
   if (!fullName || !email || !phone || !password) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -135,6 +147,17 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', otpLimiter, async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Login and obtain tokens'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      required: true,
+      schema: { $ref: '#/definitions/AuthLoginRequest' }
+    }
+    #swagger.responses[200] = { description: 'Logged in', schema: { $ref: '#/definitions/AuthLoginResponse' } }
+    #swagger.responses[401] = { description: 'Invalid credentials', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { email, password, deviceId } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
 
@@ -211,6 +234,17 @@ router.post('/login', otpLimiter, async (req, res) => {
 });
 
 router.post('/verify-device', otpLimiter, async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Verify new device with OTP'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      required: true,
+      schema: { $ref: '#/definitions/VerifyDeviceRequest' }
+    }
+    #swagger.responses[200] = { description: 'Device verified', schema: { $ref: '#/definitions/AuthLoginResponse' } }
+    #swagger.responses[400] = { description: 'Invalid OTP or payload', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { email, code, deviceId, label } = req.body || {};
   if (!email || !code || !deviceId) {
     return res.status(400).json({ error: 'Missing fields' });
@@ -262,6 +296,16 @@ router.post('/verify-device', otpLimiter, async (req, res) => {
 });
 
 router.post('/forgot-password', otpLimiter, async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Request password reset OTP'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      required: true,
+      schema: { $ref: '#/definitions/ForgotPasswordRequest' }
+    }
+    #swagger.responses[200] = { description: 'OTP dispatched', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
   const [rows] = await pool.query('SELECT id FROM users WHERE email = ? LIMIT 1', [email]);
@@ -293,6 +337,17 @@ router.post('/forgot-password', otpLimiter, async (req, res) => {
 });
 
 router.post('/reset-password', async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Reset password using OTP'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      required: true,
+      schema: { $ref: '#/definitions/ResetPasswordRequest' }
+    }
+    #swagger.responses[200] = { description: 'Password reset', schema: { $ref: '#/definitions/MessageResponse' } }
+    #swagger.responses[400] = { description: 'Invalid OTP or payload', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { email, code, newPassword } = req.body || {};
   if (!email || !code || !newPassword) {
     return res.status(400).json({ error: 'Missing fields' });
@@ -320,6 +375,16 @@ router.post('/reset-password', async (req, res) => {
 });
 
 router.post('/refresh', async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Refresh access token'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      schema: { $ref: '#/definitions/RefreshRequest' }
+    }
+    #swagger.responses[200] = { description: 'Tokens refreshed', schema: { $ref: '#/definitions/AuthTokensResponse' } }
+    #swagger.responses[401] = { description: 'Invalid token', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const incoming = req.cookies?.refresh_token || req.body?.refreshToken;
   if (!incoming) return res.status(400).json({ error: 'Refresh token required' });
 
@@ -345,6 +410,15 @@ router.post('/refresh', async (req, res) => {
 });
 
 router.post('/logout', async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Logout and revoke refresh token'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      schema: { $ref: '#/definitions/RefreshRequest' }
+    }
+    #swagger.responses[200] = { description: 'Logged out', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const incoming = req.cookies?.refresh_token || req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('refresh_token');
@@ -354,11 +428,26 @@ router.post('/logout', async (req, res) => {
 });
 
 router.get('/csrf', (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Get CSRF token'
+    #swagger.responses[200] = {
+      description: 'CSRF token',
+      schema: { type: 'object', properties: { csrfToken: { type: 'string' } } }
+    }
+  */
   const token = issueCsrf(res);
   return res.json({ csrfToken: token });
 });
 
 router.get('/me', requireUser, async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Get current user'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'User', schema: { $ref: '#/definitions/UserProfile' } }
+    #swagger.responses[404] = { description: 'Not found', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const [rows] = await pool.query(
     'SELECT id, full_name, email, phone, kyc_level, kyc_status FROM users WHERE id = ?',
     [req.user.sub]

@@ -10,6 +10,12 @@ import { sendReservedAccountEmail } from '../utils/email.js';
 const router = express.Router();
 
 router.get('/', requireAdmin, requirePermission('users:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Users']
+    #swagger.summary = 'List users'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Users', schema: { type: 'array', items: { $ref: '#/definitions/AdminUserListItem' } } }
+  */
   const [rows] = await pool.query(
     'SELECT id, full_name, email, phone, kyc_level, kyc_status, created_at FROM users ORDER BY created_at DESC LIMIT 200'
   );
@@ -17,6 +23,13 @@ router.get('/', requireAdmin, requirePermission('users:read'), async (req, res) 
 });
 
 router.put('/:id/kyc', requireAdmin, requirePermission('users:kyc'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Users']
+    #swagger.summary = 'Update user KYC status'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AdminKycUpdateRequest' } }
+    #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { status, level } = req.body || {};
   if (!['verified', 'rejected', 'pending'].includes(status)) {
     return res.status(400).json({ error: 'Invalid status' });
@@ -50,6 +63,13 @@ router.put('/:id/kyc', requireAdmin, requirePermission('users:kyc'), async (req,
 });
 
 router.post('/:id/reserved-account', requireAdmin, requirePermission('accounts:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Users']
+    #swagger.summary = 'Create reserved account for user'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Created', schema: { $ref: '#/definitions/MessageResponse' } }
+    #swagger.responses[409] = { description: 'Already exists', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const userId = req.params.id;
   const [existing] = await pool.query(
     'SELECT id FROM reserved_accounts WHERE user_id = ? LIMIT 1',

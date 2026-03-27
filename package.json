@@ -21,7 +21,7 @@
     "nanoid": "^5.1.7",
     "nodemailer": "^8.0.1",
     "pdfkit": "^0.18.0",
-    "swagger-autogen": "^2.23.7",
+    "swagger-autogen": "^2.9.2",
     "swagger-ui-express": "^5.0.1"
   }
 }

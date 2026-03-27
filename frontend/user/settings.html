@@ -76,6 +76,26 @@
       </section>
 
       <section class="card section-gap">
+        <h3>Security Question</h3>
+        <p class="muted">Add an extra verification step for sensitive actions.</p>
+        <form data-security-question-form>
+          <div>
+            <label>Question</label>
+            <select name="question" data-security-question required></select>
+          </div>
+          <div>
+            <label>Answer</label>
+            <input type="password" name="answer" required />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-shield"></i>
+            Save Security Question
+          </button>
+        </form>
+        <p class="muted section-gap" data-security-question-status></p>
+      </section>
+
+      <section class="card section-gap">
         <h3>Session Controls</h3>
         <p class="muted">Log out from this device when you are done.</p>
         <button class="btn btn-primary section-gap" data-logout type="button">

@@ -19,7 +19,11 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
+      <section class="hero">
+        <h1>Bill Providers</h1>
+        <p class="muted">Sync providers and control service availability.</p>
+      </section>
+      <section class="card section-gap">
         <h3>Bill Categories</h3>
         <table class="table">
           <thead>
@@ -32,41 +36,42 @@
           <tbody data-categories></tbody>
         </table>
       </section>
-      <section class="card section-gap">
-        <h3>Add Category</h3>
-        <form data-category-form>
-          <div>
-            <label>Code</label>
-            <input type="text" name="code" required />
-          </div>
-          <div>
-            <label>Name</label>
-            <input type="text" name="name" required />
-          </div>
-          <div>
-            <label>Description</label>
-            <input type="text" name="description" required />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-plus"></i>
-            Add Category
-          </button>
-        </form>
-      </section>
-
-      <section class="card section-gap">
-        <h3>Bill Providers</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Category</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody data-providers></tbody>
-        </table>
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Add Category</h3>
+          <form data-category-form>
+            <div>
+              <label>Code</label>
+              <input type="text" name="code" required />
+            </div>
+            <div>
+              <label>Name</label>
+              <input type="text" name="name" required />
+            </div>
+            <div>
+              <label>Description</label>
+              <input type="text" name="description" required />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-plus"></i>
+              Add Category
+            </button>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Bill Providers</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Category</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody data-providers></tbody>
+          </table>
+        </div>
       </section>
       <section class="card section-gap">
         <h3>Add Provider</h3>

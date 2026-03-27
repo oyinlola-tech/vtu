@@ -1,5 +1,5 @@
 import { api } from '/api/client.js';
-import { showLoader, initTheme, initNav, ensureAuth } from '/js/ui.js';
+import { showLoader, showBanner, initTheme, initNav, ensureAuth } from '/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -54,11 +54,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      alert(`Bill paid. Ref: ${result.reference}`);
+      showBanner(`Bill paid. Ref: ${result.reference}`, 'success');
       form.reset();
       quoteBox.textContent = '';
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <tr>
           <td>${e.payment_reference}</td>
           <td>${e.account_reference || '-'}</td>
-          <td>₦${Number(e.amount).toFixed(2)}</td>
+          <td>NGN ${Number(e.amount).toFixed(2)}</td>
           <td>${e.status}</td>
           <td>${e.attempts}</td>
           <td>${e.last_error || '-'}</td>

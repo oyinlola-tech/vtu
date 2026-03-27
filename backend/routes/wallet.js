@@ -9,6 +9,13 @@ import { verifyTransactionPin, isValidPin } from '../utils/pin.js';
 const router = express.Router();
 
 router.get('/balance', requireUser, async (req, res) => {
+  /*
+    #swagger.tags = ['Wallet']
+    #swagger.summary = 'Get wallet balance'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Balance', schema: { $ref: '#/definitions/WalletBalance' } }
+    #swagger.responses[404] = { description: 'Wallet not found', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const [rows] = await pool.query(
     'SELECT balance, currency FROM wallets WHERE user_id = ?',
     [req.user.sub]
@@ -18,6 +25,14 @@ router.get('/balance', requireUser, async (req, res) => {
 });
 
 router.post('/send', requireUser, async (req, res) => {
+  /*
+    #swagger.tags = ['Wallet']
+    #swagger.summary = 'Send money to bank or internal user'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/WalletSendRequest' } }
+    #swagger.responses[200] = { description: 'Transfer created', schema: { $ref: '#/definitions/WalletSendResponse' } }
+    #swagger.responses[400] = { description: 'Validation error', schema: { $ref: '#/definitions/ErrorResponse' } }
+  */
   const { amount, pin, accountNumber, bankCode, accountName, to, channel } = req.body || {};
   const numericAmount = Number(amount);
   if (!numericAmount || numericAmount <= 0) {
@@ -178,6 +193,13 @@ router.post('/send', requireUser, async (req, res) => {
 });
 
 router.post('/receive', requireUser, async (req, res) => {
+  /*
+    #swagger.tags = ['Wallet']
+    #swagger.summary = 'Request money from another user'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/WalletReceiveRequest' } }
+    #swagger.responses[200] = { description: 'Request created', schema: { $ref: '#/definitions/WalletReceiveResponse' } }
+  */
   const { amount, note } = req.body || {};
   const numericAmount = Number(amount);
   if (!numericAmount || numericAmount <= 0) {

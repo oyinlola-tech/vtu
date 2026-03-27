@@ -1,5 +1,5 @@
 import { api } from '/api/client.js';
-import { showLoader, initTheme, initNav, ensureAuth } from '/js/ui.js';
+import { showLoader, showBanner, initTheme, initNav, ensureAuth } from '/js/ui.js';
 
 function buildAccountQrPayload({ accountNumber, bankName }) {
   return `glyvtu://account?accountNumber=${encodeURIComponent(accountNumber)}&bank=${encodeURIComponent(
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     event.preventDefault();
     const payload = Object.fromEntries(new FormData(form).entries());
     if (!accountNumber) {
-      alert('Reserved account not available yet.');
+      showBanner('Reserved account not available yet.', 'error');
       return;
     }
     try {

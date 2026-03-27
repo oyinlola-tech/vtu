@@ -116,6 +116,9 @@ export async function initDatabase() {
         pin_locked_until TIMESTAMP NULL,
         biometric_enabled TINYINT NOT NULL DEFAULT 0,
         pin_updated_at TIMESTAMP NULL,
+        security_question VARCHAR(255) NULL,
+        security_answer_hash VARCHAR(255) NULL,
+        security_updated_at TIMESTAMP NULL,
         kyc_level TINYINT NOT NULL DEFAULT 1,
         kyc_status ENUM('pending','verified','rejected') NOT NULL DEFAULT 'pending',
         kyc_payload JSON NULL,
@@ -324,6 +327,9 @@ async function ensureUserSecurityColumns(conn) {
   if (!existing.has('pin_locked_until')) alters.push('ADD COLUMN pin_locked_until TIMESTAMP NULL');
   if (!existing.has('biometric_enabled')) alters.push('ADD COLUMN biometric_enabled TINYINT NOT NULL DEFAULT 0');
   if (!existing.has('pin_updated_at')) alters.push('ADD COLUMN pin_updated_at TIMESTAMP NULL');
+  if (!existing.has('security_question')) alters.push('ADD COLUMN security_question VARCHAR(255) NULL');
+  if (!existing.has('security_answer_hash')) alters.push('ADD COLUMN security_answer_hash VARCHAR(255) NULL');
+  if (!existing.has('security_updated_at')) alters.push('ADD COLUMN security_updated_at TIMESTAMP NULL');
   if (alters.length) {
     await conn.query(`ALTER TABLE users ${alters.join(', ')}`);
   }

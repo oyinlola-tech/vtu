@@ -40,6 +40,14 @@ body {
     var(--bg);
   color: var(--text);
   min-height: 100vh;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+body.page-loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 a {
@@ -340,4 +348,48 @@ textarea:focus {
     transform: translateX(-50%);
     box-shadow: var(--shadow);
   }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.banner {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  z-index: 20;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.banner.success {
+  border: 1px solid rgba(26, 156, 98, 0.3);
+  background: rgba(26, 156, 98, 0.12);
+  color: var(--success);
+}
+
+.banner.error {
+  border: 1px solid rgba(217, 75, 75, 0.3);
+  background: rgba(217, 75, 75, 0.12);
+  color: var(--danger);
 }

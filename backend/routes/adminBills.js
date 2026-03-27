@@ -7,6 +7,12 @@ import { logAudit } from '../utils/audit.js';
 const router = express.Router();
 
 router.get('/categories', requireAdmin, requirePermission('bills:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'List bill categories'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Categories', schema: { type: 'array', items: { type: 'object' } } }
+  */
   const [rows] = await pool.query(
     'SELECT id, code, name, description, active FROM bill_categories ORDER BY name'
   );
@@ -14,6 +20,13 @@ router.get('/categories', requireAdmin, requirePermission('bills:read'), async (
 });
 
 router.post('/categories', requireAdmin, requirePermission('bills:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'Create bill category'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AdminBillsCategoryRequest' } }
+    #swagger.responses[201] = { description: 'Created', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { code, name, description } = req.body || {};
   if (!code || !name || !description) return res.status(400).json({ error: 'Missing fields' });
   await pool.query(
@@ -33,6 +46,13 @@ router.post('/categories', requireAdmin, requirePermission('bills:write'), async
 });
 
 router.put('/categories/:id', requireAdmin, requirePermission('bills:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'Update bill category'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/AdminBillsCategoryUpdateRequest' } }
+    #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { name, description, active } = req.body || {};
   await pool.query(
     'UPDATE bill_categories SET name = ?, description = ?, active = ? WHERE id = ?',
@@ -51,6 +71,12 @@ router.put('/categories/:id', requireAdmin, requirePermission('bills:write'), as
 });
 
 router.get('/providers', requireAdmin, requirePermission('bills:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'List bill providers'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Providers', schema: { type: 'array', items: { type: 'object' } } }
+  */
   const [rows] = await pool.query(
     `SELECT p.id, p.name, p.code, p.active, c.name as category_name
      FROM bill_providers p
@@ -61,6 +87,13 @@ router.get('/providers', requireAdmin, requirePermission('bills:read'), async (r
 });
 
 router.post('/providers', requireAdmin, requirePermission('bills:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'Create bill provider'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AdminBillsProviderRequest' } }
+    #swagger.responses[201] = { description: 'Created', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { categoryId, name, code } = req.body || {};
   if (!categoryId || !name || !code) return res.status(400).json({ error: 'Missing fields' });
   await pool.query(
@@ -80,6 +113,13 @@ router.post('/providers', requireAdmin, requirePermission('bills:write'), async 
 });
 
 router.put('/providers/:id', requireAdmin, requirePermission('bills:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'Update bill provider'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/AdminBillsProviderUpdateRequest' } }
+    #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { name, code, active } = req.body || {};
   await pool.query(
     'UPDATE bill_providers SET name = ?, code = ?, active = ? WHERE id = ?',
@@ -98,6 +138,12 @@ router.put('/providers/:id', requireAdmin, requirePermission('bills:write'), asy
 });
 
 router.get('/pricing', requireAdmin, requirePermission('pricing:read'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'List bill pricing rules'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.responses[200] = { description: 'Pricing', schema: { type: 'array', items: { type: 'object' } } }
+  */
   const [rows] = await pool.query(
     `SELECT pr.id, p.name as provider, pr.base_fee, pr.markup_type, pr.markup_value, pr.currency, pr.active
      FROM bill_pricing pr
@@ -108,6 +154,13 @@ router.get('/pricing', requireAdmin, requirePermission('pricing:read'), async (r
 });
 
 router.post('/pricing', requireAdmin, requirePermission('pricing:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'Create pricing rule'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/AdminPricingRequest' } }
+    #swagger.responses[201] = { description: 'Created', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { providerId, baseFee, markupType, markupValue, currency } = req.body || {};
   if (!providerId) return res.status(400).json({ error: 'Missing provider' });
   await pool.query(
@@ -127,6 +180,13 @@ router.post('/pricing', requireAdmin, requirePermission('pricing:write'), async 
 });
 
 router.put('/pricing/:id', requireAdmin, requirePermission('pricing:write'), async (req, res) => {
+  /*
+    #swagger.tags = ['Admin Bills']
+    #swagger.summary = 'Update pricing rule'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/AdminPricingUpdateRequest' } }
+    #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
+  */
   const { baseFee, markupType, markupValue, currency, active } = req.body || {};
   await pool.query(
     'UPDATE bill_pricing SET base_fee = ?, markup_type = ?, markup_value = ?, currency = ?, active = ? WHERE id = ?',
