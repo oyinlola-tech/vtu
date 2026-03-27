@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Admin Dashboard</title>
     <link
       rel="stylesheet"
@@ -29,10 +29,35 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> Admin Dashboard</span>
         <h1>Operations Overview</h1>
         <p class="muted">Monitor activity across Nigeria with real-time KPIs.</p>
       </section>
-      <section class="grid two section-gap">
+      <section class="section-gap">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="action-row">
+          <a class="action-tile" href="/admin/users">
+            <span class="card-icon"><i class="fa-solid fa-users"></i></span>
+            <span>Users</span>
+          </a>
+          <a class="action-tile" href="/admin/finance">
+            <span class="card-icon"><i class="fa-solid fa-naira-sign"></i></span>
+            <span>Finance</span>
+          </a>
+          <a class="action-tile" href="/admin/bills">
+            <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
+            <span>Bills</span>
+          </a>
+          <a class="action-tile" href="/admin/audit">
+            <span class="card-icon"><i class="fa-solid fa-shield"></i></span>
+            <span>Audit</span>
+          </a>
+        </div>
+      </section>
+      <section class="section-gap">
+        <h3 class="section-title">KPI Snapshot</h3>
+      </section>
+      <section class="grid two compact-grid">
         <div class="card">
           <h3>Total Users</h3>
           <div class="balance" data-users>0</div>
@@ -49,22 +74,31 @@
           <h3>Webhook Failure Rate</h3>
           <div class="balance" data-webhook-failure>0%</div>
         </div>
-        <a class="card" href="/admin/bills">
-          <h3>Bill Providers</h3>
-          <p class="muted">Manage categories and providers from live APIs.</p>
-        </a>
-        <a class="card" href="/admin/pricing">
-          <h3>Pricing Control</h3>
-          <p class="muted">Set markups and margins.</p>
-        </a>
-        <a class="card" href="/admin/finance">
-          <h3>Financial Dashboard</h3>
-          <p class="muted">Revenue, debits, credits and balances.</p>
-        </a>
-        <a class="card" href="/admin/admins">
-          <h3>Admin Management</h3>
-          <p class="muted">Create and manage admin roles.</p>
-        </a>
+      </section>
+      <section class="section-gap">
+        <h3 class="section-title">Control Center</h3>
+        <div class="grid two compact-grid">
+          <a class="card" href="/admin/bills">
+            <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
+            <h3>Bill Providers</h3>
+            <p class="muted">Manage categories and providers from live APIs.</p>
+          </a>
+          <a class="card" href="/admin/pricing">
+            <span class="card-icon"><i class="fa-solid fa-sliders"></i></span>
+            <h3>Pricing Control</h3>
+            <p class="muted">Set markups and margins.</p>
+          </a>
+          <a class="card" href="/admin/finance">
+            <span class="card-icon"><i class="fa-solid fa-chart-pie"></i></span>
+            <h3>Financial Dashboard</h3>
+            <p class="muted">Revenue, debits, credits and balances.</p>
+          </a>
+          <a class="card" href="/admin/admins">
+            <span class="card-icon"><i class="fa-solid fa-user-shield"></i></span>
+            <h3>Admin Management</h3>
+            <p class="muted">Create and manage admin roles.</p>
+          </a>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

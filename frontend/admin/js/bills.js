@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadBills() {
     try {
       const categories = await api('/api/admin/bills/categories');
+      const categoriesCount = document.querySelector('[data-bill-categories]');
+      if (categoriesCount) categoriesCount.textContent = categories.length;
       categoriesTable.innerHTML = categories
         .map(
           (c) => `
@@ -23,6 +25,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         .join('');
 
       const providers = await api('/api/admin/bills/providers');
+      const providersCount = document.querySelector('[data-bill-providers]');
+      if (providersCount) providersCount.textContent = providers.length;
       providersTable.innerHTML = providers
         .map(
           (p) => `

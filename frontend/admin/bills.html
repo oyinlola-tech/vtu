@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Bills Management</title>
     <link
       rel="stylesheet"
@@ -29,10 +29,46 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Bills</span>
         <h1>Bill Providers</h1>
         <p class="muted">Sync providers and control service availability.</p>
       </section>
+      <section class="section-gap">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="action-row">
+          <a class="action-tile" href="/admin/pricing">
+            <span class="card-icon"><i class="fa-solid fa-sliders"></i></span>
+            <span>Pricing</span>
+          </a>
+          <a class="action-tile" href="/admin/finance">
+            <span class="card-icon"><i class="fa-solid fa-naira-sign"></i></span>
+            <span>Finance</span>
+          </a>
+          <a class="action-tile" href="/admin/transactions">
+            <span class="card-icon"><i class="fa-solid fa-receipt"></i></span>
+            <span>Activity</span>
+          </a>
+          <a class="action-tile" href="/admin/monnify">
+            <span class="card-icon"><i class="fa-solid fa-satellite-dish"></i></span>
+            <span>Monnify</span>
+          </a>
+        </div>
+      </section>
+      <section class="section-gap">
+        <h3 class="section-title">Summary</h3>
+        <div class="grid two compact-grid">
+          <div class="card">
+            <h3>Categories</h3>
+            <div class="balance" data-bill-categories>0</div>
+          </div>
+          <div class="card">
+            <h3>Providers</h3>
+            <div class="balance" data-bill-providers>0</div>
+          </div>
+        </div>
+      </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-layer-group"></i></span>
         <h3>Bill Categories</h3>
         <table class="table">
           <thead>
@@ -45,8 +81,12 @@
           <tbody data-categories></tbody>
         </table>
       </section>
-      <section class="grid two section-gap">
+      <section class="section-gap">
+        <h3 class="section-title">Provider Operations</h3>
+      </section>
+      <section class="grid two compact-grid">
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-plus"></i></span>
           <h3>Add Category</h3>
           <form data-category-form>
             <div>
@@ -68,6 +108,7 @@
           </form>
         </div>
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
           <h3>Bill Providers</h3>
           <table class="table">
             <thead>
@@ -83,6 +124,7 @@
         </div>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-building-columns"></i></span>
         <h3>Add Provider</h3>
         <form data-provider-form>
           <div>

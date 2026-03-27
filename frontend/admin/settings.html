@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Admin Settings</title>
     <link
       rel="stylesheet"
@@ -29,28 +29,37 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-gear"></i> Admin Settings</span>
         <h1>Admin Settings</h1>
         <p class="muted">Security, compliance, and operational controls.</p>
       </section>
-      <section class="grid two section-gap">
+      <section class="section-gap">
+        <h3 class="section-title">Admin Tools</h3>
+      </section>
+      <section class="grid two compact-grid">
         <a class="card" href="/admin/admins">
+          <span class="card-icon"><i class="fa-solid fa-user-shield"></i></span>
           <h3>Admin Management</h3>
           <p class="muted">Create and manage admin roles.</p>
         </a>
         <a class="card" href="/admin/audit">
+          <span class="card-icon"><i class="fa-solid fa-shield"></i></span>
           <h3>Audit Logs</h3>
           <p class="muted">Track sensitive actions.</p>
         </a>
         <a class="card" href="/admin/finance">
+          <span class="card-icon"><i class="fa-solid fa-chart-pie"></i></span>
           <h3>Finance Dashboard</h3>
           <p class="muted">Revenue and balance sheet.</p>
         </a>
         <a class="card" href="/admin/monnify">
+          <span class="card-icon"><i class="fa-solid fa-satellite-dish"></i></span>
           <h3>Monnify Events</h3>
           <p class="muted">Webhook status and retries.</p>
         </a>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
         <h3>Session Controls</h3>
         <button class="btn btn-primary section-gap" data-logout type="button">
           <i class="fa-solid fa-right-from-bracket"></i>

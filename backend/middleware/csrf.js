@@ -23,7 +23,13 @@ export function csrfMiddleware(req, res, next) {
     '/api/admin/auth/refresh',
     '/api/admin/auth/csrf',
   ];
-  if (csrfExemptPaths.some((p) => req.path?.startsWith(p))) return next();
+  const path = req.path || '';
+  const proxyStripped = path.startsWith('/app/admin/api')
+    ? path.replace('/app/admin/api', '/api/admin')
+    : path.startsWith('/app/api')
+      ? path.replace('/app/api', '/api')
+      : path;
+  if (csrfExemptPaths.some((p) => proxyStripped.startsWith(p))) return next();
 
   const authHeader = req.headers.authorization;
   if (authHeader) return next();

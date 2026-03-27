@@ -106,6 +106,18 @@ app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
   res.status(204).end();
 });
 
+// Block direct browser access to /api/* (public surface is /app/*).
+app.use('/api', (req, res, next) => {
+  const origin = req.headers.origin;
+  const secFetchSite = req.headers['sec-fetch-site'];
+  const secFetchMode = req.headers['sec-fetch-mode'];
+  const internal = req.headers['x-internal-request'] === '1';
+  if (internal || (!origin && !secFetchSite && !secFetchMode)) {
+    return next();
+  }
+  return res.status(403).json({ error: 'Direct browser access blocked. Use /app/*.' });
+});
+
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: Number(process.env.RATE_LIMIT_GLOBAL_MAX || 600),
@@ -202,6 +214,23 @@ app.use('/api/admin/audit', adminAuditRoutes);
 app.use('/api/admin/finance', adminFinanceRoutes);
 app.use('/api/monnify/webhook', webhookLimiter, monnifyWebhookRoutes);
 app.use('/api/admin/monnify', adminMonnifyRoutes);
+
+// Backend-only proxy layer for frontend calls
+app.use('/app/api/auth', authLimiter, authRoutes);
+app.use('/app/api/user', userRoutes);
+app.use('/app/api/wallet', walletRoutes);
+app.use('/app/api/bills', billsRoutes);
+app.use('/app/api/transactions', transactionsRoutes);
+app.use('/app/api/banks', banksRoutes);
+
+app.use('/app/admin/api/auth', adminAuthLimiter, adminAuthRoutes);
+app.use('/app/admin/api/users', adminUsersRoutes);
+app.use('/app/admin/api/bills', adminBillsRoutes);
+app.use('/app/admin/api/transactions', adminTransactionsRoutes);
+app.use('/app/admin/api/manage', adminManagementRoutes);
+app.use('/app/admin/api/audit', adminAuditRoutes);
+app.use('/app/admin/api/finance', adminFinanceRoutes);
+app.use('/app/admin/api/monnify', adminMonnifyRoutes);
 
 const enableSwagger = process.env.ENABLE_SWAGGER !== 'false';
 async function setupSwaggerDocs(appInstance) {

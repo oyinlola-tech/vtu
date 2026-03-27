@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Finance</title>
     <link
       rel="stylesheet"
@@ -29,10 +29,35 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-naira-sign"></i> Finance</span>
         <h1>Financial Dashboard</h1>
         <p class="muted">Revenue, credits, debits, and user balances.</p>
       </section>
-      <section class="grid two section-gap">
+      <section class="section-gap">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="action-row">
+          <a class="action-tile" href="/admin/pricing">
+            <span class="card-icon"><i class="fa-solid fa-sliders"></i></span>
+            <span>Pricing</span>
+          </a>
+          <a class="action-tile" href="/admin/bills">
+            <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
+            <span>Bills</span>
+          </a>
+          <a class="action-tile" href="/admin/transactions">
+            <span class="card-icon"><i class="fa-solid fa-receipt"></i></span>
+            <span>Activity</span>
+          </a>
+          <a class="action-tile" href="/admin/users">
+            <span class="card-icon"><i class="fa-solid fa-users"></i></span>
+            <span>Users</span>
+          </a>
+        </div>
+      </section>
+      <section class="section-gap">
+        <h3 class="section-title">Core KPIs</h3>
+      </section>
+      <section class="grid two compact-grid">
         <div class="card">
           <h3>Total Revenue</h3>
           <div class="balance" data-revenue>NGN 0.00</div>
@@ -59,6 +84,7 @@
         </div>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-file-export"></i></span>
         <h3>Export Finance Report</h3>
         <form data-export-form>
           <div>
@@ -80,6 +106,7 @@
         </form>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-wallet"></i></span>
         <h3>User Balances</h3>
         <table class="table">
           <thead>

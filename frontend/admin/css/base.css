@@ -206,15 +206,15 @@ a {
 
 .grid {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .section-gap {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .section-gap-lg {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .grid.two {
@@ -229,7 +229,7 @@ a {
   background: var(--panel);
   border: none;
   border-radius: 14px;
-  padding: 14px;
+  padding: 12px;
   box-shadow: none;
   transition: none;
 }
@@ -263,12 +263,12 @@ a {
 }
 
 .card h3 {
-  margin: 14px 0 10px;
-  font-size: 16px;
+  margin: 12px 0 8px;
+  font-size: 15px;
 }
 
 .balance {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--accent-strong);
   letter-spacing: 0.4px;
@@ -291,7 +291,7 @@ a {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 14px;
+  padding: 9px 12px;
   border-radius: 10px;
   border: none;
   background: transparent;
@@ -324,11 +324,11 @@ a {
 
 form {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 label {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
 }
 
@@ -343,7 +343,7 @@ input,
 select,
 textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 9px 11px;
   border-radius: 10px;
   border: none;
   background: var(--panel);
@@ -403,10 +403,16 @@ textarea:focus {
 
 .table th,
 .table td {
-  padding: 10px 8px;
+  padding: 9px 8px;
   border-bottom: 1px solid var(--border);
   text-align: left;
-  font-size: 13px;
+  font-size: 12px;
+}
+
+.table th {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
 }
 
 .status-pill {
@@ -578,6 +584,72 @@ textarea:focus {
   .content {
     padding: 16px;
     padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+}
+
+.section-title {
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+
+.compact-grid {
+  gap: 10px;
+}
+
+.compact-card {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.compact-card h3 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.action-tile {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.action-tile .card-icon {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.promo-card {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .action-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .promo-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Audit Logs</title>
     <link
       rel="stylesheet"
@@ -29,10 +29,12 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-shield"></i> Audit</span>
         <h1>Audit Logs</h1>
         <p class="muted">Track sensitive actions across the platform.</p>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-filter"></i></span>
         <h3>Filters</h3>
         <form class="section-gap" data-filter-form>
           <div>
@@ -67,6 +69,7 @@
         </form>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-clipboard-list"></i></span>
         <h3>Log Stream</h3>
         <table class="table">
           <thead>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Admins</title>
     <link
       rel="stylesheet"
@@ -29,10 +29,12 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-user-shield"></i> Access Control</span>
         <h1>Admin Access</h1>
         <p class="muted">Super Admins can create and manage admin roles.</p>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-users-gear"></i></span>
         <h3>Admin Accounts</h3>
         <table class="table">
           <thead>
@@ -47,8 +49,12 @@
         </table>
       </section>
 
-      <section class="grid two section-gap">
+      <section class="section-gap">
+        <h3 class="section-title">Access Controls</h3>
+      </section>
+      <section class="grid two compact-grid">
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-user-plus"></i></span>
           <h3>Create Admin</h3>
           <form data-admin-form>
             <div>
@@ -74,6 +80,7 @@
           </form>
         </div>
         <div class="card">
+          <span class="card-icon"><i class="fa-solid fa-user-gear"></i></span>
           <h3>Update Role</h3>
           <form data-role-form>
             <div>

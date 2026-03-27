@@ -9,6 +9,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadUsers() {
     try {
       const users = await api('/api/admin/users');
+      const totalEl = document.querySelector('[data-users]');
+      const pendingEl = document.querySelector('[data-kyc-pending]');
+      if (totalEl) totalEl.textContent = users.length;
+      if (pendingEl) {
+        const pending = users.filter((u) => u.kyc_status === 'pending').length;
+        pendingEl.textContent = pending;
+      }
       table.innerHTML = users
         .map(
           (u) => `

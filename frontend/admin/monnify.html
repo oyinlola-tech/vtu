@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="" />
+    <meta name="api-base" content="/app/admin/api" />
     <title>GLY VTU | Monnify Events</title>
     <link
       rel="stylesheet"
@@ -29,10 +29,12 @@
     </header>
     <main class="content">
       <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-satellite-dish"></i> Monnify</span>
         <h1>Monnify Events</h1>
         <p class="muted">Track webhook processing status and retries.</p>
       </section>
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-filter"></i></span>
         <form class="section-gap" data-filter-form>
           <div>
             <label>Status</label>
@@ -64,6 +66,7 @@
       </section>
 
       <section class="card section-gap">
+        <span class="card-icon"><i class="fa-solid fa-rotate"></i></span>
         <h3>Manual Retry</h3>
         <form data-retry-form>
           <div>
