@@ -1,5 +1,5 @@
 import { api } from '/admin/api/client.js';
-import { showLoader, initTheme, initNav, ensureAuth } from '/admin/js/ui.js';
+import { showLoader, showBanner, initTheme, initNav, ensureAuth } from '/admin/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      alert('Admin created');
+      showBanner('Admin created', 'success');
       form.reset();
       await loadAdmins();
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }
@@ -66,11 +66,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: payload.role }),
       });
-      alert('Role updated');
+      showBanner('Role updated', 'success');
       roleForm.reset();
       await loadAdmins();
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }

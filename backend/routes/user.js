@@ -7,6 +7,7 @@ import { isValidPin, setTransactionPin, verifyTransactionPin, getPinStatus } fro
 import { logAudit } from '../utils/audit.js';
 import bcrypt from 'bcryptjs';
 import { QUESTIONS, normalizeAnswer } from '../utils/securityQuestions.js';
+import { enforceSecurityQuestion } from '../utils/securityQuestionGuard.js';
 
 const router = express.Router();
 
@@ -156,7 +157,11 @@ router.get('/security', requireUser, async (req, res) => {
   */
   const status = await getPinStatus(req.user.sub);
   if (!status) return res.status(404).json({ error: 'Not found' });
-  return res.json(status);
+  const [[row]] = await pool.query(
+    'SELECT security_question_enabled FROM users WHERE id = ?',
+    [req.user.sub]
+  );
+  return res.json({ ...status, securityQuestionEnabled: Boolean(row?.security_question_enabled) });
 });
 
 router.post('/pin/setup', requireUser, async (req, res) => {
@@ -198,12 +203,20 @@ router.post('/pin/change', requireUser, async (req, res) => {
     #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
     #swagger.responses[400] = { description: 'Invalid PIN', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const { currentPin, newPin } = req.body || {};
+  const { currentPin, newPin, securityAnswer } = req.body || {};
   if (!isValidPin(newPin)) return res.status(400).json({ error: 'PIN must be 4-6 digits' });
   try {
     await verifyTransactionPin(req.user.sub, currentPin);
   } catch (err) {
     return res.status(400).json({ error: err.message });
+  }
+  const enforcement = await enforceSecurityQuestion({
+    userId: req.user.sub,
+    answer: securityAnswer,
+    flow: 'pin_change',
+  });
+  if (!enforcement.ok) {
+    return res.status(enforcement.status).json({ error: enforcement.message });
   }
   await setTransactionPin(req.user.sub, newPin);
   logAudit({
@@ -278,12 +291,13 @@ router.get('/security-questions', requireUser, async (req, res) => {
 
 router.get('/security-question', requireUser, async (req, res) => {
   const [[row]] = await pool.query(
-    'SELECT security_question, security_updated_at FROM users WHERE id = ?',
+    'SELECT security_question, security_updated_at, security_question_enabled FROM users WHERE id = ?',
     [req.user.sub]
   );
   return res.json({
     question: row?.security_question || null,
     updatedAt: row?.security_updated_at || null,
+    enabled: Boolean(row?.security_question_enabled),
   });
 });
 
@@ -310,6 +324,31 @@ router.post('/security-question/set', requireUser, async (req, res) => {
     userAgent: req.headers['user-agent'],
   }).catch(console.error);
   return res.json({ message: 'Security question updated' });
+});
+
+router.post('/security-question/enable', requireUser, async (req, res) => {
+  const { enabled } = req.body || {};
+  const [[row]] = await pool.query(
+    'SELECT security_question FROM users WHERE id = ?',
+    [req.user.sub]
+  );
+  if (enabled && !row?.security_question) {
+    return res.status(400).json({ error: 'Set a security question first' });
+  }
+  await pool.query('UPDATE users SET security_question_enabled = ? WHERE id = ?', [
+    enabled ? 1 : 0,
+    req.user.sub,
+  ]);
+  logAudit({
+    actorType: 'user',
+    actorId: req.user.sub,
+    action: enabled ? 'security.question.enabled' : 'security.question.disabled',
+    entityType: 'user',
+    entityId: req.user.sub,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+  }).catch(console.error);
+  return res.json({ message: enabled ? 'Security question enabled' : 'Security question disabled' });
 });
 
 router.post('/security-question/verify', requireUser, async (req, res) => {

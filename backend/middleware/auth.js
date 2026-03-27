@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
 export function requireUser(req, res, next) {
   const header = req.headers.authorization || '';
   const bearer = header.startsWith('Bearer ') ? header.slice(7) : null;
-  const token = bearer || req.cookies?.access_token;
+  const token = bearer;
 
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   try {

@@ -25,15 +25,6 @@ function setRefreshCookie(res, token, expiresAt) {
   });
 }
 
-function setAccessCookie(res, token) {
-  res.cookie('admin_access_token', token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: isProd,
-    maxAge: 1000 * 60 * 15,
-  });
-}
-
 function setCsrfCookie(res, token) {
   res.cookie('csrf_token', token, {
     httpOnly: true,
@@ -69,7 +60,6 @@ router.post('/login', otpLimiter, async (req, res) => {
 
   const accessToken = signAccessToken({ type: 'admin', sub: admin.id }, JWT_ADMIN_SECRET);
   const refresh = await issueRefreshToken({ adminId: admin.id });
-  setAccessCookie(res, accessToken);
   setRefreshCookie(res, refresh.raw, refresh.expiresAt);
   const csrfToken = issueCsrf(res);
   logAudit({
@@ -110,7 +100,6 @@ router.post('/refresh', async (req, res) => {
   if (!rotated) return res.status(401).json({ error: 'Expired token' });
 
   const accessToken = signAccessToken({ type: 'admin', sub: tokenRow[0].admin_id }, JWT_ADMIN_SECRET);
-  setAccessCookie(res, accessToken);
   setRefreshCookie(res, rotated.raw, rotated.expiresAt);
   const csrfToken = issueCsrf(res);
 
@@ -132,7 +121,6 @@ router.post('/logout', requireAdmin, async (req, res) => {
   const incoming = req.cookies?.admin_refresh_token || req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('admin_refresh_token');
-  res.clearCookie('admin_access_token');
   res.clearCookie('csrf_token');
   logAudit({
     actorType: 'admin',

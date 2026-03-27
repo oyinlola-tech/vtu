@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const accountNameInput = document.querySelector('[data-account-name]');
   const accountStatus = document.querySelector('[data-account-status]');
   const internalToInput = document.querySelector('input[name="to"]');
+  const securityAnswerInput = document.querySelector('input[name="securityAnswer"]');
+  const securityQuestionText = document.querySelector('[data-security-question-text]');
 
   function setAccountStatus(text) {
     accountStatus.textContent = text;
@@ -77,6 +79,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadBanks();
   accountNumberInput?.addEventListener('blur', resolveAccount);
   bankSelect?.addEventListener('change', resolveAccount);
+
+  try {
+    const question = await api('/api/user/security-question');
+    if (question?.enabled && question.question) {
+      if (securityQuestionText) {
+        securityQuestionText.textContent = `Question: ${question.question}`;
+      }
+      if (securityAnswerInput) securityAnswerInput.required = true;
+    } else if (securityQuestionText) {
+      securityQuestionText.textContent = '';
+    }
+  } catch (err) {
+    if (securityQuestionText) securityQuestionText.textContent = '';
+  }
 
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();

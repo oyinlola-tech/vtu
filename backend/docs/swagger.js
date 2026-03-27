@@ -15,7 +15,8 @@ const routeFiles = fs
   .filter((file) => file.endsWith('.js'))
   .map((file) => path.join(routesDir, file));
 
-const endpointsFiles = [serverFile, ...routeFiles];
+const useRoutesOnly = (process.env.SWAGGER_ROUTES_ONLY || 'false') === 'true';
+const endpointsFiles = useRoutesOnly ? routeFiles : [serverFile, ...routeFiles];
 
 const port = process.env.PORT || 3000;
 const doc = {
@@ -644,9 +645,102 @@ const doc = {
 };
 
 export async function generateSwagger() {
-  const swagger = swaggerAutogen();
-  await swagger(outputFile, endpointsFiles, doc);
+  const swagger = swaggerAutogen({ openapi: '2.0' });
+  const result = await swagger(outputFile, endpointsFiles, doc);
+  if (!fs.existsSync(outputFile)) {
+    console.warn('swagger-autogen did not generate output file. Falling back to manual builder.');
+    const fallback = buildFallbackSpec();
+    fs.writeFileSync(outputFile, JSON.stringify(fallback, null, 2));
+  }
   return outputFile;
+}
+
+function buildFallbackSpec() {
+  const rootDir = path.resolve(__dirname, '..', '..');
+  const serverPath = path.join(rootDir, 'server.js');
+  const serverSource = fs.readFileSync(serverPath, 'utf-8');
+
+  const importMap = new Map();
+  const importRegex = /import\s+([A-Za-z0-9_]+)\s+from\s+['"]([^'"]+)['"]/g;
+  let match = null;
+  while ((match = importRegex.exec(serverSource)) !== null) {
+    const varName = match[1];
+    const relPath = match[2];
+    if (!relPath.includes('routes')) continue;
+    const absPath = path.resolve(rootDir, relPath);
+    importMap.set(varName, absPath);
+  }
+
+  const useRegex = /app\.use\(([^)]+)\)/g;
+  const mountPoints = [];
+  while ((match = useRegex.exec(serverSource)) !== null) {
+    const args = match[1]
+      .split(',')
+      .map((arg) => arg.trim())
+      .filter((arg) => arg.length > 0);
+    if (!args.length) continue;
+    const basePathRaw = args[0];
+    if (!basePathRaw.startsWith("'") && !basePathRaw.startsWith('"') && !basePathRaw.startsWith('`')) {
+      continue;
+    }
+    const basePath = basePathRaw.slice(1, -1);
+    const lastArg = args[args.length - 1];
+    const routeVar = lastArg.replace(/\);?$/, '');
+    const routeFile = importMap.get(routeVar);
+    if (routeFile) {
+      mountPoints.push({ basePath, routeFile });
+    }
+  }
+
+  const tagByPrefix = {
+    '/api/auth': 'Auth',
+    '/api/user': 'User',
+    '/api/wallet': 'Wallet',
+    '/api/bills': 'Bills',
+    '/api/transactions': 'Transactions',
+    '/api/banks': 'Banks',
+    '/api/admin/auth': 'Admin Auth',
+    '/api/admin/users': 'Admin Users',
+    '/api/admin/bills': 'Admin Bills',
+    '/api/admin/transactions': 'Admin Transactions',
+    '/api/admin/manage': 'Admin Management',
+    '/api/admin/audit': 'Admin Audit',
+    '/api/admin/finance': 'Admin Finance',
+    '/api/monnify/webhook': 'Monnify Webhook',
+    '/api/admin/monnify': 'Admin Monnify',
+  };
+
+  const paths = {};
+  const methodRegex = /router\.(get|post|put|patch|delete)\(\s*['"`]([^'"`]+)['"`]/g;
+  for (const { basePath, routeFile } of mountPoints) {
+    if (!fs.existsSync(routeFile)) continue;
+    const source = fs.readFileSync(routeFile, 'utf-8');
+    let m = null;
+    while ((m = methodRegex.exec(source)) !== null) {
+      const method = m[1].toLowerCase();
+      const routePath = m[2];
+      const fullPath =
+        routePath === '/'
+          ? basePath
+          : basePath.endsWith('/')
+            ? `${basePath}${routePath.replace(/^\//, '')}`
+            : `${basePath}${routePath.startsWith('/') ? '' : '/'}${routePath}`;
+      if (!paths[fullPath]) paths[fullPath] = {};
+      const tag = tagByPrefix[basePath] || 'API';
+      paths[fullPath][method] = {
+        tags: [tag],
+        summary: `${method.toUpperCase()} ${fullPath}`,
+        responses: {
+          200: { description: 'Success' },
+        },
+      };
+    }
+  }
+
+  return {
+    ...doc,
+    paths,
+  };
 }
 
 if (process.argv[1] && process.argv[1].endsWith('swagger.js')) {

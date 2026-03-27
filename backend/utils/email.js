@@ -32,6 +32,10 @@ function transporter() {
   });
 }
 
+function sanitizeForLog(value) {
+  return String(value ?? '').replace(/[\r\n]+/g, ' ');
+}
+
 function baseTemplate({ title, body, footer, highlight }) {
   return `<!DOCTYPE html>
   <html>
@@ -75,7 +79,11 @@ function baseTemplate({ title, body, footer, highlight }) {
 async function sendEmail({ to, subject, html, attachments = [] }) {
   const tx = transporter();
   if (!tx) {
-    console.log('Email skipped. Configure SMTP to send:', subject, to);
+    console.log(
+      'Email skipped. Configure SMTP to send:',
+      sanitizeForLog(subject),
+      sanitizeForLog(to),
+    );
     return;
   }
   await tx.sendMail({ from: EMAIL_FROM, to, subject, html, attachments });

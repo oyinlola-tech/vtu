@@ -119,6 +119,7 @@ export async function initDatabase() {
         security_question VARCHAR(255) NULL,
         security_answer_hash VARCHAR(255) NULL,
         security_updated_at TIMESTAMP NULL,
+        security_question_enabled TINYINT NOT NULL DEFAULT 0,
         kyc_level TINYINT NOT NULL DEFAULT 1,
         kyc_status ENUM('pending','verified','rejected') NOT NULL DEFAULT 'pending',
         kyc_payload JSON NULL,
@@ -330,6 +331,9 @@ async function ensureUserSecurityColumns(conn) {
   if (!existing.has('security_question')) alters.push('ADD COLUMN security_question VARCHAR(255) NULL');
   if (!existing.has('security_answer_hash')) alters.push('ADD COLUMN security_answer_hash VARCHAR(255) NULL');
   if (!existing.has('security_updated_at')) alters.push('ADD COLUMN security_updated_at TIMESTAMP NULL');
+  if (!existing.has('security_question_enabled')) {
+    alters.push('ADD COLUMN security_question_enabled TINYINT NOT NULL DEFAULT 0');
+  }
   if (alters.length) {
     await conn.query(`ALTER TABLE users ${alters.join(', ')}`);
   }

@@ -1,5 +1,5 @@
 import { api } from '/admin/api/client.js';
-import { showLoader, initTheme, initNav, ensureAuth } from '/admin/js/ui.js';
+import { showLoader, showBanner, initTheme, initNav, ensureAuth } from '/admin/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           level: Number(payload.level || 1),
         }),
       });
-      alert('KYC updated');
+      showBanner('KYC updated', 'success');
       form.reset();
       await loadUsers();
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }
@@ -60,10 +60,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       await api(`/api/admin/users/${payload.userId}/reserved-account`, {
         method: 'POST',
       });
-      alert('Reserved account created');
+      showBanner('Reserved account created', 'success');
       reserveForm.reset();
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }

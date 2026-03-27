@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const questionForm = document.querySelector('[data-security-question-form]');
   const questionSelect = document.querySelector('[data-security-question]');
   const questionStatus = document.querySelector('[data-security-question-status]');
+  const questionToggle = document.querySelector('[data-security-question-enabled]');
 
   async function refreshSecurity() {
     try {
@@ -38,6 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             current.updatedAt
           ).toLocaleString()}`;
         }
+      }
+      if (questionToggle) {
+        questionToggle.checked = Boolean(current.enabled);
       }
     } catch (err) {
       console.error(err);
@@ -114,6 +118,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       showBanner(err.message, 'error');
     } finally {
       showLoader(false);
+    }
+  });
+
+  questionToggle?.addEventListener('change', async () => {
+    try {
+      await api('/api/user/security-question/enable', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: questionToggle.checked }),
+      });
+      showBanner(
+        questionToggle.checked
+          ? 'Security question checks enabled.'
+          : 'Security question checks disabled.',
+        'success'
+      );
+    } catch (err) {
+      showBanner(err.message, 'error');
+      questionToggle.checked = !questionToggle.checked;
     }
   });
 

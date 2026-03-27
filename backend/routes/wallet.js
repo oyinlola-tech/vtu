@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid';
 import { sendReceiptEmail } from '../utils/email.js';
 import { logAudit } from '../utils/audit.js';
 import { verifyTransactionPin, isValidPin } from '../utils/pin.js';
+import { enforceSecurityQuestion } from '../utils/securityQuestionGuard.js';
 
 const router = express.Router();
 
@@ -33,7 +34,8 @@ router.post('/send', requireUser, async (req, res) => {
     #swagger.responses[200] = { description: 'Transfer created', schema: { $ref: '#/definitions/WalletSendResponse' } }
     #swagger.responses[400] = { description: 'Validation error', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const { amount, pin, accountNumber, bankCode, accountName, to, channel } = req.body || {};
+  const { amount, pin, accountNumber, bankCode, accountName, to, channel, securityAnswer } =
+    req.body || {};
   const numericAmount = Number(amount);
   if (!numericAmount || numericAmount <= 0) {
     return res.status(400).json({ error: 'Invalid payload' });
@@ -43,6 +45,15 @@ router.post('/send', requireUser, async (req, res) => {
     await verifyTransactionPin(req.user.sub, pin);
   } catch (err) {
     return res.status(400).json({ error: err.message });
+  }
+  const enforcement = await enforceSecurityQuestion({
+    userId: req.user.sub,
+    answer: securityAnswer,
+    flow: 'transfer',
+    amount: numericAmount,
+  });
+  if (!enforcement.ok) {
+    return res.status(enforcement.status).json({ error: enforcement.message });
   }
 
   const isBank = channel === 'bank' || accountNumber || bankCode;

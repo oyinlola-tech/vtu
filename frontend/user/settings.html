@@ -61,6 +61,11 @@
               <label>New PIN</label>
               <input type="password" name="newPin" inputmode="numeric" minlength="4" maxlength="6" required />
             </div>
+            <div>
+              <label>Security Answer (if required)</label>
+              <input type="password" name="securityAnswer" autocomplete="off" />
+              <small class="muted" data-security-question-text></small>
+            </div>
             <button class="btn btn-ghost" type="submit">
               <i class="fa-solid fa-rotate"></i>
               Update PIN
@@ -78,6 +83,10 @@
       <section class="card section-gap">
         <h3>Security Question</h3>
         <p class="muted">Add an extra verification step for sensitive actions.</p>
+        <label class="toggle section-gap">
+          <input type="checkbox" data-security-question-enabled />
+          Enable security question checks
+        </label>
         <form data-security-question-form>
           <div>
             <label>Question</label>

@@ -1,0 +1,4845 @@
+{
+  "info": {
+    "title": "GLY VTU API",
+    "description": "Auto-generated Swagger specification for GLY VTU backend.",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "User authentication and session management."
+    },
+    {
+      "name": "User",
+      "description": "User profile, KYC, and security settings."
+    },
+    {
+      "name": "Wallet",
+      "description": "Wallet balance and transfers."
+    },
+    {
+      "name": "Bills",
+      "description": "Bill categories, providers, quotes, and payments."
+    },
+    {
+      "name": "Transactions",
+      "description": "User transaction history."
+    },
+    {
+      "name": "Banks",
+      "description": "Bank list and account validation."
+    },
+    {
+      "name": "Admin Auth",
+      "description": "Admin authentication and sessions."
+    },
+    {
+      "name": "Admin Users",
+      "description": "Admin user management and KYC."
+    },
+    {
+      "name": "Admin Bills",
+      "description": "Admin bills and pricing management."
+    },
+    {
+      "name": "Admin Transactions",
+      "description": "Admin transaction reporting."
+    },
+    {
+      "name": "Admin Finance",
+      "description": "Finance metrics and exports."
+    },
+    {
+      "name": "Admin Audit",
+      "description": "Audit logs."
+    },
+    {
+      "name": "Admin Management",
+      "description": "Admin roles and permissions."
+    },
+    {
+      "name": "Admin Monnify",
+      "description": "Monnify event monitoring."
+    },
+    {
+      "name": "Monnify Webhook",
+      "description": "Monnify webhook endpoint."
+    }
+  ],
+  "host": "localhost:3000",
+  "schemes": [
+    "http"
+  ],
+  "basePath": "/",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Use: `Bearer <token>`"
+    }
+  },
+  "definitions": {
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Error message"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "example": "Validation error"
+            }
+          }
+        }
+      }
+    },
+    "MessageResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Human-readable message"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "Operation successful"
+            }
+          }
+        }
+      }
+    },
+    "AuthRegisterRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "fullName",
+            "email",
+            "phone",
+            "password"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "fullName": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Full legal name"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Email address"
+                }
+              }
+            },
+            "phone": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Phone number (international format recommended)"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Password (min 8 chars recommended)"
+                }
+              }
+            },
+            "bvn": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Optional BVN for KYC level 1"
+                }
+              }
+            },
+            "nin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Optional NIN for KYC level 1"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "fullName": {
+              "type": "string",
+              "example": "Ada Lovelace"
+            },
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            },
+            "phone": {
+              "type": "string",
+              "example": "+2348012345678"
+            },
+            "password": {
+              "type": "string",
+              "example": "StrongPassword1!"
+            },
+            "bvn": {
+              "type": "string",
+              "example": "12345678901"
+            }
+          }
+        }
+      }
+    },
+    "AuthLoginRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "email",
+            "password"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Email address"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Password"
+                }
+              }
+            },
+            "deviceId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Client device identifier"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "StrongPassword1!"
+            },
+            "deviceId": {
+              "type": "string",
+              "example": "device-xyz"
+            }
+          }
+        }
+      }
+    },
+    "AuthTokensResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "JWT access token"
+                }
+              }
+            },
+            "refreshToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Refresh token (may be null if cookie-based)"
+                }
+              }
+            },
+            "csrfToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "CSRF token for state-changing requests"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string",
+              "example": "eyJhbGciOi..."
+            },
+            "refreshToken": {
+              "type": "string",
+              "example": "rft_12345"
+            },
+            "csrfToken": {
+              "type": "string",
+              "example": "csrf_12345"
+            }
+          }
+        }
+      }
+    },
+    "AuthLoginResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "JWT access token"
+                }
+              }
+            },
+            "refreshToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Refresh token (may be null if cookie-based)"
+                }
+              }
+            },
+            "csrfToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "CSRF token for state-changing requests"
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "object"
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "User ID"
+                        }
+                      }
+                    },
+                    "fullName": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Full name"
+                        }
+                      }
+                    },
+                    "email": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Email address"
+                        }
+                      }
+                    },
+                    "phone": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Phone number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string",
+              "example": "eyJhbGciOi..."
+            },
+            "refreshToken": {
+              "type": "string",
+              "example": "rft_12345"
+            },
+            "csrfToken": {
+              "type": "string",
+              "example": "csrf_12345"
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "uuid"
+                },
+                "fullName": {
+                  "type": "string",
+                  "example": "Ada Lovelace"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "ada@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "+2348012345678"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "AdminLoginResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "JWT access token"
+                }
+              }
+            },
+            "refreshToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Refresh token (may be null if cookie-based)"
+                }
+              }
+            },
+            "csrfToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "CSRF token for state-changing requests"
+                }
+              }
+            },
+            "admin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "object"
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Admin ID"
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Admin name"
+                        }
+                      }
+                    },
+                    "email": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Admin email"
+                        }
+                      }
+                    },
+                    "role": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Admin role"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string",
+              "example": "eyJhbGciOi..."
+            },
+            "refreshToken": {
+              "type": "string",
+              "example": "rft_admin_123"
+            },
+            "csrfToken": {
+              "type": "string",
+              "example": "csrf_admin_123"
+            },
+            "admin": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "uuid"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Admin User"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "admin@example.com"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "super_admin"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "RefreshRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "refreshToken": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Refresh token"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "refreshToken": {
+              "type": "string",
+              "example": "rft_12345"
+            }
+          }
+        }
+      }
+    },
+    "VerifyDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "email",
+            "code",
+            "deviceId"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "User email"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "OTP code"
+                }
+              }
+            },
+            "deviceId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Client device identifier"
+                }
+              }
+            },
+            "label": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Friendly device name"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            },
+            "code": {
+              "type": "string",
+              "example": "123456"
+            },
+            "deviceId": {
+              "type": "string",
+              "example": "device-xyz"
+            },
+            "label": {
+              "type": "string",
+              "example": "iPhone 14"
+            }
+          }
+        }
+      }
+    },
+    "ForgotPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "email"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Account email"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            }
+          }
+        }
+      }
+    },
+    "ResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "email",
+            "code",
+            "newPassword"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Account email"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "OTP code"
+                }
+              }
+            },
+            "newPassword": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "New password"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            },
+            "code": {
+              "type": "string",
+              "example": "123456"
+            },
+            "newPassword": {
+              "type": "string",
+              "example": "NewStrongPass1!"
+            }
+          }
+        }
+      }
+    },
+    "UserProfile": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "User ID"
+                }
+              }
+            },
+            "full_name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Full name"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Email address"
+                }
+              }
+            },
+            "phone": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Phone number"
+                }
+              }
+            },
+            "kyc_level": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Current KYC level"
+                }
+              }
+            },
+            "kyc_status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "KYC status"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "pending",
+                    "verified",
+                    "rejected"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "kyc_payload": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Raw KYC payload JSON string"
+                }
+              }
+            },
+            "account_number": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Reserved account number (if available)"
+                }
+              }
+            },
+            "bank_name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Reserved bank name (if available)"
+                }
+              }
+            },
+            "account_name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Reserved account name (if available)"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "full_name": {
+              "type": "string",
+              "example": "Ada Lovelace"
+            },
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            },
+            "phone": {
+              "type": "string",
+              "example": "+2348012345678"
+            },
+            "kyc_level": {
+              "type": "number",
+              "example": 1
+            },
+            "kyc_status": {
+              "type": "string",
+              "example": "pending"
+            },
+            "account_number": {
+              "type": "string",
+              "example": "0123456789"
+            },
+            "bank_name": {
+              "type": "string",
+              "example": "Example Bank"
+            },
+            "account_name": {
+              "type": "string",
+              "example": "Ada Lovelace"
+            }
+          }
+        }
+      }
+    },
+    "UpdateProfileRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "fullName",
+            "phone"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "fullName": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Full name"
+                }
+              }
+            },
+            "phone": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Phone number"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "fullName": {
+              "type": "string",
+              "example": "Ada Lovelace"
+            },
+            "phone": {
+              "type": "string",
+              "example": "+2348012345678"
+            }
+          }
+        }
+      }
+    },
+    "KycRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "level",
+            "payload"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "KYC level"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    1,
+                    2
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "object"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "KYC payload object"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "type": "number",
+              "example": 1
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "bvn": {
+                  "type": "string",
+                  "example": "12345678901"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "PinSetupRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "pin"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "pin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "4-6 digit PIN"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "pin": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        }
+      }
+    },
+    "PinChangeRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "currentPin",
+            "newPin"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "currentPin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Current 4-6 digit PIN"
+                }
+              }
+            },
+            "newPin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "New 4-6 digit PIN"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "currentPin": {
+              "type": "string",
+              "example": "1234"
+            },
+            "newPin": {
+              "type": "string",
+              "example": "4321"
+            }
+          }
+        }
+      }
+    },
+    "PinVerifyRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "pin"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "pin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "4-6 digit PIN"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "pin": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        }
+      }
+    },
+    "BiometricRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "enabled"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Enable or disable biometric auth"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        }
+      }
+    },
+    "WalletBalance": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "balance": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Wallet balance"
+                }
+              }
+            },
+            "currency": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Currency code (e.g., NGN)"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "balance": {
+              "type": "number",
+              "example": 12500.5
+            },
+            "currency": {
+              "type": "string",
+              "example": "NGN"
+            }
+          }
+        }
+      }
+    },
+    "WalletSendRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "amount",
+            "pin"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Transfer amount"
+                }
+              }
+            },
+            "pin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Transaction PIN"
+                }
+              }
+            },
+            "channel": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Use `bank` for bank transfer."
+                }
+              }
+            },
+            "accountNumber": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Recipient account number (bank transfer)"
+                }
+              }
+            },
+            "bankCode": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bank code (bank transfer)"
+                }
+              }
+            },
+            "accountName": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Recipient account name (bank transfer)"
+                }
+              }
+            },
+            "to": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Recipient email or phone for internal transfer."
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "example": 5000
+            },
+            "pin": {
+              "type": "string",
+              "example": "1234"
+            },
+            "channel": {
+              "type": "string",
+              "example": "bank"
+            },
+            "accountNumber": {
+              "type": "string",
+              "example": "0123456789"
+            },
+            "bankCode": {
+              "type": "string",
+              "example": "058"
+            },
+            "accountName": {
+              "type": "string",
+              "example": "Ada Lovelace"
+            }
+          }
+        }
+      }
+    },
+    "WalletSendResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Result message"
+                }
+              }
+            },
+            "reference": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Transfer reference"
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Transfer status"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "pending",
+                    "success"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "Transfer initiated"
+            },
+            "reference": {
+              "type": "string",
+              "example": "TX-abc123"
+            },
+            "status": {
+              "type": "string",
+              "example": "pending"
+            }
+          }
+        }
+      }
+    },
+    "WalletReceiveRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "amount"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Requested amount"
+                }
+              }
+            },
+            "note": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Optional note for recipient"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "example": 1500
+            },
+            "note": {
+              "type": "string",
+              "example": "Lunch refund"
+            }
+          }
+        }
+      }
+    },
+    "WalletReceiveResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Result message"
+                }
+              }
+            },
+            "reference": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Request reference"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "Money request created"
+            },
+            "reference": {
+              "type": "string",
+              "example": "REQ-xyz123"
+            }
+          }
+        }
+      }
+    },
+    "BillsQuoteRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "providerCode",
+            "amount"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "providerCode": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bill provider code"
+                }
+              }
+            },
+            "amount": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bill amount"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "providerCode": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "amount": {
+              "type": "number",
+              "example": 5000
+            }
+          }
+        }
+      }
+    },
+    "BillsPayRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "providerCode",
+            "amount",
+            "account",
+            "pin"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "providerCode": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bill provider code"
+                }
+              }
+            },
+            "amount": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bill amount"
+                }
+              }
+            },
+            "account": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Service account/decoder number"
+                }
+              }
+            },
+            "pin": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Transaction PIN"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "providerCode": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "amount": {
+              "type": "number",
+              "example": 5000
+            },
+            "account": {
+              "type": "string",
+              "example": "1212121212"
+            },
+            "pin": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        }
+      }
+    },
+    "BillsPayResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Result message"
+                }
+              }
+            },
+            "reference": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bill reference"
+                }
+              }
+            },
+            "total": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Total charged (amount + fee)"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "Bill paid"
+            },
+            "reference": {
+              "type": "string",
+              "example": "BILL-abc123"
+            },
+            "total": {
+              "type": "number",
+              "example": 5200
+            }
+          }
+        }
+      }
+    },
+    "BankResolveRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "accountNumber"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "accountNumber": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Account number to resolve"
+                }
+              }
+            },
+            "bankCode": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Bank code (optional to fetch list)"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "accountNumber": {
+              "type": "string",
+              "example": "0123456789"
+            },
+            "bankCode": {
+              "type": "string",
+              "example": "058"
+            }
+          }
+        }
+      }
+    },
+    "AdminCreateRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "name",
+            "email",
+            "password",
+            "role"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Admin name"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Admin email"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Admin password"
+                }
+              }
+            },
+            "role": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Admin role"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Admin User"
+            },
+            "email": {
+              "type": "string",
+              "example": "admin@example.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "AdminPass1!"
+            },
+            "role": {
+              "type": "string",
+              "example": "super_admin"
+            }
+          }
+        }
+      }
+    },
+    "AdminRoleUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "role"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "New role"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "example": "finance"
+            }
+          }
+        }
+      }
+    },
+    "AdminKycUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "status"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "KYC status"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "verified",
+                    "rejected",
+                    "pending"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "level": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "KYC level"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    1,
+                    2
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "verified"
+            },
+            "level": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        }
+      }
+    },
+    "AdminBillsCategoryRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "code",
+            "name",
+            "description"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Category code"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Category name"
+                }
+              }
+            },
+            "description": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Category description"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "example": "cable_tv"
+            },
+            "name": {
+              "type": "string",
+              "example": "Cable TV"
+            },
+            "description": {
+              "type": "string",
+              "example": "Cable TV subscriptions"
+            }
+          }
+        }
+      }
+    },
+    "AdminBillsCategoryUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Category name"
+                }
+              }
+            },
+            "description": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Category description"
+                }
+              }
+            },
+            "active": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Activate or deactivate category"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Cable TV"
+            },
+            "description": {
+              "type": "string",
+              "example": "Cable services"
+            },
+            "active": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        }
+      }
+    },
+    "AdminBillsProviderRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "categoryId",
+            "name",
+            "code"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "categoryId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Category ID"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Provider name"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Provider code"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "categoryId": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "name": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "code": {
+              "type": "string",
+              "example": "DSTV"
+            }
+          }
+        }
+      }
+    },
+    "AdminBillsProviderUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Provider name"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Provider code"
+                }
+              }
+            },
+            "active": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Activate or deactivate provider"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "code": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "active": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        }
+      }
+    },
+    "AdminPricingRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "providerId"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Provider ID"
+                }
+              }
+            },
+            "baseFee": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Base fee amount"
+                }
+              }
+            },
+            "markupType": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "flat",
+                    "percent"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Markup calculation type"
+                }
+              }
+            },
+            "markupValue": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Markup value"
+                }
+              }
+            },
+            "currency": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Currency code (e.g., NGN)"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "baseFee": {
+              "type": "number",
+              "example": 50
+            },
+            "markupType": {
+              "type": "string",
+              "example": "percent"
+            },
+            "markupValue": {
+              "type": "number",
+              "example": 1.5
+            },
+            "currency": {
+              "type": "string",
+              "example": "NGN"
+            }
+          }
+        }
+      }
+    },
+    "AdminPricingUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "baseFee": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Base fee amount"
+                }
+              }
+            },
+            "markupType": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "flat",
+                    "percent"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Markup calculation type"
+                }
+              }
+            },
+            "markupValue": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Markup value"
+                }
+              }
+            },
+            "currency": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Currency code (e.g., NGN)"
+                }
+              }
+            },
+            "active": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Activate or deactivate pricing rule"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "baseFee": {
+              "type": "number",
+              "example": 20
+            },
+            "markupType": {
+              "type": "string",
+              "example": "flat"
+            },
+            "markupValue": {
+              "type": "number",
+              "example": 10
+            },
+            "currency": {
+              "type": "string",
+              "example": "NGN"
+            },
+            "active": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        }
+      }
+    },
+    "AdminMonnifyRetryRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": [
+            "paymentReference"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "paymentReference": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Monnify payment reference"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "paymentReference": {
+              "type": "string",
+              "example": "MNFY-123456"
+            }
+          }
+        }
+      }
+    },
+    "Bank": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "active": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "name": {
+              "type": "string",
+              "example": "Access Bank"
+            },
+            "code": {
+              "type": "string",
+              "example": "044"
+            },
+            "active": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        }
+      }
+    },
+    "TransactionItem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "type": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Transaction type"
+                }
+              }
+            },
+            "amount": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "fee": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "total": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "pending",
+                    "success",
+                    "failed"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "reference": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "created_at": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "type": {
+              "type": "string",
+              "example": "send"
+            },
+            "amount": {
+              "type": "number",
+              "example": 5000
+            },
+            "fee": {
+              "type": "number",
+              "example": 0
+            },
+            "total": {
+              "type": "number",
+              "example": 5000
+            },
+            "status": {
+              "type": "string",
+              "example": "success"
+            },
+            "reference": {
+              "type": "string",
+              "example": "TX-abc123"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2026-03-27T10:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    "BillCategory": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "description": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "active": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "code": {
+              "type": "string",
+              "example": "cable_tv"
+            },
+            "name": {
+              "type": "string",
+              "example": "Cable TV"
+            },
+            "description": {
+              "type": "string",
+              "example": "Cable services"
+            },
+            "active": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        }
+      }
+    },
+    "BillProvider": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "active": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "category_name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "category_code": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "name": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "code": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "active": {
+              "type": "number",
+              "example": 1
+            },
+            "category_name": {
+              "type": "string",
+              "example": "Cable TV"
+            }
+          }
+        }
+      }
+    },
+    "BillQuoteResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "amount": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "fee": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "total": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "currency": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "example": "DSTV"
+            },
+            "amount": {
+              "type": "number",
+              "example": 5000
+            },
+            "fee": {
+              "type": "number",
+              "example": 50
+            },
+            "total": {
+              "type": "number",
+              "example": 5050
+            },
+            "currency": {
+              "type": "string",
+              "example": "NGN"
+            }
+          }
+        }
+      }
+    },
+    "AdminUser": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "role": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "created_at": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "name": {
+              "type": "string",
+              "example": "Admin User"
+            },
+            "email": {
+              "type": "string",
+              "example": "admin@example.com"
+            },
+            "role": {
+              "type": "string",
+              "example": "super_admin"
+            }
+          }
+        }
+      }
+    },
+    "AdminUserListItem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "full_name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "phone": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "kyc_level": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            },
+            "kyc_status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": [
+                    "pending",
+                    "verified",
+                    "rejected"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "created_at": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "full_name": {
+              "type": "string",
+              "example": "Ada Lovelace"
+            },
+            "email": {
+              "type": "string",
+              "example": "ada@example.com"
+            },
+            "phone": {
+              "type": "string",
+              "example": "+2348012345678"
+            },
+            "kyc_level": {
+              "type": "number",
+              "example": 1
+            },
+            "kyc_status": {
+              "type": "string",
+              "example": "pending"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2026-03-27T10:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    "AuditLog": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "actor_type": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "actor_id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "action": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "entity_type": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "entity_id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "ip_address": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "user_agent": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "object"
+                }
+              }
+            },
+            "created_at": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "actor_type": {
+              "type": "string",
+              "example": "admin"
+            },
+            "actor_id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "action": {
+              "type": "string",
+              "example": "admin.login"
+            },
+            "entity_type": {
+              "type": "string",
+              "example": "admin"
+            },
+            "entity_id": {
+              "type": "string",
+              "example": "uuid"
+            },
+            "ip_address": {
+              "type": "string",
+              "example": "127.0.0.1"
+            },
+            "user_agent": {
+              "type": "string",
+              "example": "Mozilla/5.0"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {}
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2026-03-27T10:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    "MonnifyEvent": {
+      "type": "object",
+      "properties": {
+        "payment_reference": {
+          "type": "string"
+        },
+        "account_reference": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "paid_on": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "received",
+            "success",
+            "failed"
+          ]
+        },
+        "attempts": {
+          "type": "number"
+        },
+        "last_error": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "payment_reference": "MNFY-123456",
+        "account_reference": "GLY-uuid",
+        "amount": 2000,
+        "currency": "NGN",
+        "paid_on": "2026-03-27T10:00:00Z",
+        "status": "success",
+        "attempts": 1,
+        "last_error": null,
+        "updated_at": "2026-03-27T10:00:00Z"
+      }
+    },
+    "FinanceOverview": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "number"
+        },
+        "volume": {
+          "type": "number"
+        },
+        "revenue": {
+          "type": "number"
+        },
+        "credits": {
+          "type": "number"
+        },
+        "debits": {
+          "type": "number"
+        },
+        "walletBalance": {
+          "type": "number"
+        }
+      },
+      "example": {
+        "users": 120,
+        "volume": 500000,
+        "revenue": 12000,
+        "credits": 250000,
+        "debits": 230000,
+        "walletBalance": 45000
+      }
+    },
+    "WalletBalanceRow": {
+      "type": "object",
+      "properties": {
+        "full_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "full_name": "Ada Lovelace",
+        "email": "ada@example.com",
+        "balance": 1200,
+        "currency": "NGN",
+        "updated_at": "2026-03-27T10:00:00Z"
+      }
+    },
+    "AdminTransaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "fee": {
+          "type": "number"
+        },
+        "total": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "success",
+            "failed"
+          ]
+        },
+        "reference": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "id": "uuid",
+        "full_name": "Ada Lovelace",
+        "type": "bill",
+        "amount": 5000,
+        "fee": 50,
+        "total": 5050,
+        "status": "success",
+        "reference": "BILL-abc123",
+        "created_at": "2026-03-27T10:00:00Z"
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/register",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/login",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/verify-device": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/verify-device",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/forgot-password",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/reset-password",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/refresh",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/logout",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/csrf": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "GET /api/auth/csrf",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "GET /api/auth/me",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "GET /api/user/profile",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "PUT /api/user/profile",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/kyc": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "PUT /api/user/kyc",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/security": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "GET /api/user/security",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/pin/setup": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/pin/setup",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/pin/change": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/pin/change",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/pin/verify": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/pin/verify",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/biometric": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/biometric",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/security-questions": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "GET /api/user/security-questions",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/security-question": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "GET /api/user/security-question",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/security-question/set": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/security-question/set",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/security-question/verify": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/security-question/verify",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/wallet/balance": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "GET /api/wallet/balance",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/wallet/send": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "POST /api/wallet/send",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/wallet/receive": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "POST /api/wallet/receive",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/bills/categories": {
+      "get": {
+        "tags": [
+          "Bills"
+        ],
+        "summary": "GET /api/bills/categories",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/bills/providers": {
+      "get": {
+        "tags": [
+          "Bills"
+        ],
+        "summary": "GET /api/bills/providers",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/bills/quote": {
+      "post": {
+        "tags": [
+          "Bills"
+        ],
+        "summary": "POST /api/bills/quote",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/bills/pay": {
+      "post": {
+        "tags": [
+          "Bills"
+        ],
+        "summary": "POST /api/bills/pay",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/transactions": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "GET /api/transactions",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/banks": {
+      "get": {
+        "tags": [
+          "Banks"
+        ],
+        "summary": "GET /api/banks",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/banks/resolve": {
+      "post": {
+        "tags": [
+          "Banks"
+        ],
+        "summary": "POST /api/banks/resolve",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/login": {
+      "post": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "POST /api/admin/auth/login",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/refresh": {
+      "post": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "POST /api/admin/auth/refresh",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/logout": {
+      "post": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "POST /api/admin/auth/logout",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/me": {
+      "get": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "GET /api/admin/auth/me",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "POST /api/admin/auth/forgot-password",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "POST /api/admin/auth/reset-password",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/auth/csrf": {
+      "get": {
+        "tags": [
+          "Admin Auth"
+        ],
+        "summary": "GET /api/admin/auth/csrf",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "GET /api/admin/users",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/users/:id/kyc": {
+      "put": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "PUT /api/admin/users/:id/kyc",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/users/:id/reserved-account": {
+      "post": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "POST /api/admin/users/:id/reserved-account",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/bills/categories": {
+      "get": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "GET /api/admin/bills/categories",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "POST /api/admin/bills/categories",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/bills/categories/:id": {
+      "put": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "PUT /api/admin/bills/categories/:id",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/bills/providers": {
+      "get": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "GET /api/admin/bills/providers",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "POST /api/admin/bills/providers",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/bills/providers/:id": {
+      "put": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "PUT /api/admin/bills/providers/:id",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/bills/pricing": {
+      "get": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "GET /api/admin/bills/pricing",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "POST /api/admin/bills/pricing",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/bills/pricing/:id": {
+      "put": {
+        "tags": [
+          "Admin Bills"
+        ],
+        "summary": "PUT /api/admin/bills/pricing/:id",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/transactions": {
+      "get": {
+        "tags": [
+          "Admin Transactions"
+        ],
+        "summary": "GET /api/admin/transactions",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/transactions/metrics": {
+      "get": {
+        "tags": [
+          "Admin Transactions"
+        ],
+        "summary": "GET /api/admin/transactions/metrics",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/manage": {
+      "get": {
+        "tags": [
+          "Admin Management"
+        ],
+        "summary": "GET /api/admin/manage",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admin Management"
+        ],
+        "summary": "POST /api/admin/manage",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/manage/roles": {
+      "get": {
+        "tags": [
+          "Admin Management"
+        ],
+        "summary": "GET /api/admin/manage/roles",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/manage/:id/role": {
+      "put": {
+        "tags": [
+          "Admin Management"
+        ],
+        "summary": "PUT /api/admin/manage/:id/role",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/audit": {
+      "get": {
+        "tags": [
+          "Admin Audit"
+        ],
+        "summary": "GET /api/admin/audit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/finance/overview": {
+      "get": {
+        "tags": [
+          "Admin Finance"
+        ],
+        "summary": "GET /api/admin/finance/overview",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/finance/balances": {
+      "get": {
+        "tags": [
+          "Admin Finance"
+        ],
+        "summary": "GET /api/admin/finance/balances",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/finance/export": {
+      "get": {
+        "tags": [
+          "Admin Finance"
+        ],
+        "summary": "GET /api/admin/finance/export",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/monnify/webhook": {
+      "post": {
+        "tags": [
+          "Monnify Webhook"
+        ],
+        "summary": "POST /api/monnify/webhook",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/monnify/events": {
+      "get": {
+        "tags": [
+          "Admin Monnify"
+        ],
+        "summary": "GET /api/admin/monnify/events",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/monnify/metrics": {
+      "get": {
+        "tags": [
+          "Admin Monnify"
+        ],
+        "summary": "GET /api/admin/monnify/metrics",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/admin/monnify/retry": {
+      "post": {
+        "tags": [
+          "Admin Monnify"
+        ],
+        "summary": "POST /api/admin/monnify/retry",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  }
+}

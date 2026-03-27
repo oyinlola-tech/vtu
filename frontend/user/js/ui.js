@@ -45,6 +45,31 @@ function initReveal() {
   });
 }
 
+function initStagger() {
+  const groups = [];
+
+  document.querySelectorAll('.stagger').forEach((group) => {
+    groups.push(Array.from(group.children));
+  });
+
+  document.querySelectorAll('.table tbody').forEach((tbody) => {
+    groups.push(Array.from(tbody.querySelectorAll('tr')));
+  });
+
+  document.querySelectorAll('.grid').forEach((grid) => {
+    const cards = Array.from(grid.querySelectorAll('.card'));
+    if (cards.length) groups.push(cards);
+  });
+
+  groups.forEach((items) => {
+    items.forEach((item, idx) => {
+      if (item.classList.contains('show')) return;
+      item.classList.add('stagger-item');
+      window.setTimeout(() => item.classList.add('show'), 140 + idx * 70);
+    });
+  });
+}
+
 function initTheme() {
   const stored = localStorage.getItem('gly_vtu_theme') || 'light';
   document.documentElement.setAttribute('data-theme', stored);
@@ -60,6 +85,7 @@ function initTheme() {
   }
   document.body.classList.add('page-loaded');
   initReveal();
+  initStagger();
 }
 
 function initNav() {

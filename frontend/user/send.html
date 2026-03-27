@@ -64,6 +64,11 @@
               <label>Transaction PIN</label>
               <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
             </div>
+            <div>
+              <label>Security Answer (for large transfers)</label>
+              <input type="password" name="securityAnswer" autocomplete="off" />
+              <small class="muted" data-security-question-text></small>
+            </div>
             <button class="btn btn-primary" type="submit">
               <i class="fa-solid fa-paper-plane"></i>
               Send Now

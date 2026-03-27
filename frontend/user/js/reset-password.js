@@ -1,5 +1,5 @@
 import { api } from '/api/client.js';
-import { showLoader, initTheme } from '/js/ui.js';
+import { showLoader, showBanner, initTheme } from '/js/ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(payload),
       });
       sessionStorage.removeItem('reset_email');
-      alert('Password reset successful');
+      showBanner('Password reset successful', 'success');
       window.location.href = '/login';
     } catch (err) {
-      alert(err.message);
+      showBanner(err.message, 'error');
     } finally {
       showLoader(false);
     }

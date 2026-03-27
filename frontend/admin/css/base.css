@@ -361,6 +361,17 @@ textarea:focus {
   transition: opacity 0.45s ease, transform 0.45s ease;
 }
 
+.stagger-item {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.stagger-item.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
 .banner {
   position: fixed;
   top: 16px;

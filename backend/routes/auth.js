@@ -10,6 +10,7 @@ import { logAudit } from '../utils/audit.js';
 import { requireUser } from '../middleware/auth.js';
 import { generateCsrfToken } from '../middleware/csrf.js';
 import { otpLimiter } from '../middleware/rateLimiters.js';
+import { enforceSecurityQuestion } from '../utils/securityQuestionGuard.js';
 
 const router = express.Router();
 
@@ -24,15 +25,6 @@ function setRefreshCookie(res, token, expiresAt) {
     sameSite: 'lax',
     secure: isProd,
     expires: expiresAt,
-  });
-}
-
-function setAccessCookie(res, token) {
-  res.cookie('access_token', token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: isProd,
-    maxAge: 1000 * 60 * 15,
   });
 }
 
@@ -221,7 +213,6 @@ router.post('/login', otpLimiter, async (req, res) => {
 
   const accessToken = signAccessToken({ type: 'user', sub: user.id }, JWT_SECRET);
   const refresh = await issueRefreshToken({ userId: user.id });
-  setAccessCookie(res, accessToken);
   setRefreshCookie(res, refresh.raw, refresh.expiresAt);
   const csrfToken = issueCsrf(res);
 
@@ -245,7 +236,7 @@ router.post('/verify-device', otpLimiter, async (req, res) => {
     #swagger.responses[200] = { description: 'Device verified', schema: { $ref: '#/definitions/AuthLoginResponse' } }
     #swagger.responses[400] = { description: 'Invalid OTP or payload', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const { email, code, deviceId, label } = req.body || {};
+  const { email, code, deviceId, label, securityAnswer } = req.body || {};
   if (!email || !code || !deviceId) {
     return res.status(400).json({ error: 'Missing fields' });
   }
@@ -257,6 +248,14 @@ router.post('/verify-device', otpLimiter, async (req, res) => {
   ]);
   if (!rows.length) return res.status(404).json({ error: 'User not found' });
   const user = rows[0];
+  const enforcement = await enforceSecurityQuestion({
+    userId: user.id,
+    answer: securityAnswer,
+    flow: 'device_verify',
+  });
+  if (!enforcement.ok) {
+    return res.status(enforcement.status).json({ error: enforcement.message });
+  }
 
   await pool.query(
     `INSERT INTO user_devices (id, user_id, device_id, label, ip_address, user_agent)
@@ -267,7 +266,6 @@ router.post('/verify-device', otpLimiter, async (req, res) => {
 
   const accessToken = signAccessToken({ type: 'user', sub: user.id }, JWT_SECRET);
   const refresh = await issueRefreshToken({ userId: user.id });
-  setAccessCookie(res, accessToken);
   setRefreshCookie(res, refresh.raw, refresh.expiresAt);
   const csrfToken = issueCsrf(res);
 
@@ -348,12 +346,20 @@ router.post('/reset-password', async (req, res) => {
     #swagger.responses[200] = { description: 'Password reset', schema: { $ref: '#/definitions/MessageResponse' } }
     #swagger.responses[400] = { description: 'Invalid OTP or payload', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const { email, code, newPassword } = req.body || {};
+  const { email, code, newPassword, securityAnswer } = req.body || {};
   if (!email || !code || !newPassword) {
     return res.status(400).json({ error: 'Missing fields' });
   }
   const otp = await verifyOtp({ email, purpose: 'password_reset', code });
   if (!otp) return res.status(400).json({ error: 'Invalid or expired OTP' });
+  const enforcement = await enforceSecurityQuestion({
+    userId: otp.user_id,
+    answer: securityAnswer,
+    flow: 'password_reset',
+  });
+  if (!enforcement.ok) {
+    return res.status(enforcement.status).json({ error: enforcement.message });
+  }
 
   const passwordHash = await bcrypt.hash(newPassword, 12);
   await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [passwordHash, otp.user_id]);
@@ -398,7 +404,6 @@ router.post('/refresh', async (req, res) => {
   if (!rotated) return res.status(401).json({ error: 'Expired token' });
 
   const accessToken = signAccessToken({ type: 'user', sub: tokenRow[0].user_id }, JWT_SECRET);
-  setAccessCookie(res, accessToken);
   setRefreshCookie(res, rotated.raw, rotated.expiresAt);
   const csrfToken = issueCsrf(res);
 
@@ -422,7 +427,6 @@ router.post('/logout', async (req, res) => {
   const incoming = req.cookies?.refresh_token || req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('refresh_token');
-  res.clearCookie('access_token');
   res.clearCookie('csrf_token');
   return res.json({ message: 'Logged out' });
 });
@@ -438,6 +442,19 @@ router.get('/csrf', (req, res) => {
   */
   const token = issueCsrf(res);
   return res.json({ csrfToken: token });
+});
+
+router.post('/security-question', async (req, res) => {
+  const { email } = req.body || {};
+  if (!email) return res.json({ enabled: false, question: null });
+  const [rows] = await pool.query(
+    'SELECT security_question, security_question_enabled FROM users WHERE email = ? LIMIT 1',
+    [email]
+  );
+  if (!rows.length || !rows[0].security_question_enabled) {
+    return res.json({ enabled: false, question: null });
+  }
+  return res.json({ enabled: true, question: rows[0].security_question });
 });
 
 router.get('/me', requireUser, async (req, res) => {

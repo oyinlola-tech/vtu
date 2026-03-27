@@ -5,7 +5,7 @@ const JWT_ADMIN_SECRET = process.env.JWT_ADMIN_SECRET || process.env.JWT_SECRET 
 export function requireAdmin(req, res, next) {
   const header = req.headers.authorization || '';
   const bearer = header.startsWith('Bearer ') ? header.slice(7) : null;
-  const token = bearer || req.cookies?.admin_access_token;
+  const token = bearer;
 
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   try {
