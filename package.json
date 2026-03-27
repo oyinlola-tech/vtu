@@ -1,11 +1,12 @@
 {
   "name": "gly-vtu",
-  "version": "1.0.0",
+  "version": "4.420",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "swagger": "node backend/docs/swagger.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -19,6 +20,8 @@
     "mysql2": "^3.20.0",
     "nanoid": "^5.1.7",
     "nodemailer": "^8.0.1",
-    "pdfkit": "^0.18.0"
+    "pdfkit": "^0.18.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
   }
 }

@@ -4,8 +4,10 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 import { initDatabase } from './backend/config/db.js';
 import authRoutes from './backend/routes/auth.js';
 import adminAuthRoutes from './backend/routes/adminAuth.js';
@@ -176,6 +178,44 @@ app.use('/api/admin/finance', adminFinanceRoutes);
 app.use('/api/monnify/webhook', webhookLimiter, monnifyWebhookRoutes);
 app.use('/api/admin/monnify', adminMonnifyRoutes);
 
+const enableSwagger = process.env.ENABLE_SWAGGER !== 'false';
+async function setupSwaggerDocs(appInstance) {
+  if (!enableSwagger) return;
+  const swaggerPath = path.join(__dirname, 'backend', 'docs', 'swagger-output.json');
+  let swaggerDocument = null;
+
+  try {
+    const raw = fs.readFileSync(swaggerPath, 'utf-8');
+    swaggerDocument = JSON.parse(raw);
+  } catch (err) {
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('Swagger file missing. Run `npm run swagger` to generate it.');
+      return;
+    }
+    try {
+      const { generateSwagger } = await import('./backend/docs/swagger.js');
+      await generateSwagger();
+      const raw = fs.readFileSync(swaggerPath, 'utf-8');
+      swaggerDocument = JSON.parse(raw);
+    } catch (genErr) {
+      console.warn('Swagger generation failed:', genErr.message);
+      return;
+    }
+  }
+
+  appInstance.use('/api-docs', (req, res, next) => {
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'self' 'unsafe-inline' https: http: data:; img-src 'self' data: https: http:; script-src 'self' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline' https: http:; font-src 'self' data: https: http:;"
+    );
+    next();
+  });
+  appInstance.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
+  appInstance.get('/api-docs.json', (req, res) => res.json(swaggerDocument));
+}
+
+const swaggerReady = setupSwaggerDocs(app);
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
@@ -191,7 +231,8 @@ app.use((err, req, res, next) => {
 const PORT = Number(process.env.PORT || 3000);
 
 initDatabase()
-  .then(() => {
+  .then(async () => {
+    await swaggerReady;
     app.listen(PORT, () => {
       console.log(`GLY VTU API running on http://localhost:${PORT}`);
     });

@@ -20,19 +20,32 @@
     </header>
     <main class="content">
       <section class="hero">
-        <h1>Wallet Balance</h1>
-        <p class="muted">Keep track of your NGN wallet.</p>
-        <div class="balance" data-wallet-balance>₦0.00</div>
+        <h1>Wallet Overview</h1>
+        <p class="muted">Your available balance and quick actions.</p>
+        <div class="balance" data-wallet-balance>NGN 0.00</div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/send">
+            <i class="fa-solid fa-paper-plane"></i>
+            Send Money
+          </a>
+          <a class="btn" href="/receive">
+            <i class="fa-solid fa-qrcode"></i>
+            Receive via QR
+          </a>
+        </div>
       </section>
+
       <section class="grid two section-gap">
-        <a class="card" href="/send">
-          <h3>Send Money</h3>
-          <p class="muted">Instant transfers to others.</p>
-        </a>
-        <a class="card" href="/receive">
-          <h3>Request Money</h3>
-          <p class="muted">Share a payment request.</p>
-        </a>
+        <div class="card">
+          <h3>Account Security</h3>
+          <p class="muted">Use your transaction PIN for transfers and bill payments.</p>
+          <a class="btn btn-ghost" href="/settings">Manage Security</a>
+        </div>
+        <div class="card">
+          <h3>Daily Operations</h3>
+          <p class="muted">Review recent activity and monitor transfer status.</p>
+          <a class="btn btn-ghost" href="/transactions">View Activity</a>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

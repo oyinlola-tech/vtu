@@ -21,30 +21,40 @@
     <main class="content">
       <section class="hero">
         <h1>Hello, <span data-user-name>Customer</span></h1>
-        <p class="muted">Your all-in-one Nigerian bill payment wallet.</p>
-        <div class="balance" data-wallet-balance>₦0.00</div>
+        <p class="muted">Your secure fintech wallet for transfers, bills, and virtual accounts.</p>
+        <div class="balance" data-wallet-balance>NGN 0.00</div>
         <p class="muted account-line">
           Account: <strong data-account-number>----</strong>
           <span data-account-bank class="muted"></span>
         </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/send">
+            <i class="fa-solid fa-paper-plane"></i>
+            Send Money
+          </a>
+          <a class="btn" href="/receive">
+            <i class="fa-solid fa-qrcode"></i>
+            Receive via QR
+          </a>
+        </div>
       </section>
 
       <section class="grid two section-gap">
         <a class="card" href="/send">
           <h3>Send Money</h3>
-          <p class="muted">Transfer to any GLY VTU user.</p>
+          <p class="muted">Verify bank account and transfer securely.</p>
         </a>
         <a class="card" href="/receive">
-          <h3>Request Money</h3>
-          <p class="muted">Share a payment request.</p>
+          <h3>Receive Money</h3>
+          <p class="muted">Share QR or account details instantly.</p>
         </a>
         <a class="card" href="/bills">
           <h3>Pay Bills</h3>
-          <p class="muted">Airtime, data, TV, electricity.</p>
+          <p class="muted">Airtime, data, TV, electricity and more.</p>
         </a>
         <a class="card" href="/kyc">
           <h3>Complete KYC</h3>
-          <p class="muted">Upgrade to Level 2 for more limits.</p>
+          <p class="muted">Unlock higher limits and premium features.</p>
         </a>
       </section>
 

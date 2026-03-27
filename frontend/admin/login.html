@@ -19,24 +19,36 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
-        <h3>Admin Access</h3>
-        <p class="muted">Sign in to manage the platform.</p>
-        <form>
-          <div>
-            <label>Email</label>
-            <input type="email" name="email" required />
+      <section class="hero">
+        <h1>Admin Console</h1>
+        <p class="muted">Secure access for operations and compliance teams.</p>
+      </section>
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Admin Access</h3>
+          <form>
+            <div>
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div>
+              <label>Password</label>
+              <input type="password" name="password" required />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-shield"></i>
+              Sign In
+            </button>
+          </form>
+          <p class="muted"><a href="/admin/forgot-password">Forgot password?</a></p>
+        </div>
+        <div class="card">
+          <h3>Security First</h3>
+          <p class="muted">Role-based access and audit trails are enforced.</p>
+          <div class="section-gap">
+            <span class="pill"><i class="fa-solid fa-lock"></i> RBAC enabled</span>
           </div>
-          <div>
-            <label>Password</label>
-            <input type="password" name="password" required />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-shield"></i>
-            Sign In
-          </button>
-        </form>
-        <p class="muted"><a href="/admin/forgot-password">Forgot password?</a></p>
+        </div>
       </section>
     </main>
     <div class="overlay">

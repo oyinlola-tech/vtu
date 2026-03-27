@@ -19,38 +19,55 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
-        <h3>KYC Verification</h3>
-        <p class="muted">Upgrade to Level 2 for higher limits.</p>
-        <form>
-          <div>
-            <label>KYC Level</label>
-            <select name="level">
-              <option value="1">Level 1 - Basic</option>
-              <option value="2">Level 2 - Full Verification</option>
-            </select>
+      <section class="hero">
+        <h1>KYC Verification</h1>
+        <p class="muted">Unlock higher limits and premium services.</p>
+      </section>
+
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Submit Verification</h3>
+          <p class="muted">Provide accurate details for faster approval.</p>
+          <form>
+            <div>
+              <label>KYC Level</label>
+              <select name="level">
+                <option value="1">Level 1 - Basic</option>
+                <option value="2">Level 2 - Full Verification</option>
+              </select>
+            </div>
+            <div>
+              <label>BVN</label>
+              <input type="text" name="bvn" required />
+            </div>
+            <div>
+              <label>NIN</label>
+              <input type="text" name="nin" required />
+            </div>
+            <div>
+              <label>Date of Birth</label>
+              <input type="date" name="dob" required />
+            </div>
+            <div>
+              <label>Residential Address</label>
+              <input type="text" name="address" required />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-id-card"></i>
+              Submit KYC
+            </button>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Why KYC Matters</h3>
+          <p class="muted">Verified users enjoy higher limits and faster approvals.</p>
+          <div class="section-gap">
+            <span class="pill"><i class="fa-solid fa-circle-check"></i> Higher limits</span>
           </div>
-          <div>
-            <label>BVN</label>
-            <input type="text" name="bvn" required />
-          </div>
-          <div>
-            <label>NIN</label>
-            <input type="text" name="nin" required />
-          </div>
-          <div>
-            <label>Date of Birth</label>
-            <input type="date" name="dob" required />
-          </div>
-          <div>
-            <label>Residential Address</label>
-            <input type="text" name="address" required />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-id-card"></i>
-            Submit KYC
-          </button>
-        </form>
+          <p class="muted section-gap">
+            Ensure your BVN and NIN match your legal name to avoid delays.
+          </p>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

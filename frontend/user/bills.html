@@ -19,40 +19,58 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
-        <h3>Pay Bills</h3>
-        <p class="muted">Select a service and pay instantly.</p>
-        <form>
-          <div>
-            <label>Category</label>
-            <select data-category required></select>
+      <section class="hero">
+        <h1>Pay Bills</h1>
+        <p class="muted">Fast and verified bill payments with transparent fees.</p>
+      </section>
+
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Bill Payment</h3>
+          <p class="muted">Select a service provider and confirm your payment.</p>
+          <form>
+            <div>
+              <label>Category</label>
+              <select data-category required></select>
+            </div>
+            <div>
+              <label>Provider</label>
+              <select name="providerCode" data-provider required></select>
+            </div>
+            <div>
+              <label>Account / Meter / Smartcard</label>
+              <input type="text" name="account" required />
+            </div>
+            <div>
+              <label>Amount (NGN)</label>
+              <input type="number" name="amount" min="100" step="0.01" data-amount required />
+            </div>
+            <div>
+              <label>Transaction PIN</label>
+              <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
+            </div>
+            <button class="btn btn-ghost" type="button" data-quote-btn>
+              <i class="fa-solid fa-calculator"></i>
+              Get Quote
+            </button>
+            <p class="muted" data-quote></p>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-bolt"></i>
+              Pay Bill
+            </button>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Payment Assurance</h3>
+          <p class="muted">We verify providers and send receipts instantly.</p>
+          <div class="section-gap">
+            <span class="pill"><i class="fa-solid fa-receipt"></i> Instant receipts</span>
           </div>
-          <div>
-            <label>Provider</label>
-            <select name="providerCode" data-provider required></select>
-          </div>
-          <div>
-            <label>Account / Meter / Smartcard</label>
-            <input type="text" name="account" required />
-          </div>
-          <div>
-            <label>Amount (NGN)</label>
-            <input type="number" name="amount" min="100" step="0.01" data-amount required />
-          </div>
-          <div>
-            <label>Transaction PIN</label>
-            <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
-          </div>
-          <button class="btn btn-ghost" type="button" data-quote-btn>
-            <i class="fa-solid fa-calculator"></i>
-            Get Quote
-          </button>
-          <p class="muted" data-quote></p>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-bolt"></i>
-            Pay Bill
-          </button>
-        </form>
+          <p class="muted section-gap">
+            If a payment fails, you will receive a notification and a reversal where applicable.
+          </p>
+          <a class="btn btn-ghost" href="/transactions">View History</a>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

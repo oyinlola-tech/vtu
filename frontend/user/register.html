@@ -19,42 +19,57 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
-        <h3>Create Your Account</h3>
-        <p class="muted">Join Nigerians paying bills smarter.</p>
-        <form>
-          <div>
-            <label>Full Name</label>
-            <input type="text" name="fullName" required />
+      <section class="hero">
+        <h1>Create Your Account</h1>
+        <p class="muted">Join Nigerians paying bills and transferring smarter.</p>
+      </section>
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Get Started</h3>
+          <form>
+            <div>
+              <label>Full Name</label>
+              <input type="text" name="fullName" required />
+            </div>
+            <div>
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div>
+              <label>Phone Number</label>
+              <input type="tel" name="phone" required />
+            </div>
+            <div>
+              <label>Password</label>
+              <input type="password" name="password" required />
+            </div>
+            <div>
+              <label>BVN (or provide NIN)</label>
+              <input type="text" name="bvn" />
+            </div>
+            <div>
+              <label>NIN (or provide BVN)</label>
+              <input type="text" name="nin" />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-user-plus"></i>
+              Create Account
+            </button>
+          </form>
+          <p class="muted">
+            Already have an account? <a href="/login">Sign in</a>
+          </p>
+        </div>
+        <div class="card">
+          <h3>Why GLY VTU</h3>
+          <p class="muted">Instant transfers, bill payments, and verified accounts.</p>
+          <div class="section-gap">
+            <span class="pill"><i class="fa-solid fa-bolt"></i> Real-time services</span>
           </div>
-          <div>
-            <label>Email</label>
-            <input type="email" name="email" required />
-          </div>
-          <div>
-            <label>Phone Number</label>
-            <input type="tel" name="phone" required />
-          </div>
-          <div>
-            <label>Password</label>
-            <input type="password" name="password" required />
-          </div>
-          <div>
-            <label>BVN (or provide NIN)</label>
-            <input type="text" name="bvn" />
-          </div>
-          <div>
-            <label>NIN (or provide BVN)</label>
-            <input type="text" name="nin" />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-user-plus"></i>
-            Create Account
-          </button>
-        </form>
-        <p class="muted">
-          Already have an account? <a href="/login">Sign in</a>
-        </p>
+          <p class="muted section-gap">
+            Provide BVN or NIN to unlock reserved account features faster.
+          </p>
+        </div>
       </section>
     </main>
     <div class="overlay">

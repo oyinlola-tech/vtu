@@ -19,57 +19,65 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
-        <h3>Account Settings</h3>
-        <p class="muted">Manage your preferences and security.</p>
-        <div class="grid two section-gap">
-          <a class="card" href="/kyc">
-            <h3>KYC Status</h3>
-            <p class="muted">Review or update verification.</p>
-          </a>
-          <a class="card" href="/transactions">
-            <h3>Transaction History</h3>
-            <p class="muted">Review all bill payments.</p>
-          </a>
+      <section class="hero">
+        <h1>Settings & Security</h1>
+        <p class="muted">Manage your security, preferences, and KYC status.</p>
+      </section>
+
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Account Essentials</h3>
+          <p class="muted">Keep your verification and transaction limits updated.</p>
+          <div class="grid two section-gap">
+            <a class="card" href="/kyc">
+              <h3>KYC Status</h3>
+              <p class="muted">Upgrade to unlock higher limits.</p>
+            </a>
+            <a class="card" href="/transactions">
+              <h3>Transaction History</h3>
+              <p class="muted">Monitor all transfers and bills.</p>
+            </a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Transaction PIN</h3>
+          <p class="muted">A PIN is required for every transfer and bill payment.</p>
+          <form data-pin-setup>
+            <div>
+              <label>New PIN</label>
+              <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-key"></i>
+              Create PIN
+            </button>
+          </form>
+          <form data-pin-change hidden>
+            <div>
+              <label>Current PIN</label>
+              <input type="password" name="currentPin" inputmode="numeric" minlength="4" maxlength="6" required />
+            </div>
+            <div>
+              <label>New PIN</label>
+              <input type="password" name="newPin" inputmode="numeric" minlength="4" maxlength="6" required />
+            </div>
+            <button class="btn btn-ghost" type="submit">
+              <i class="fa-solid fa-rotate"></i>
+              Update PIN
+            </button>
+          </form>
+          <div class="section-gap">
+            <label class="toggle">
+              <input type="checkbox" data-biometric />
+              Enable biometric approval (when available)
+            </label>
+          </div>
         </div>
       </section>
 
-      <section class="card">
-        <h3>Transaction PIN</h3>
-        <p class="muted">Set a PIN to authorize transfers and bill payments.</p>
-        <form data-pin-setup>
-          <div>
-            <label>New PIN</label>
-            <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-key"></i>
-            Create PIN
-          </button>
-        </form>
-        <form data-pin-change hidden>
-          <div>
-            <label>Current PIN</label>
-            <input type="password" name="currentPin" inputmode="numeric" minlength="4" maxlength="6" required />
-          </div>
-          <div>
-            <label>New PIN</label>
-            <input type="password" name="newPin" inputmode="numeric" minlength="4" maxlength="6" required />
-          </div>
-          <button class="btn btn-ghost" type="submit">
-            <i class="fa-solid fa-rotate"></i>
-            Update PIN
-          </button>
-        </form>
-        <div class="section-gap">
-          <label class="toggle">
-            <input type="checkbox" data-biometric />
-            Enable biometric approval (when available)
-          </label>
-        </div>
-      </section>
-
-      <section class="card">
+      <section class="card section-gap">
+        <h3>Session Controls</h3>
+        <p class="muted">Log out from this device when you are done.</p>
         <button class="btn btn-primary section-gap" data-logout type="button">
           <i class="fa-solid fa-right-from-bracket"></i>
           Log Out

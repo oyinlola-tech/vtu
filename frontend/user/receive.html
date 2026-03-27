@@ -19,40 +19,46 @@
       </div>
     </header>
     <main class="content">
-      <section class="card">
-        <h3>Your Receive QR</h3>
-        <p class="muted">Share this QR so people can send money to your reserved account.</p>
-        <div class="grid two">
-          <div>
-            <div class="muted">Account Number</div>
-            <div data-account-number>-</div>
-            <div class="muted section-gap">Bank</div>
-            <div data-bank-name>-</div>
-          </div>
-          <div>
-            <div data-qr-account></div>
-          </div>
-        </div>
+      <section class="hero">
+        <h1>Receive Money</h1>
+        <p class="muted">Share QR or account details for instant payments.</p>
       </section>
 
-      <section class="card">
-        <h3>Create Request QR</h3>
-        <p class="muted">Generate a QR with amount and note for quick payments.</p>
-        <form>
-          <div>
-            <label>Amount (NGN)</label>
-            <input type="number" name="amount" min="100" step="0.01" required />
+      <section class="grid two section-gap">
+        <div class="card">
+          <h3>Your Receive QR</h3>
+          <p class="muted">Share this QR to receive transfers into your reserved account.</p>
+          <div class="grid two section-gap">
+            <div>
+              <div class="muted">Account Number</div>
+              <div data-account-number>-</div>
+              <div class="muted section-gap">Bank</div>
+              <div data-bank-name>-</div>
+            </div>
+            <div>
+              <div data-qr-account></div>
+            </div>
           </div>
-          <div>
-            <label>Note</label>
-            <input type="text" name="note" placeholder="School fees, airtime, etc." />
-          </div>
-          <button class="btn btn-primary" type="submit">
-            <i class="fa-solid fa-qrcode"></i>
-            Create QR
-          </button>
-        </form>
-        <div class="section-gap" data-qr-request></div>
+        </div>
+        <div class="card">
+          <h3>Create Request QR</h3>
+          <p class="muted">Generate a payment request with amount and note.</p>
+          <form>
+            <div>
+              <label>Amount (NGN)</label>
+              <input type="number" name="amount" min="100" step="0.01" required />
+            </div>
+            <div>
+              <label>Note</label>
+              <input type="text" name="note" placeholder="School fees, airtime, etc." />
+            </div>
+            <button class="btn btn-primary" type="submit">
+              <i class="fa-solid fa-qrcode"></i>
+              Create QR
+            </button>
+          </form>
+          <div class="section-gap" data-qr-request></div>
+        </div>
       </section>
     </main>
     <nav class="bottom-nav">

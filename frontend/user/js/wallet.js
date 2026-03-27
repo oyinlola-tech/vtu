@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   ensureAuth();
   try {
     const wallet = await api('/api/wallet/balance');
-    document.querySelector('[data-wallet-balance]').textContent = `₦${Number(
+    document.querySelector('[data-wallet-balance]').textContent = `NGN ${Number(
       wallet.balance
     ).toFixed(2)}`;
   } catch (err) {

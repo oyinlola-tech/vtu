@@ -14,7 +14,7 @@ function renderTransactions(items, container) {
             <div class="muted">${new Date(tx.created_at).toLocaleString()}</div>
           </div>
           <div>
-            <div class="balance">₦${Number(tx.total).toFixed(2)}</div>
+            <div class="balance">NGN ${Number(tx.total).toFixed(2)}</div>
             <span class="status-pill">${tx.status}</span>
           </div>
         </div>

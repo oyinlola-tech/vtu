@@ -3,21 +3,28 @@
 :root {
   --wine: #6b0f2e;
   --wine-dark: #3f0618;
+  --accent: #f0b04b;
   --bg: #ffffff;
+  --bg-2: #fbf7f8;
   --text: #121212;
   --muted: #6a6a6a;
-  --panel: #f6f1f3;
-  --border: #e7d9df;
-  --shadow: 0 12px 30px rgba(45, 10, 20, 0.12);
+  --panel: #ffffff;
+  --border: #ead9e0;
+  --shadow: 0 12px 40px rgba(45, 10, 20, 0.12);
+  --shadow-soft: 0 6px 18px rgba(45, 10, 20, 0.08);
+  --success: #1a9c62;
+  --danger: #d94b4b;
 }
 
 [data-theme='dark'] {
   --bg: #0b0b0b;
+  --bg-2: #120b0e;
   --text: #f5f5f5;
   --muted: #b7b7b7;
-  --panel: #171012;
+  --panel: #141014;
   --border: #2a1c22;
-  --shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -27,7 +34,10 @@
 body {
   margin: 0;
   font-family: 'Manrope', sans-serif;
-  background: radial-gradient(circle at top, rgba(107, 15, 46, 0.12), transparent 45%), var(--bg);
+  background:
+    radial-gradient(circle at top right, rgba(107, 15, 46, 0.2), transparent 40%),
+    radial-gradient(circle at 20% 20%, rgba(240, 176, 75, 0.14), transparent 40%),
+    var(--bg);
   color: var(--text);
   min-height: 100vh;
 }
@@ -49,16 +59,21 @@ a {
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
   z-index: 5;
 }
 
+[data-theme='dark'] .topbar {
+  background: rgba(11, 11, 11, 0.9);
+}
+
 .brand {
   font-family: 'Playfair Display', serif;
   font-size: 20px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   color: var(--wine);
   font-weight: 700;
 }
@@ -71,7 +86,7 @@ a {
 
 .theme-toggle {
   border: 1px solid var(--border);
-  background: var(--panel);
+  background: var(--bg-2);
   color: var(--text);
   padding: 8px 12px;
   border-radius: 999px;
@@ -82,21 +97,23 @@ a {
 .content {
   flex: 1;
   padding: 20px;
-  padding-bottom: 90px;
+  padding-bottom: 100px;
 }
 
 .hero {
-  background: linear-gradient(120deg, rgba(107, 15, 46, 0.15), rgba(0, 0, 0, 0));
+  background:
+    linear-gradient(135deg, rgba(107, 15, 46, 0.14), rgba(0, 0, 0, 0)),
+    var(--panel);
   border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 22px;
+  padding: 22px;
   box-shadow: var(--shadow);
 }
 
 .hero h1 {
   font-family: 'Playfair Display', serif;
   margin: 0 0 8px;
-  font-size: 26px;
+  font-size: 28px;
 }
 
 .muted {
@@ -117,14 +134,20 @@ a {
 }
 
 .section-gap-lg {
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 16px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
 
@@ -139,6 +162,18 @@ a {
   color: var(--wine);
 }
 
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(107, 15, 46, 0.12);
+  color: var(--wine);
+  font-weight: 600;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -151,12 +186,22 @@ a {
   color: var(--text);
   cursor: pointer;
   font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .btn-primary {
   background: var(--wine);
   color: #fff;
   border-color: var(--wine);
+  box-shadow: 0 10px 20px rgba(107, 15, 46, 0.25);
+}
+
+.btn-primary:hover {
+  background: var(--wine-dark);
 }
 
 form {
@@ -179,6 +224,15 @@ textarea {
   background: var(--bg);
   color: var(--text);
   font-family: inherit;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--wine);
+  box-shadow: 0 0 0 3px rgba(107, 15, 46, 0.15);
 }
 
 .table {
@@ -205,6 +259,7 @@ textarea {
   grid-template-columns: repeat(5, 1fr);
   padding: 10px 12px 14px;
   z-index: 4;
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.08);
 }
 
 .splash {
@@ -278,7 +333,7 @@ textarea {
     padding: 32px 80px 110px;
   }
   .bottom-nav {
-    max-width: 620px;
+    max-width: 640px;
     margin: 0 auto 18px;
     border-radius: 20px;
     left: 50%;

@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const wallet = await api('/api/wallet/balance');
     const transactions = await api('/api/transactions');
     document.querySelector('[data-user-name]').textContent = profile.full_name;
-    document.querySelector('[data-wallet-balance]').textContent = `₦${Number(
+    document.querySelector('[data-wallet-balance]').textContent = `NGN ${Number(
       wallet.balance
     ).toFixed(2)}`;
     const accountNumber = document.querySelector('[data-account-number]');
