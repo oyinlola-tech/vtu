@@ -11,6 +11,7 @@ import { requireUser } from '../middleware/auth.js';
 import { generateCsrfToken } from '../middleware/csrf.js';
 import { otpLimiter } from '../middleware/rateLimiters.js';
 import { enforceSecurityQuestion } from '../utils/securityQuestionGuard.js';
+import { encryptCookieValue, decryptCookieValue } from '../utils/secureCookie.js';
 
 const router = express.Router();
 
@@ -20,7 +21,8 @@ const isProd = process.env.NODE_ENV === 'production';
 
 function setRefreshCookie(res, token, expiresAt) {
   if (!USE_COOKIE_REFRESH) return;
-  res.cookie('refresh_token', token, {
+  const encrypted = encryptCookieValue(token);
+  res.cookie('refresh_token', encrypted, {
     httpOnly: true,
     sameSite: 'lax',
     secure: isProd,
@@ -391,7 +393,8 @@ router.post('/refresh', async (req, res) => {
     #swagger.responses[200] = { description: 'Tokens refreshed', schema: { $ref: '#/definitions/AuthTokensResponse' } }
     #swagger.responses[401] = { description: 'Invalid token', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const incoming = req.cookies?.refresh_token || req.body?.refreshToken;
+  const cookieToken = req.cookies?.refresh_token;
+  const incoming = cookieToken ? decryptCookieValue(cookieToken) : req.body?.refreshToken;
   if (!incoming) return res.status(400).json({ error: 'Refresh token required' });
 
   const [tokenRow] = await pool.query(
@@ -424,7 +427,8 @@ router.post('/logout', async (req, res) => {
     }
     #swagger.responses[200] = { description: 'Logged out', schema: { $ref: '#/definitions/MessageResponse' } }
   */
-  const incoming = req.cookies?.refresh_token || req.body?.refreshToken;
+  const cookieToken = req.cookies?.refresh_token;
+  const incoming = cookieToken ? decryptCookieValue(cookieToken) : req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('refresh_token');
   res.clearCookie('csrf_token');

@@ -647,12 +647,16 @@ const doc = {
 export async function generateSwagger() {
   const swagger = swaggerAutogen({ openapi: '2.0' });
   const result = await swagger(outputFile, endpointsFiles, doc);
-  if (!fs.existsSync(outputFile)) {
+  const autogenSuccess =
+    result?.success !== false && fs.existsSync(outputFile);
+  let usedFallback = false;
+  if (!autogenSuccess) {
+    usedFallback = true;
     console.warn('swagger-autogen did not generate output file. Falling back to manual builder.');
     const fallback = buildFallbackSpec();
     fs.writeFileSync(outputFile, JSON.stringify(fallback, null, 2));
   }
-  return outputFile;
+  return { outputFile, autogenSuccess, usedFallback };
 }
 
 function buildFallbackSpec() {
@@ -745,8 +749,13 @@ function buildFallbackSpec() {
 
 if (process.argv[1] && process.argv[1].endsWith('swagger.js')) {
   generateSwagger()
-    .then(() => {
-      console.log(`Swagger docs generated at ${outputFile}`);
+    .then((result) => {
+      const location = result?.outputFile || outputFile;
+      if (result?.usedFallback) {
+        console.log(`Swagger docs generated (fallback) at ${location}`);
+      } else {
+        console.log(`Swagger docs generated at ${location}`);
+      }
     })
     .catch((err) => {
       console.error('Swagger generation failed:', err);

@@ -106,6 +106,13 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
+const pageLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: Number(process.env.RATE_LIMIT_PAGES_MAX || 300),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const userDir = path.join(__dirname, 'frontend', 'user');
 const adminDir = path.join(__dirname, 'frontend', 'admin');
 
@@ -130,13 +137,13 @@ const userPages = [
 ];
 
 userPages.forEach((page) => {
-  app.get(`/${page}`, (req, res) => {
+  app.get(`/${page}`, pageLimiter, (req, res) => {
     res.sendFile(path.join(userDir, `${page}.html`));
   });
 });
 
-app.get('/', (req, res) => res.redirect('/splash'));
-app.get('/admin', (req, res) => res.redirect('/admin/splash'));
+app.get('/', pageLimiter, (req, res) => res.redirect('/splash'));
+app.get('/admin', pageLimiter, (req, res) => res.redirect('/admin/splash'));
 
 const adminPages = [
   'splash',
@@ -156,7 +163,7 @@ const adminPages = [
 ];
 
 adminPages.forEach((page) => {
-  app.get(`/admin/${page}`, (req, res) => {
+  app.get(`/admin/${page}`, pageLimiter, (req, res) => {
     res.sendFile(path.join(adminDir, `${page}.html`));
   });
 });

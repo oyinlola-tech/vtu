@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const questionSelect = document.querySelector('[data-security-question]');
   const questionStatus = document.querySelector('[data-security-question-status]');
   const questionToggle = document.querySelector('[data-security-question-enabled]');
+  const pinSecurityText = changeForm?.querySelector('[data-security-question-text]');
+  const pinSecurityInput = changeForm?.querySelector('input[name=\"securityAnswer\"]');
 
   async function refreshSecurity() {
     try {
@@ -42,6 +44,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (questionToggle) {
         questionToggle.checked = Boolean(current.enabled);
+      }
+      if (pinSecurityText) {
+        pinSecurityText.textContent =
+          current.enabled && current.question ? `Question: ${current.question}` : '';
+      }
+      if (pinSecurityInput) {
+        pinSecurityInput.required = Boolean(current.enabled);
       }
     } catch (err) {
       console.error(err);

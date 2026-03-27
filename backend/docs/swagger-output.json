@@ -4123,6 +4123,19 @@
         }
       }
     },
+    "/api/auth/security-question": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "POST /api/auth/security-question",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/auth/me": {
       "get": {
         "tags": [
@@ -4270,6 +4283,19 @@
           "User"
         ],
         "summary": "POST /api/user/security-question/set",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/security-question/enable": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "POST /api/user/security-question/enable",
         "responses": {
           "200": {
             "description": "Success"

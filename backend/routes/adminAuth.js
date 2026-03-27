@@ -8,6 +8,7 @@ import { createOtp, verifyOtp } from '../utils/otp.js';
 import { sendOtpEmail, sendSecurityEmail } from '../utils/email.js';
 import { generateCsrfToken } from '../middleware/csrf.js';
 import { otpLimiter } from '../middleware/rateLimiters.js';
+import { encryptCookieValue, decryptCookieValue } from '../utils/secureCookie.js';
 
 const router = express.Router();
 
@@ -17,7 +18,8 @@ const isProd = process.env.NODE_ENV === 'production';
 
 function setRefreshCookie(res, token, expiresAt) {
   if (!USE_COOKIE_REFRESH) return;
-  res.cookie('admin_refresh_token', token, {
+  const encrypted = encryptCookieValue(token);
+  res.cookie('admin_refresh_token', encrypted, {
     httpOnly: true,
     sameSite: 'lax',
     secure: isProd,
@@ -87,7 +89,8 @@ router.post('/refresh', async (req, res) => {
     #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/RefreshRequest' } }
     #swagger.responses[200] = { description: 'Tokens refreshed', schema: { $ref: '#/definitions/AuthTokensResponse' } }
   */
-  const incoming = req.cookies?.admin_refresh_token || req.body?.refreshToken;
+  const cookieToken = req.cookies?.admin_refresh_token;
+  const incoming = cookieToken ? decryptCookieValue(cookieToken) : req.body?.refreshToken;
   if (!incoming) return res.status(400).json({ error: 'Refresh token required' });
 
   const [tokenRow] = await pool.query(
@@ -118,7 +121,8 @@ router.post('/logout', requireAdmin, async (req, res) => {
     #swagger.parameters['body'] = { in: 'body', schema: { $ref: '#/definitions/RefreshRequest' } }
     #swagger.responses[200] = { description: 'Logged out', schema: { $ref: '#/definitions/MessageResponse' } }
   */
-  const incoming = req.cookies?.admin_refresh_token || req.body?.refreshToken;
+  const cookieToken = req.cookies?.admin_refresh_token;
+  const incoming = cookieToken ? decryptCookieValue(cookieToken) : req.body?.refreshToken;
   if (incoming) await revokeRefreshToken(incoming);
   res.clearCookie('admin_refresh_token');
   res.clearCookie('csrf_token');
