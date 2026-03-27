@@ -143,8 +143,16 @@ function updateUserBadge() {
 
 function initNav() {
   const page = document.body.dataset.page;
+  const navAliases = {
+    admins: 'settings',
+    audit: 'settings',
+    pricing: 'finance',
+    bills: 'finance',
+    monnify: 'finance',
+  };
+  const activePage = navAliases[page] || page;
   document.querySelectorAll('.nav-link').forEach((link) => {
-    if (link.dataset.page === page) link.classList.add('active');
+    if (link.dataset.page === activePage) link.classList.add('active');
   });
 }
 

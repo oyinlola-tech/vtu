@@ -249,20 +249,16 @@ router.post('/verify-device', otpLimiter, async (req, res) => {
   let user = null;
   if (code) {
     const otp = await verifyOtp({ email, purpose: 'device_login', code });
-    if (otp) {
-      const [rows] = await pool.query(
-        'SELECT id, full_name, email, phone FROM users WHERE id = ?',
-        [otp.user_id]
-      );
-      if (!rows.length) return res.status(404).json({ error: 'User not found' });
-      user = rows[0];
-    }
-  }
-
-  if (!user) {
-    if (!securityAnswer) {
+    if (!otp) {
       return res.status(400).json({ error: 'Invalid or expired OTP' });
     }
+    const [rows] = await pool.query(
+      'SELECT id, full_name, email, phone FROM users WHERE id = ?',
+      [otp.user_id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'User not found' });
+    user = rows[0];
+  } else {
     const [rows] = await pool.query(
       'SELECT id, full_name, email, phone FROM users WHERE email = ? LIMIT 1',
       [email]
