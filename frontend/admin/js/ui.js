@@ -12,6 +12,16 @@ const protectedPages = new Set([
   'audit',
 ]);
 
+function isDevHost() {
+  const host = window.location.hostname;
+  return host === 'localhost' || host === '127.0.0.1';
+}
+
+function isDevBypassEnabled() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('dev') === 'true';
+}
+
 function showLoader(show, text = 'Processing...') {
   const overlay = document.querySelector('.overlay');
   if (!overlay) return;
@@ -103,6 +113,7 @@ function initNav() {
 function ensureAuth() {
   const page = document.body.dataset.page;
   if (!protectedPages.has(page)) return;
+  if (isDevHost() && isDevBypassEnabled()) return;
   if (!getToken()) {
     window.location.href = '/admin/login';
   }
