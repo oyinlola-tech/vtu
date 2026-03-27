@@ -1,0 +1,77 @@
+@import url('/css/base.css');
+
+.faq-list {
+  display: grid;
+  gap: 16px;
+}
+
+.faq-search {
+  display: grid;
+  gap: 8px;
+}
+
+[data-faq-count] {
+  margin: 0;
+}
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.faq-title i {
+  color: var(--accent-strong);
+}
+
+.faq-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--accent-strong);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.faq-item[open] .faq-toggle {
+  transform: rotate(45deg);
+  background: rgba(20, 184, 166, 0.16);
+  color: var(--accent-2);
+}
+
+.faq-content {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.faq-content ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}

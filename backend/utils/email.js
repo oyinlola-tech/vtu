@@ -7,10 +7,12 @@ dotenv.config();
 const EMAIL_FROM = process.env.EMAIL_FROM || 'no-reply@glyvtu.ng';
 const BRAND = 'GLY VTU';
 const WINE = '#6b0f2e';
+const DEEP = '#2b0a17';
 const BLACK = '#0b0b0b';
 const WHITE = '#ffffff';
 const LIGHT = '#f6f1f3';
 const BORDER = '#e7d9df';
+const SLATE = '#6e6a73';
 const LOGO_URL = process.env.EMAIL_LOGO_URL || '';
 const BRAND_URL = process.env.BRAND_URL || '';
 const SUPPORT_URL = process.env.SUPPORT_URL || '';
@@ -32,7 +34,7 @@ function transporter() {
   });
 }
 
-function baseTemplate({ title, body, footer, highlight }) {
+function baseTemplate({ title, body, footer, highlight, cta }) {
   return `<!DOCTYPE html>
   <html>
     <head>
@@ -40,32 +42,39 @@ function baseTemplate({ title, body, footer, highlight }) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>${title}</title>
     </head>
-    <body style="margin:0;background:${BLACK};font-family:Arial,sans-serif;color:${WHITE};">
-      <div style="max-width:620px;margin:0 auto;padding:28px;background:${BLACK};">
-        <div style="background:linear-gradient(135deg, ${WINE}, ${BLACK});padding:22px;border-radius:18px;color:${WHITE};display:flex;align-items:center;gap:14px;">
+    <body style="margin:0;background:${LIGHT};font-family:Arial,sans-serif;color:${BLACK};">
+      <div style="max-width:640px;margin:0 auto;padding:32px 18px;">
+        <div style="background:linear-gradient(135deg, ${WINE}, ${DEEP});padding:24px;border-radius:20px;color:${WHITE};display:flex;align-items:center;gap:14px;box-shadow:0 14px 34px rgba(27,7,16,0.28);">
           ${
             LOGO_URL
-              ? `<img src="${LOGO_URL}" alt="${BRAND}" style="width:42px;height:42px;border-radius:10px;background:${WHITE};padding:6px;" />`
+              ? `<img src="${LOGO_URL}" alt="${BRAND}" style="width:46px;height:46px;border-radius:12px;background:${WHITE};padding:6px;" />`
               : ''
           }
           <div>
-            <h1 style="margin:0;font-size:22px;letter-spacing:0.4px;">${BRAND}</h1>
-            <p style="margin:6px 0 0;font-size:12px;letter-spacing:0.6px;">Nigeria Bill Payments & Wallet</p>
+            <h1 style="margin:0;font-size:22px;letter-spacing:0.6px;">${BRAND}</h1>
+            <p style="margin:6px 0 0;font-size:12px;letter-spacing:0.8px;opacity:0.9;">Nigeria Bill Payments & Wallet</p>
           </div>
         </div>
-        <div style="background:${WHITE};color:${BLACK};padding:26px;border-radius:18px;margin-top:16px;border:1px solid ${BORDER};">
-          <h2 style="margin-top:0;color:${WINE};">${title}</h2>
+        <div style="background:${WHITE};color:${BLACK};padding:28px;border-radius:20px;margin-top:18px;border:1px solid ${BORDER};box-shadow:0 12px 30px rgba(33,12,20,0.08);">
+          <h2 style="margin-top:0;color:${WINE};font-size:20px;">${title}</h2>
           ${highlight ? `<div style="background:${LIGHT};border:1px solid ${BORDER};padding:14px;border-radius:12px;margin:14px 0;color:${BLACK};">${highlight}</div>` : ''}
           ${body}
+          ${
+            cta?.label && cta?.href
+              ? `<div style="margin-top:18px;">
+                  <a href="${cta.href}" style="display:inline-block;background:${WINE};color:${WHITE};text-decoration:none;padding:12px 18px;border-radius:999px;font-weight:600;">${cta.label}</a>
+                </div>`
+              : ''
+          }
         </div>
-        <p style="font-size:12px;color:#cfcfcf;margin-top:14px;line-height:1.5;">
-          ${footer}<br />Need help? Reply to this email.
+        <p style="font-size:12px;color:${SLATE};margin-top:16px;line-height:1.6;">
+          ${footer}<br />Need help? Reply to this email or visit support.
         </p>
-        <div style="font-size:12px;color:#cfcfcf;display:flex;gap:12px;flex-wrap:wrap;">
-          ${BRAND_URL ? `<a href="${BRAND_URL}" style="color:#cfcfcf;">Website</a>` : ''}
-          ${SUPPORT_URL ? `<a href="${SUPPORT_URL}" style="color:#cfcfcf;">Support</a>` : ''}
-          ${PRIVACY_URL ? `<a href="${PRIVACY_URL}" style="color:#cfcfcf;">Privacy</a>` : ''}
-          ${TERMS_URL ? `<a href="${TERMS_URL}" style="color:#cfcfcf;">Terms</a>` : ''}
+        <div style="font-size:12px;color:${SLATE};display:flex;gap:12px;flex-wrap:wrap;">
+          ${BRAND_URL ? `<a href="${BRAND_URL}" style="color:${SLATE};">Website</a>` : ''}
+          ${SUPPORT_URL ? `<a href="${SUPPORT_URL}" style="color:${SLATE};">Support</a>` : ''}
+          ${PRIVACY_URL ? `<a href="${PRIVACY_URL}" style="color:${SLATE};">Privacy</a>` : ''}
+          ${TERMS_URL ? `<a href="${TERMS_URL}" style="color:${SLATE};">Terms</a>` : ''}
         </div>
       </div>
     </body>
@@ -107,6 +116,129 @@ function createReceiptPdf({ title, name, details }) {
       doc.fillColor(BLACK).text(`  ${line}`, { continued: false });
     });
     doc.moveDown(2);
+    doc.fillColor('#666').fontSize(10).text('Thank you for using GLY VTU.');
+    doc.end();
+  });
+}
+
+function createStatementPdf({
+  name,
+  startDate,
+  endDate,
+  openingBalance = 0,
+  closingBalance = 0,
+  transactions,
+}) {
+  return new Promise((resolve) => {
+    const doc = new PDFDocument({ size: 'A4', margin: 50 });
+    const chunks = [];
+    doc.on('data', (c) => chunks.push(c));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+
+    const columns = [
+      { label: 'Date', width: 75 },
+      { label: 'Type', width: 50 },
+      { label: 'Status', width: 50 },
+      { label: 'Amount', width: 65 },
+      { label: 'Fee', width: 50 },
+      { label: 'Total', width: 65 },
+      { label: 'Balance', width: 65 },
+      { label: 'Reference', width: 75 },
+    ];
+
+    const formatMoney = (value) => `NGN ${Number(value || 0).toFixed(2)}`;
+    const formatDate = (value) => new Date(value).toLocaleDateString();
+
+    const addHeader = () => {
+      doc.fillColor(WINE).fontSize(20).text(BRAND, { align: 'left' });
+      doc.moveDown(0.4);
+      doc.fillColor(BLACK).fontSize(14).text('Account Statement');
+      doc
+        .fontSize(10)
+        .fillColor('#666')
+        .text(`Customer: ${name || 'Customer'}`);
+      doc
+        .fontSize(10)
+        .fillColor('#666')
+        .text(`Period: ${startDate} to ${endDate}`);
+      doc.moveDown(0.8);
+      doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#ddd').stroke();
+      doc.moveDown(0.6);
+    };
+
+    const addTableHeader = () => {
+      let x = 50;
+      doc.fillColor(BLACK).fontSize(9).font('Helvetica-Bold');
+      columns.forEach((col) => {
+        doc.text(col.label, x, doc.y, { width: col.width });
+        x += col.width;
+      });
+      doc.font('Helvetica');
+      doc.moveDown(0.6);
+      doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#eee').stroke();
+      doc.moveDown(0.4);
+    };
+
+    const addRow = (row) => {
+      let x = 50;
+      const values = [
+        formatDate(row.created_at),
+        String(row.type || '').toUpperCase(),
+        String(row.status || '').toUpperCase(),
+        formatMoney(row.amount),
+        formatMoney(row.fee),
+        formatMoney(row.total),
+        formatMoney(row.running_balance),
+        row.reference || '-',
+      ];
+      doc.fillColor(BLACK).fontSize(9);
+      values.forEach((value, idx) => {
+        doc.text(value, x, doc.y, { width: columns[idx].width });
+        x += columns[idx].width;
+      });
+      doc.moveDown(0.6);
+    };
+
+    addHeader();
+    addTableHeader();
+
+    if (!transactions.length) {
+      doc.fillColor('#666').fontSize(10).text('No transactions in this period.');
+      doc.end();
+      return;
+    }
+
+    transactions.forEach((row) => {
+      if (doc.y > 720) {
+        doc.addPage();
+        addHeader();
+        addTableHeader();
+      }
+      addRow(row);
+    });
+
+    doc.moveDown(1);
+    const totalValue = transactions.reduce(
+      (sum, row) => sum + Number(row.total || 0),
+      0
+    );
+    doc
+      .fillColor(BLACK)
+      .fontSize(10)
+      .text(`Opening balance: NGN ${Number(openingBalance || 0).toFixed(2)}`);
+    doc
+      .fillColor(BLACK)
+      .fontSize(10)
+      .text(`Closing balance: NGN ${Number(closingBalance || 0).toFixed(2)}`);
+    doc
+      .fillColor(BLACK)
+      .fontSize(10)
+      .text(`Total transactions: ${transactions.length}`);
+    doc
+      .fillColor(BLACK)
+      .fontSize(10)
+      .text(`Total value: NGN ${totalValue.toFixed(2)}`);
+    doc.moveDown(0.6);
     doc.fillColor('#666').fontSize(10).text('Thank you for using GLY VTU.');
     doc.end();
   });
@@ -172,6 +304,65 @@ export async function sendReceiptEmail({ to, name, title, details }) {
     subject: `${BRAND} Receipt`,
     html,
     attachments: [{ filename: `glyvtu-receipt-${Date.now()}.pdf`, content: pdf }],
+  });
+}
+
+export async function sendStatementEmail({
+  to,
+  name,
+  startDate,
+  endDate,
+  openingBalance,
+  closingBalance,
+  transactions = [],
+}) {
+  const totalCount = transactions.length;
+  const totalValue = transactions.reduce(
+    (sum, row) => sum + Number(row.total || 0),
+    0
+  );
+  const pdf = await createStatementPdf({
+    name,
+    startDate,
+    endDate,
+    openingBalance,
+    closingBalance,
+    transactions,
+  });
+  const html = baseTemplate({
+    title: 'Your Account Statement',
+    highlight: `<strong>Statement period:</strong> ${startDate} to ${endDate}<br/>
+      <strong>Total transactions:</strong> ${totalCount}<br/>
+      <strong>Total value:</strong> NGN ${totalValue.toFixed(2)}<br/>
+      <strong>Closing balance:</strong> NGN ${Number(closingBalance || 0).toFixed(2)}`,
+    body: `<p>Hello ${name || 'there'},</p>
+      <p>Your requested account statement is attached as a PDF.</p>
+      <p>For your security, please keep this document private.</p>`,
+    footer: 'If you did not request this statement, contact support immediately.',
+  });
+  await sendEmail({
+    to,
+    subject: `${BRAND} Account Statement`,
+    html,
+    attachments: [{ filename: `glyvtu-statement-${Date.now()}.pdf`, content: pdf }],
+  });
+}
+
+export async function generateStatementPdf({
+  name,
+  startDate,
+  endDate,
+  openingBalance,
+  closingBalance,
+  transactions = [],
+}) {
+  return createStatementPdf({
+    name,
+    startDate,
+    endDate,
+    openingBalance,
+    closingBalance,
+    transactions,
   });
 }
 

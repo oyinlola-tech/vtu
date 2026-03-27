@@ -12,7 +12,13 @@ const protectedPages = new Set([
   'terms',
   'privacy',
   'support',
+  'faq',
 ]);
+
+function isDevHost() {
+  const host = window.location.hostname;
+  return host === 'localhost' || host === '127.0.0.1';
+}
 
 function showLoader(show, text = 'Processing...') {
   const overlay = document.querySelector('.overlay');
@@ -105,6 +111,7 @@ function initNav() {
 function ensureAuth() {
   const page = document.body.dataset.page;
   if (!protectedPages.has(page)) return;
+  if (isDevHost()) return;
   if (!getToken()) {
     window.location.href = '/login';
   }

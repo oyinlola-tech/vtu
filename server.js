@@ -142,6 +142,7 @@ const userPages = [
   'terms',
   'privacy',
   'support',
+  'faq',
 ];
 
 userPages.forEach((page) => {

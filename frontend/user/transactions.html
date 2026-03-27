@@ -33,6 +33,31 @@
         <h1>Transaction History</h1>
         <p class="muted">All transfers and bill payments in one place.</p>
       </section>
+      <section class="card section-gap statement-card">
+        <span class="card-icon"><i class="fa-solid fa-file-pdf"></i></span>
+        <div class="statement-header">
+          <div>
+            <h3>Email Account Statement</h3>
+            <p class="muted">Choose a date range and we will email a PDF statement to you.</p>
+          </div>
+          <div class="statement-badge">PDF • Secure</div>
+        </div>
+        <form class="statement-form" data-statement-form>
+          <div>
+            <label>Start date</label>
+            <input type="date" name="startDate" required />
+          </div>
+          <div>
+            <label>End date</label>
+            <input type="date" name="endDate" required />
+          </div>
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-paper-plane"></i>
+            Send Statement
+          </button>
+        </form>
+        <p class="muted small">Statements are delivered to the email tied to your account.</p>
+      </section>
       <section class="card section-gap">
         <span class="card-icon"><i class="fa-solid fa-list-check"></i></span>
         <h3>Latest Activity</h3>

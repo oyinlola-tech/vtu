@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLY VTU | FAQ</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/faq.css" />
+  </head>
+  <body class="app" data-page="faq">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5c3.63 0 6.65-2.58 7.34-6h-7.34v-3h10.7c.2 0 .36.16.36.36 0 6.07-4.93 11-11 11s-11-4.93-11-11 4.93-11 11-11c2.61 0 5.02.92 6.9 2.45l-2.4 2.4A7.44 7.44 0 0 0 12 4.5z"/></svg></span>
+        <div class="brand-text">
+          <span class="brand-title">GLY VTU</span>
+          <span class="brand-sub">Premium Wallet Platform</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="theme-toggle" data-theme-toggle>
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Appearance
+        </button>
+      </div>
+    </header>
+    <main class="content">
+      <section class="hero">
+        <span class="eyebrow"><i class="fa-solid fa-circle-question"></i> Help Desk</span>
+        <h1>Frequently Asked Questions</h1>
+        <p class="muted">Find quick answers about transfers, bills, security, and account access.</p>
+      </section>
+
+      <section class="card section-gap">
+        <div class="faq-search">
+          <label for="faq-search">Search FAQs</label>
+          <input
+            id="faq-search"
+            type="search"
+            placeholder="Search topics like transfers, bills, security..."
+            autocomplete="off"
+          />
+        </div>
+        <p class="muted section-gap" data-faq-count></p>
+      </section>
+
+      <section class="card section-gap">
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>
+              <span class="faq-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                How do I secure my account?
+              </span>
+              <span class="faq-toggle"><i class="fa-solid fa-plus"></i></span>
+            </summary>
+            <div class="faq-content">
+              <p class="muted">Use a strong password, enable device verification, and keep your PIN private.</p>
+              <ul>
+                <li>Never share OTPs, passwords, or your transaction PIN.</li>
+                <li>Enable biometric approvals when available.</li>
+                <li>Review your login history regularly.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              <span class="faq-title">
+                <i class="fa-solid fa-building-columns"></i>
+                Why is my transfer pending?
+              </span>
+              <span class="faq-toggle"><i class="fa-solid fa-plus"></i></span>
+            </summary>
+            <div class="faq-content">
+              <p class="muted">Transfers can be delayed due to bank processing windows or compliance checks.</p>
+              <ul>
+                <li>Bank settlements can take additional time on weekends.</li>
+                <li>High-value transfers may be reviewed for security.</li>
+                <li>Check Activity for real-time status updates.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              <span class="faq-title">
+                <i class="fa-solid fa-bolt"></i>
+                How do bill payments work?
+              </span>
+              <span class="faq-toggle"><i class="fa-solid fa-plus"></i></span>
+            </summary>
+            <div class="faq-content">
+              <p class="muted">Select a provider, confirm the amount, and we process instantly with a receipt.</p>
+              <ul>
+                <li>We validate the account or meter number before payment.</li>
+                <li>Receipts are issued immediately after confirmation.</li>
+                <li>Failed payments are reversed where applicable.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              <span class="faq-title">
+                <i class="fa-solid fa-user-check"></i>
+                How do I increase my limits?
+              </span>
+              <span class="faq-toggle"><i class="fa-solid fa-plus"></i></span>
+            </summary>
+            <div class="faq-content">
+              <p class="muted">Complete KYC in Settings to unlock higher transfer and bill limits.</p>
+              <ul>
+                <li>Submit accurate BVN/NIN and address details.</li>
+                <li>Approval timelines vary by verification level.</li>
+                <li>Track KYC progress from the Settings page.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              <span class="faq-title">
+                <i class="fa-solid fa-qrcode"></i>
+                Can I receive money with QR?
+              </span>
+              <span class="faq-toggle"><i class="fa-solid fa-plus"></i></span>
+            </summary>
+            <div class="faq-content">
+              <p class="muted">Yes, you can share your receive QR or create a request QR for any amount.</p>
+              <ul>
+                <li>Share your QR directly from the Receive page.</li>
+                <li>Create request QR codes for invoices or reminders.</li>
+                <li>All QR transfers post directly to your wallet.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              <span class="faq-title">
+                <i class="fa-solid fa-headset"></i>
+                Need more help?
+              </span>
+              <span class="faq-toggle"><i class="fa-solid fa-plus"></i></span>
+            </summary>
+            <div class="faq-content">
+              <p class="muted">Visit Support to open a request or track existing tickets.</p>
+              <div class="hero-actions section-gap">
+                <a class="btn btn-primary" href="/support">Go to Support</a>
+                <a class="btn btn-ghost" href="/transactions">View Activity</a>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <a class="nav-link" data-page="dashboard" href="/dashboard">
+        <i class="fa-solid fa-house"></i>
+        Home
+      </a>
+      <a class="nav-link" data-page="wallet" href="/wallet">
+        <i class="fa-solid fa-wallet"></i>
+        Wallet
+      </a>
+      <a class="nav-link" data-page="bills" href="/bills">
+        <i class="fa-solid fa-bolt"></i>
+        Bills
+      </a>
+      <a class="nav-link" data-page="transactions" href="/transactions">
+        <i class="fa-solid fa-receipt"></i>
+        Activity
+      </a>
+      <a class="nav-link" data-page="settings" href="/settings">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+    </nav>
+
+    <div class="overlay">
+      <div class="loader"></div>
+      <div data-loader-text>Loading...</div>
+    </div>
+    <script type="module" src="/js/faq.js"></script>
+  </body>
+</html>
