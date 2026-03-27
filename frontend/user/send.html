@@ -39,7 +39,9 @@
           <span class="card-icon"><i class="fa-solid fa-building-columns"></i></span>
           <h3>Transfer Details</h3>
           <p class="muted">Choose bank transfer (default) or GLY VTU internal transfer.</p>
-          <form>
+          <form data-send-form>
+            <input type="hidden" name="pin" data-pin-hidden />
+            <input type="hidden" name="securityAnswer" data-security-hidden />
             <div class="grid two">
               <label class="radio">
                 <input type="radio" name="transferType" value="bank" checked />
@@ -50,15 +52,16 @@
                 GLY VTU User
               </label>
             </div>
-            <div data-bank-fields>
+            <div class="step" data-step="account">
               <label>Account Number</label>
-              <input type="text" name="accountNumber" inputmode="numeric" required />
+              <input type="text" name="accountNumber" inputmode="numeric" data-account-number required />
+              <small class="muted">Enter the 10-digit account number to continue.</small>
             </div>
-            <div data-bank-fields>
+            <div class="step" data-step="bank" hidden>
               <label>Select Bank</label>
               <select name="bankCode" data-bank-select required></select>
             </div>
-            <div data-bank-fields>
+            <div class="step" data-step="name" hidden>
               <label>Account Name</label>
               <input type="text" name="accountName" data-account-name readonly required />
               <small class="muted" data-account-status></small>
@@ -67,24 +70,35 @@
               <label>Recipient Email or Phone</label>
               <input type="text" name="to" />
             </div>
-            <div>
+            <div class="step" data-step="amount" hidden>
               <label>Amount (NGN)</label>
-              <input type="number" name="amount" min="100" step="0.01" required />
+              <input type="number" name="amount" min="100" step="0.01" data-amount required />
+              <small class="muted" data-balance-text></small>
             </div>
-            <div>
-              <label>Transaction PIN</label>
-              <input type="password" name="pin" inputmode="numeric" minlength="4" maxlength="6" required />
-            </div>
-            <div>
-              <label>Security Answer (for large transfers)</label>
-              <input type="password" name="securityAnswer" autocomplete="off" />
-              <small class="muted" data-security-question-text></small>
-            </div>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="button" data-open-pin disabled>
               <i class="fa-solid fa-paper-plane"></i>
-              Send Now
+              Continue
             </button>
           </form>
+          <div class="modal" data-pin-modal hidden>
+            <div class="modal-card">
+              <div class="modal-header">
+                <h3>Confirm Transfer</h3>
+                <button class="btn btn-ghost" type="button" data-close-pin>Cancel</button>
+              </div>
+              <p class="muted">Enter your transaction PIN to complete this transfer.</p>
+              <div class="modal-body">
+                <label>Transaction PIN</label>
+                <input type="password" data-pin-input inputmode="numeric" minlength="4" maxlength="6" />
+                <label class="section-gap">Security Answer (if required)</label>
+                <input type="password" data-security-answer autocomplete="off" />
+                <small class="muted" data-security-question-text></small>
+              </div>
+              <button class="btn btn-primary section-gap" type="button" data-confirm-pin>
+                Send Now
+              </button>
+            </div>
+          </div>
         </div>
         <div class="card">
           <span class="card-icon"><i class="fa-solid fa-shield-halved"></i></span>

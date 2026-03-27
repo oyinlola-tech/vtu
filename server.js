@@ -39,6 +39,9 @@ const __dirname = path.dirname(__filename);
 app.disable('x-powered-by');
 
 const isProd = process.env.NODE_ENV === 'production';
+let dbReady = false;
+let dbCheckedAt = null;
+let dbError = null;
 if (isProd) {
   const jwtSecret = process.env.JWT_SECRET;
   const jwtAdminSecret = process.env.JWT_ADMIN_SECRET || process.env.JWT_SECRET;
@@ -123,6 +126,12 @@ const adminDir = path.join(__dirname, 'frontend', 'admin');
 
 app.use('/', express.static(userDir));
 app.use('/admin', express.static(adminDir));
+
+if (!isProd) {
+  app.get('/dev-status', (req, res) => {
+    res.json({ dbReady, dbCheckedAt, dbError });
+  });
+}
 
 const userPages = [
   'splash',
@@ -246,47 +255,62 @@ app.use((err, req, res, next) => {
 
 const PORT = Number(process.env.PORT || 3000);
 
-initDatabase()
-  .then(async () => {
-    await swaggerReady;
-    app.listen(PORT, () => {
-      console.log(`GLY VTU API running on http://localhost:${PORT}`);
-    });
+async function startServer() {
+  try {
+    await initDatabase();
+    dbReady = true;
+    dbCheckedAt = new Date().toISOString();
+    dbError = null;
+  } catch (err) {
+    dbReady = false;
+    dbCheckedAt = new Date().toISOString();
+    dbError = err?.message || String(err);
+    if (isProd) {
+      console.error('Database init failed:', err);
+      process.exit(1);
+    }
+    console.warn('Database init failed (dev mode). Running UI without DB.');
+  }
 
-    const banksRefreshInterval = Number(process.env.BANKS_REFRESH_INTERVAL_MS || 21600000);
-    setInterval(() => {
-      refreshBankCache().catch((err) =>
-        console.error('Bank cache refresh failed:', err.message)
-      );
-    }, banksRefreshInterval);
-    refreshBankCache().catch((err) =>
-      console.error('Bank cache initial refresh failed:', err.message)
-    );
-
-    const retryInterval = Number(process.env.MONNIFY_RETRY_INTERVAL_MS || 60000);
-    const retryBatch = Number(process.env.MONNIFY_RETRY_BATCH || 20);
-    const retryMax = Number(process.env.MONNIFY_RETRY_MAX_ATTEMPTS || 5);
-    setInterval(async () => {
-      try {
-        const [rows] = await pool.query(
-          `SELECT payment_reference, raw_payload, attempts
-           FROM monnify_events
-           WHERE status = 'failed' AND attempts < ?
-           ORDER BY updated_at ASC
-           LIMIT ?`,
-          [retryMax, retryBatch]
-        );
-        for (const row of rows) {
-          if (!row.raw_payload) continue;
-          const payload = JSON.parse(row.raw_payload);
-          await processMonnifyEvent(payload, { ip: 'system', userAgent: 'retry-job' });
-        }
-      } catch (err) {
-        console.error('Monnify retry job error:', err.message);
-      }
-    }, retryInterval);
-  })
-  .catch((err) => {
-    console.error('Database init failed:', err);
-    process.exit(1);
+  await swaggerReady;
+  app.listen(PORT, () => {
+    console.log(`GLY VTU API running on http://localhost:${PORT}`);
   });
+
+  if (!dbReady) return;
+
+  const banksRefreshInterval = Number(process.env.BANKS_REFRESH_INTERVAL_MS || 21600000);
+  setInterval(() => {
+    refreshBankCache().catch((err) =>
+      console.error('Bank cache refresh failed:', err.message)
+    );
+  }, banksRefreshInterval);
+  refreshBankCache().catch((err) =>
+    console.error('Bank cache initial refresh failed:', err.message)
+  );
+
+  const retryInterval = Number(process.env.MONNIFY_RETRY_INTERVAL_MS || 60000);
+  const retryBatch = Number(process.env.MONNIFY_RETRY_BATCH || 20);
+  const retryMax = Number(process.env.MONNIFY_RETRY_MAX_ATTEMPTS || 5);
+  setInterval(async () => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT payment_reference, raw_payload, attempts
+         FROM monnify_events
+         WHERE status = 'failed' AND attempts < ?
+         ORDER BY updated_at ASC
+         LIMIT ?`,
+        [retryMax, retryBatch]
+      );
+      for (const row of rows) {
+        if (!row.raw_payload) continue;
+        const payload = JSON.parse(row.raw_payload);
+        await processMonnifyEvent(payload, { ip: 'system', userAgent: 'retry-job' });
+      }
+    } catch (err) {
+      console.error('Monnify retry job error:', err.message);
+    }
+  }, retryInterval);
+}
+
+startServer();

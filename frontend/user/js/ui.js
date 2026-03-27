@@ -25,6 +25,20 @@ function isDevBypassEnabled() {
   return params.get('dev') === 'true';
 }
 
+async function initDevBanner() {
+  if (!isDevHost()) return;
+  try {
+    const res = await fetch('/dev-status', { headers: { Accept: 'application/json' } });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.dbReady === false) {
+      showBanner('DB not connected (dev mode). UI only.', 'error', 8000);
+    }
+  } catch (err) {
+    // Ignore dev status errors to avoid blocking UI.
+  }
+}
+
 function showLoader(show, text = 'Processing...') {
   const overlay = document.querySelector('.overlay');
   if (!overlay) return;
@@ -104,6 +118,7 @@ function initTheme() {
   document.body.classList.add('page-loaded');
   initReveal();
   initStagger();
+  initDevBanner();
 }
 
 function initNav() {
