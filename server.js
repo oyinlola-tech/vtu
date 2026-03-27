@@ -22,6 +22,7 @@ import adminFinanceRoutes from './backend/routes/adminFinance.js';
 import monnifyWebhookRoutes from './backend/routes/monnifyWebhook.js';
 import adminMonnifyRoutes from './backend/routes/adminMonnify.js';
 import banksRoutes from './backend/routes/banks.js';
+import { refreshBankCache } from './backend/utils/bankCache.js';
 import { pool } from './backend/config/db.js';
 import { processMonnifyEvent } from './backend/utils/monnifyProcessor.js';
 import { authLimiter, adminAuthLimiter, webhookLimiter } from './backend/middleware/rateLimiters.js';
@@ -194,6 +195,16 @@ initDatabase()
     app.listen(PORT, () => {
       console.log(`GLY VTU API running on http://localhost:${PORT}`);
     });
+
+    const banksRefreshInterval = Number(process.env.BANKS_REFRESH_INTERVAL_MS || 21600000);
+    setInterval(() => {
+      refreshBankCache().catch((err) =>
+        console.error('Bank cache refresh failed:', err.message)
+      );
+    }, banksRefreshInterval);
+    refreshBankCache().catch((err) =>
+      console.error('Bank cache initial refresh failed:', err.message)
+    );
 
     const retryInterval = Number(process.env.MONNIFY_RETRY_INTERVAL_MS || 60000);
     const retryBatch = Number(process.env.MONNIFY_RETRY_BATCH || 20);

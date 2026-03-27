@@ -70,30 +70,6 @@ async function seedDefaults(conn) {
      SELECT id, 0, 'flat', 10, 'NGN', 1 FROM bill_providers`
   );
 
-  await conn.query(
-    `INSERT IGNORE INTO banks (name, code, active) VALUES
-      ('Access Bank', '044', 1),
-      ('First Bank of Nigeria', '011', 1),
-      ('Guaranty Trust Bank', '058', 1),
-      ('United Bank for Africa', '033', 1),
-      ('Zenith Bank', '057', 1),
-      ('Fidelity Bank', '070', 1),
-      ('Union Bank', '032', 1),
-      ('Stanbic IBTC', '221', 1),
-      ('Wema Bank', '035', 1),
-      ('Sterling Bank', '232', 1),
-      ('Polaris Bank', '076', 1),
-      ('FCMB', '214', 1),
-      ('EcoBank', '050', 1),
-      ('Keystone Bank', '082', 1),
-      ('Unity Bank', '215', 1),
-      ('Jaiz Bank', '301', 1),
-      ('Kuda Microfinance Bank', '50211', 1),
-      ('PalmPay', '999991', 1),
-      ('Moniepoint', '999992', 1),
-      ('OPay', '999993', 1)`
-  );
-
   await conn.query('UPDATE schema_meta SET seeded = 1 WHERE id = 1');
 }
 
@@ -314,11 +290,18 @@ export async function initDatabase() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(120) NOT NULL,
         code VARCHAR(20) NOT NULL UNIQUE,
-        active TINYINT NOT NULL DEFAULT 1
+        active TINYINT NOT NULL DEFAULT 1,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS bank_cache_meta (
+        id INT PRIMARY KEY,
+        refreshed_at TIMESTAMP NULL
       );
     `);
 
     await conn.query('INSERT IGNORE INTO schema_meta (id, seeded) VALUES (1, 0)');
+    await conn.query('INSERT IGNORE INTO bank_cache_meta (id, refreshed_at) VALUES (1, NULL)');
     await seedDefaults(conn);
     await seedAdmin(conn);
     await ensureUserSecurityColumns(conn);

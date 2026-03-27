@@ -8,6 +8,9 @@ const SECRET_KEY = process.env.MONNIFY_SECRET_KEY || '';
 const CONTRACT_CODE = process.env.MONNIFY_CONTRACT_CODE || '';
 const RESERVE_PATH =
   process.env.MONNIFY_RESERVE_PATH || '/api/v2/bank-transfer/reserved-accounts';
+const BANKS_PATH = process.env.MONNIFY_BANKS_PATH || '/api/v1/banks';
+const VALIDATE_PATH =
+  process.env.MONNIFY_VALIDATE_PATH || '/api/v1/disbursements/account/validate';
 
 function authHeader() {
   const token = Buffer.from(`${API_KEY}:${SECRET_KEY}`).toString('base64');
@@ -28,6 +31,47 @@ async function getAccessToken() {
   }
   const data = await res.json();
   return data?.responseBody?.accessToken;
+}
+
+export async function fetchBanks() {
+  if (!API_KEY || !SECRET_KEY) {
+    throw new Error('Monnify credentials missing');
+  }
+  const token = await getAccessToken();
+  const res = await fetch(`${BASE_URL}${BANKS_PATH}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Monnify banks fetch failed: ${text}`);
+  }
+  const data = await res.json();
+  return data?.responseBody || [];
+}
+
+export async function validateBankAccount({ accountNumber, bankCode }) {
+  if (!API_KEY || !SECRET_KEY) {
+    throw new Error('Monnify credentials missing');
+  }
+  const token = await getAccessToken();
+  const url = new URL(`${BASE_URL}${VALIDATE_PATH}`);
+  url.searchParams.set('accountNumber', accountNumber);
+  url.searchParams.set('bankCode', bankCode);
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Monnify account validation failed: ${text}`);
+  }
+  const data = await res.json();
+  return data?.responseBody || null;
 }
 
 export async function createReservedAccount({
