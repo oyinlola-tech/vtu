@@ -120,6 +120,11 @@ a {
   box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
 }
 
+.brand-mark svg {
+  width: 20px;
+  height: 20px;
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;

@@ -73,15 +73,19 @@ function initStagger() {
 
 function initTheme() {
   const stored = localStorage.getItem('gly_vtu_admin_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', stored);
+  let current = stored;
+  document.documentElement.setAttribute('data-theme', current);
   const toggle = document.querySelector('[data-theme-toggle]');
   if (toggle) {
-    toggle.textContent = stored === 'dark' ? 'Light Mode' : 'Dark Mode';
+    const label = current === 'dark' ? 'Light Mode' : 'Dark Mode';
+    toggle.innerHTML = `<i class="fa-solid fa-circle-half-stroke"></i>${label}`;
     toggle.addEventListener('click', () => {
-      const next = stored === 'dark' ? 'light' : 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
       localStorage.setItem('gly_vtu_admin_theme', next);
       document.documentElement.setAttribute('data-theme', next);
-      toggle.textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+      const nextLabel = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+      toggle.innerHTML = `<i class="fa-solid fa-circle-half-stroke"></i>${nextLabel}`;
+      current = next;
     });
   }
   document.body.classList.add('page-loaded');
