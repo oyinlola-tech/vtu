@@ -16,3 +16,17 @@
 .auth-links a {
   color: var(--accent);
 }
+
+.benefit-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.benefit-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}

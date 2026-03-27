@@ -113,8 +113,9 @@ function initTheme() {
     });
   }
   document.body.classList.add('page-loaded');
-  initReveal();
-  initStagger();
+  if (document.querySelector('.bottom-nav')) {
+    document.body.classList.add('has-nav');
+  }
   initDevBanner();
   updateUserBadge();
 }
@@ -138,6 +139,7 @@ function updateUserBadge() {
   if (avatar) avatar.textContent = getInitials(name);
   if (profileName) profileName.textContent = name;
 }
+
 
 function initNav() {
   const page = document.body.dataset.page;

@@ -20,12 +20,7 @@
           <span class="brand-sub">Premium Wallet Platform</span>
         </div>
       </div>
-      <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>
-          <i class="fa-solid fa-circle-half-stroke"></i>
-          Appearance
-        </button>
-      </div>
+      <div class="top-actions"></div>
     </header>
     <main class="content">
       <section class="hero">
@@ -38,14 +33,22 @@
         <form>
           <div>
             <label>OTP Code</label>
-            <input type="text" name="code" inputmode="numeric" required />
+            <input type="text" name="code" inputmode="numeric" />
+            <small class="muted">Enter the OTP sent to your email, or use your security question below.</small>
           </div>
           <div>
             <label>Device Label (optional)</label>
             <input type="text" name="label" placeholder="My iPhone, Office Laptop" />
           </div>
+          <div class="section-gap">
+            <label class="toggle">
+              <input type="checkbox" data-security-alt />
+              Use security question instead of OTP
+            </label>
+            <small class="muted">Only available if you have a security question enabled.</small>
+          </div>
           <div>
-            <label>Security Answer (if required)</label>
+            <label>Security Answer</label>
             <input type="password" name="securityAnswer" autocomplete="off" />
             <small class="muted" data-security-question-text></small>
           </div>

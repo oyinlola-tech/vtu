@@ -1,7 +1,7 @@
 # Security Policy
 
 ## Overview
-GLY VTU is a private, security‑sensitive fintech platform. All security issues must be handled confidentially.
+GLY VTU is a private, security-sensitive fintech platform. All security issues must be handled confidentially.
 
 ## Reporting a Vulnerability
 If you discover a vulnerability:
@@ -33,9 +33,9 @@ Baseline controls in this project:
 - OTP rate limits
 - Device verification for unknown logins
 - Audit logs for sensitive events
-- Role‑based access control (RBAC)
+- Role-based access control (RBAC)
 - Webhook signature verification (when configured)
+- Optional security questions as an alternative to OTP during login
 
 ## Disclosure Policy
 All disclosures require explicit permission from the owner (see `LICENSE`).
-

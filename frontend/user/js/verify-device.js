@@ -8,6 +8,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (emailField) emailField.textContent = email || '';
   const securityAnswerInput = document.querySelector('input[name="securityAnswer"]');
   const securityQuestionText = document.querySelector('[data-security-question-text]');
+  const codeInput = document.querySelector('input[name="code"]');
+  const securityAlt = document.querySelector('[data-security-alt]');
+  const securityAltWrap = securityAlt?.closest('.section-gap');
+  let securityEnabled = false;
+
+  function applySecurityMode(useSecurity) {
+    if (!codeInput || !securityAnswerInput) return;
+    if (!securityEnabled) {
+      codeInput.required = true;
+      codeInput.disabled = false;
+      securityAnswerInput.required = false;
+      return;
+    }
+    codeInput.required = !useSecurity;
+    codeInput.disabled = Boolean(useSecurity);
+    if (useSecurity) codeInput.value = '';
+    securityAnswerInput.required = Boolean(useSecurity);
+  }
   if (email) {
     try {
       const question = await api('/api/auth/security-question', {
@@ -19,12 +37,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (securityQuestionText) {
           securityQuestionText.textContent = `Question: ${question.question}`;
         }
-        if (securityAnswerInput) securityAnswerInput.required = true;
+        securityEnabled = true;
+        if (securityAlt) securityAlt.checked = false;
+        applySecurityMode(false);
+      } else {
+        applySecurityMode(false);
       }
     } catch (err) {
       if (securityQuestionText) securityQuestionText.textContent = '';
+      applySecurityMode(false);
     }
   }
+  if (!email) {
+    applySecurityMode(false);
+  }
+  if (!securityEnabled && securityAltWrap) {
+    securityAltWrap.style.display = 'none';
+  }
+  securityAlt?.addEventListener('change', () => {
+    applySecurityMode(securityAlt.checked);
+  });
   const form = document.querySelector('form');
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();

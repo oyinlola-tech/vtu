@@ -239,24 +239,44 @@ router.post('/verify-device', otpLimiter, async (req, res) => {
     #swagger.responses[400] = { description: 'Invalid OTP or payload', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
   const { email, code, deviceId, label, securityAnswer } = req.body || {};
-  if (!email || !code || !deviceId) {
+  if (!email || !deviceId) {
     return res.status(400).json({ error: 'Missing fields' });
   }
-  const otp = await verifyOtp({ email, purpose: 'device_login', code });
-  if (!otp) return res.status(400).json({ error: 'Invalid or expired OTP' });
+  if (!code && !securityAnswer) {
+    return res.status(400).json({ error: 'OTP code or security answer required' });
+  }
 
-  const [rows] = await pool.query('SELECT id, full_name, email, phone FROM users WHERE id = ?', [
-    otp.user_id,
-  ]);
-  if (!rows.length) return res.status(404).json({ error: 'User not found' });
-  const user = rows[0];
-  const enforcement = await enforceSecurityQuestion({
-    userId: user.id,
-    answer: securityAnswer,
-    flow: 'device_verify',
-  });
-  if (!enforcement.ok) {
-    return res.status(enforcement.status).json({ error: enforcement.message });
+  let user = null;
+  if (code) {
+    const otp = await verifyOtp({ email, purpose: 'device_login', code });
+    if (otp) {
+      const [rows] = await pool.query(
+        'SELECT id, full_name, email, phone FROM users WHERE id = ?',
+        [otp.user_id]
+      );
+      if (!rows.length) return res.status(404).json({ error: 'User not found' });
+      user = rows[0];
+    }
+  }
+
+  if (!user) {
+    if (!securityAnswer) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+    const [rows] = await pool.query(
+      'SELECT id, full_name, email, phone FROM users WHERE email = ? LIMIT 1',
+      [email]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'User not found' });
+    const enforcement = await enforceSecurityQuestion({
+      userId: rows[0].id,
+      answer: securityAnswer,
+      flow: 'device_verify',
+    });
+    if (!enforcement.ok) {
+      return res.status(enforcement.status).json({ error: enforcement.message });
+    }
+    user = rows[0];
   }
 
   await pool.query(
@@ -348,21 +368,12 @@ router.post('/reset-password', async (req, res) => {
     #swagger.responses[200] = { description: 'Password reset', schema: { $ref: '#/definitions/MessageResponse' } }
     #swagger.responses[400] = { description: 'Invalid OTP or payload', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const { email, code, newPassword, securityAnswer } = req.body || {};
+  const { email, code, newPassword } = req.body || {};
   if (!email || !code || !newPassword) {
     return res.status(400).json({ error: 'Missing fields' });
   }
   const otp = await verifyOtp({ email, purpose: 'password_reset', code });
   if (!otp) return res.status(400).json({ error: 'Invalid or expired OTP' });
-  const enforcement = await enforceSecurityQuestion({
-    userId: otp.user_id,
-    answer: securityAnswer,
-    flow: 'password_reset',
-  });
-  if (!enforcement.ok) {
-    return res.status(enforcement.status).json({ error: enforcement.message });
-  }
-
   const passwordHash = await bcrypt.hash(newPassword, 12);
   await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [passwordHash, otp.user_id]);
   sendSecurityEmail({

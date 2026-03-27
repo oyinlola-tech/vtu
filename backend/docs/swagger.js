@@ -160,14 +160,23 @@ const doc = {
     },
     VerifyDeviceRequest: {
       type: 'object',
-      required: ['email', 'code', 'deviceId'],
+      required: ['email', 'deviceId'],
       properties: {
         email: { type: 'string', description: 'User email' },
-        code: { type: 'string', description: 'OTP code' },
+        code: { type: 'string', description: 'OTP code (optional if using security question)' },
         deviceId: { type: 'string', description: 'Client device identifier' },
         label: { type: 'string', description: 'Friendly device name' },
+        securityAnswer: {
+          type: 'string',
+          description: 'Security answer (alternative to OTP when enabled)',
+        },
       },
-      example: { email: 'ada@example.com', code: '123456', deviceId: 'device-xyz', label: 'iPhone 14' },
+      example: {
+        email: 'ada@example.com',
+        code: '123456',
+        deviceId: 'device-xyz',
+        label: 'iPhone 14',
+      },
     },
     ForgotPasswordRequest: {
       type: 'object',

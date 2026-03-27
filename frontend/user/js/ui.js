@@ -116,8 +116,9 @@ function initTheme() {
     });
   }
   document.body.classList.add('page-loaded');
-  initReveal();
-  initStagger();
+  if (document.querySelector('.bottom-nav')) {
+    document.body.classList.add('has-nav');
+  }
   initDevBanner();
   updateUserBadge();
 }
@@ -142,10 +143,21 @@ function updateUserBadge() {
   if (profileName) profileName.textContent = name;
 }
 
+
 function initNav() {
   const page = document.body.dataset.page;
+  const navAliases = {
+    send: 'wallet',
+    receive: 'wallet',
+    kyc: 'settings',
+    terms: 'settings',
+    privacy: 'settings',
+    support: 'settings',
+    faq: 'settings',
+  };
+  const activePage = navAliases[page] || page;
   document.querySelectorAll('.nav-link').forEach((link) => {
-    if (link.dataset.page === page) link.classList.add('active');
+    if (link.dataset.page === activePage) link.classList.add('active');
   });
 }
 

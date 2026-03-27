@@ -2,23 +2,16 @@ import bcrypt from 'bcryptjs';
 import { pool } from '../config/db.js';
 import { normalizeAnswer } from './securityQuestions.js';
 
-const REQUIRE_PIN_CHANGE = (process.env.SECURITY_QUESTION_REQUIRE_PIN_CHANGE || 'true') === 'true';
 const REQUIRE_DEVICE_VERIFY =
   (process.env.SECURITY_QUESTION_REQUIRE_DEVICE_VERIFY || 'true') === 'true';
-const REQUIRE_PASSWORD_RESET =
-  (process.env.SECURITY_QUESTION_REQUIRE_PASSWORD_RESET || 'true') === 'true';
-const TRANSFER_LIMIT = Number(process.env.SECURITY_QUESTION_TRANSFER_LIMIT || 0);
 
-function isRequired(flow, amount) {
-  if (flow === 'pin_change') return REQUIRE_PIN_CHANGE;
+function isRequired(flow) {
   if (flow === 'device_verify') return REQUIRE_DEVICE_VERIFY;
-  if (flow === 'password_reset') return REQUIRE_PASSWORD_RESET;
-  if (flow === 'transfer') return TRANSFER_LIMIT > 0 && Number(amount) >= TRANSFER_LIMIT;
   return false;
 }
 
-async function enforceSecurityQuestion({ userId, answer, flow, amount }) {
-  if (!isRequired(flow, amount)) return { ok: true, required: false };
+async function enforceSecurityQuestion({ userId, answer, flow }) {
+  if (!isRequired(flow)) return { ok: true, required: false };
 
   const [[row]] = await pool.query(
     'SELECT security_question, security_answer_hash, security_question_enabled FROM users WHERE id = ?',

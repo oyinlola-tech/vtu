@@ -155,7 +155,7 @@ a {
 .content {
   flex: 1;
   padding: 18px;
-  padding-bottom: 96px;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
@@ -362,7 +362,7 @@ textarea:focus {
 
 .bottom-nav {
   position: fixed;
-  bottom: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
   left: 12px;
   right: 12px;
   background: var(--panel-glass);
@@ -376,10 +376,7 @@ textarea:focus {
   box-shadow: none;
 }
 
-.sidebar-header,
-.sidebar-profile {
-  display: none;
-}
+/* Sidebar extras removed */
 
 .nav-link {
   display: flex;
@@ -459,7 +456,7 @@ textarea:focus {
   flex-direction: column;
   gap: 12px;
   z-index: 10;
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .overlay.show {
@@ -470,8 +467,8 @@ textarea:focus {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border: 3px solid var(--accent);
+  border-top-color: var(--accent);
   animation: spin 1s linear infinite;
 }
 
@@ -485,16 +482,18 @@ textarea:focus {
 }
 
 @media (min-width: 900px) {
-  .content {
+  body:not(.has-nav) .content {
+    padding: 28px 60px;
+  }
+  body.has-nav .content {
     padding: 28px 60px 28px 260px;
   }
-  .topbar {
+  body.has-nav .topbar {
     margin-left: 220px;
+    width: calc(100% - 220px);
+    left: 0;
   }
-  .app {
-    flex-direction: row;
-  }
-  .bottom-nav {
+  body.has-nav .bottom-nav {
     top: 0;
     bottom: 0;
     left: 0;
@@ -509,50 +508,7 @@ textarea:focus {
     transform: none;
     background: var(--panel);
   }
-  .bottom-nav::before {
-    content: '';
-    display: block;
-    height: 16px;
-  }
-  .sidebar-header {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 0 6px 10px;
-  }
-  .sidebar-header .brand-title {
-    font-size: 18px;
-  }
-  .sidebar-header .brand-sub {
-    font-size: 10px;
-  }
-  .sidebar-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 8px 6px 12px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    background: var(--bg);
-  }
-  .sidebar-profile .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--bg);
-    display: grid;
-    place-items: center;
-    font-weight: 700;
-  }
-  .sidebar-profile .name {
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .sidebar-profile .tier {
-    font-size: 11px;
-  }
-  .nav-link {
+  body.has-nav .nav-link {
     flex-direction: row;
     justify-content: flex-start;
     gap: 10px;
@@ -562,16 +518,17 @@ textarea:focus {
     width: 100%;
     align-items: center;
   }
-  .nav-link.active {
+  body.has-nav .nav-link.active {
     background: var(--accent);
     color: var(--bg);
   }
-  .nav-link.active i {
+  body.has-nav .nav-link.active i {
     color: var(--bg);
   }
-  .nav-link i {
+  body.has-nav .nav-link i {
     font-size: 15px;
   }
+
 }
 
 .radio,
@@ -620,7 +577,7 @@ textarea:focus {
   }
   .content {
     padding: 16px;
-    padding-bottom: 92px;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
   }
 }
 

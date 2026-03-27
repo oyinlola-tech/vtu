@@ -1,6 +1,6 @@
 # GLY VTU
 
-GLY VTU is a Nigeria‑focused fintech platform for bill payments, wallet transfers, KYC, and virtual account funding. It ships with user and admin interfaces, a Node.js API, MySQL persistence, OTP security flows, audit logs, and Monnify reserved accounts.
+GLY VTU is a Nigeria-focused fintech platform for bill payments, wallet transfers, KYC, and virtual account funding. It ships with user and admin interfaces, a Node.js API, MySQL persistence, OTP security flows, audit logs, and Monnify reserved accounts.
 
 ## Owner
 - **Owner:** Oluwayemi Oyinlola Michael  
@@ -13,7 +13,7 @@ GLY VTU is a Nigeria‑focused fintech platform for bill payments, wallet transf
 - Admin role management and permissions
 - Audit logs with filters
 - Financial dashboard and exports (CSV/PDF)
-- Monnify reserved accounts + webhook auto‑credit
+- Monnify reserved accounts + webhook auto-credit
 - Email notifications (welcome, OTP, receipts, security alerts)
 
 ## Tech Stack
@@ -43,7 +43,7 @@ npm install
 ```
 
 ### 2) Configure environment
-Copy `.env.example` to `.env` and fill required values.
+Copy `.env.example` to `.env` and fill required values. In development you can run without a database or secrets (UI-only mode) and optionally bypass auth (see below).
 
 Key settings:
 - DB_* (MySQL connection)
@@ -60,6 +60,10 @@ Default:
 - User: `http://localhost:3000/splash`
 - Admin: `http://localhost:3000/admin/splash`
 
+### Development helpers
+- **UI-only mode:** if the database is unavailable, the server boots the UI and exposes `/dev-status` with `dbReady=false`.
+- **Auth bypass:** on localhost only, append `?dev=true` to any protected page URL to skip login checks (e.g., `http://localhost:3000/dashboard?dev=true`).
+
 ## Environment Variables (Core)
 | Variable | Description |
 |---|---|
@@ -75,7 +79,7 @@ Default:
 | `MONNIFY_SECRET_KEY` | Monnify secret |
 | `MONNIFY_CONTRACT_CODE` | Monnify contract |
 | `MONNIFY_WEBHOOK_SECRET` | Webhook signature secret |
-| `MONNIFY_WEBHOOK_IPS` | Comma‑separated IP allowlist |
+| `MONNIFY_WEBHOOK_IPS` | Comma-separated IP allowlist |
 
 ## Key API Endpoints (User)
 | Method | Endpoint | Description |
@@ -104,6 +108,16 @@ Default:
 | GET | `/api/admin/finance/overview` | Finance dashboard |
 | GET | `/api/admin/finance/export` | CSV/PDF export |
 
+## Help & Legal Pages (User)
+User-facing help and legal content is available at:
+- `/faq`
+- `/support`
+- `/terms`
+- `/privacy`
+
+## Security Question Usage
+Security questions are **optional** and are used as an **alternative to OTP during login** (device verification). They are not required for transfers or PIN changes.
+
 ## Monnify Webhook
 Set the webhook URL in Monnify:
 ```
@@ -121,4 +135,3 @@ See `SECURITY.md` for security practices and reporting.
 
 ## License
 This project is **private**. See `LICENSE`.
-

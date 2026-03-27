@@ -1,1 +1,17 @@
 @import url('/css/base.css');
+
+.splash {
+  gap: 18px;
+}
+
+.splash-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.splash .pill {
+  font-size: 11px;
+  padding: 6px 10px;
+}

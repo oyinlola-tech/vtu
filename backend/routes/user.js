@@ -7,7 +7,6 @@ import { isValidPin, setTransactionPin, verifyTransactionPin, getPinStatus } fro
 import { logAudit } from '../utils/audit.js';
 import bcrypt from 'bcryptjs';
 import { QUESTIONS, normalizeAnswer } from '../utils/securityQuestions.js';
-import { enforceSecurityQuestion } from '../utils/securityQuestionGuard.js';
 
 const router = express.Router();
 
@@ -203,20 +202,12 @@ router.post('/pin/change', requireUser, async (req, res) => {
     #swagger.responses[200] = { description: 'Updated', schema: { $ref: '#/definitions/MessageResponse' } }
     #swagger.responses[400] = { description: 'Invalid PIN', schema: { $ref: '#/definitions/ErrorResponse' } }
   */
-  const { currentPin, newPin, securityAnswer } = req.body || {};
+  const { currentPin, newPin } = req.body || {};
   if (!isValidPin(newPin)) return res.status(400).json({ error: 'PIN must be 4-6 digits' });
   try {
     await verifyTransactionPin(req.user.sub, currentPin);
   } catch (err) {
     return res.status(400).json({ error: err.message });
-  }
-  const enforcement = await enforceSecurityQuestion({
-    userId: req.user.sub,
-    answer: securityAnswer,
-    flow: 'pin_change',
-  });
-  if (!enforcement.ok) {
-    return res.status(enforcement.status).json({ error: enforcement.message });
   }
   await setTransactionPin(req.user.sub, newPin);
   logAudit({

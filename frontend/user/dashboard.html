@@ -20,20 +20,15 @@
           <span class="brand-sub">Premium Wallet Platform</span>
         </div>
       </div>
-      <div class="top-actions">
-        <button class="theme-toggle" data-theme-toggle>
-          <i class="fa-solid fa-circle-half-stroke"></i>
-          Appearance
-        </button>
-      </div>
+      <div class="top-actions"></div>
     </header>
     <main class="content">
       <section class="hero">
         <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> Dashboard</span>
         <h1>Hi, <span data-user-name>Customer</span></h1>
-        <p class="muted">Your wallet at a glance.</p>
-        <div class="balance-strip">
-          <div>
+        <p class="muted">Wallet summary and quick actions.</p>
+        <div class="balance-card">
+          <div class="balance-main">
             <div class="muted">Available Balance</div>
             <div class="balance" data-wallet-balance>NGN 0.00</div>
             <div class="muted account-line">
@@ -41,7 +36,7 @@
               <span data-account-bank class="muted"></span>
             </div>
           </div>
-          <div class="balance-actions">
+          <div class="balance-cta">
             <a class="btn btn-primary" href="/send">
               <i class="fa-solid fa-paper-plane"></i>
               Send
@@ -56,18 +51,22 @@
 
       <section class="section-gap">
         <h3 class="section-title">Quick Actions</h3>
-        <div class="grid three compact-grid">
-          <a class="card compact-card" href="/send">
+        <div class="action-row">
+          <a class="action-tile" href="/send">
             <span class="card-icon"><i class="fa-solid fa-paper-plane"></i></span>
-            <h3>Send</h3>
+            <span>Send</span>
           </a>
-          <a class="card compact-card" href="/receive">
+          <a class="action-tile" href="/receive">
             <span class="card-icon"><i class="fa-solid fa-qrcode"></i></span>
-            <h3>Receive</h3>
+            <span>Receive</span>
           </a>
-          <a class="card compact-card" href="/transactions">
+          <a class="action-tile" href="/bills">
+            <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
+            <span>Bills</span>
+          </a>
+          <a class="action-tile" href="/transactions">
             <span class="card-icon"><i class="fa-solid fa-receipt"></i></span>
-            <h3>History</h3>
+            <span>History</span>
           </a>
         </div>
       </section>
@@ -85,6 +84,27 @@
             <h3>KYC</h3>
             <p class="muted">Upgrade limits and verification.</p>
           </a>
+          <a class="card" href="/wallet">
+            <span class="card-icon"><i class="fa-solid fa-wallet"></i></span>
+            <h3>Wallet</h3>
+            <p class="muted">Manage balance and settings.</p>
+          </a>
+          <a class="card" href="/settings">
+            <span class="card-icon"><i class="fa-solid fa-gear"></i></span>
+            <h3>Settings</h3>
+            <p class="muted">Security, PIN, biometrics.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="section-gap">
+        <div class="promo-card">
+          <div>
+            <div class="muted">Rewards</div>
+            <h3>Pay bills instantly</h3>
+            <p class="muted">Get confirmation in seconds.</p>
+          </div>
+          <a class="btn btn-primary" href="/bills">Pay Bills</a>
         </div>
       </section>
 
@@ -96,23 +116,6 @@
     </main>
 
     <nav class="bottom-nav">
-    <div class="sidebar-header">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 4.5c-4.14 0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5c3.63 0 6.65-2.58 7.34-6h-7.34v-3h10.7c.2 0 .36.16.36.36 0 6.07-4.93 11-11 11s-11-4.93-11-11 4.93-11 11-11c2.61 0 5.02.92 6.9 2.45l-2.4 2.4A7.44 7.44 0 0 0 12 4.5z"/></svg></span>
-        <div class="brand-text">
-          <span class="brand-title">GLY VTU</span>
-          <span class="brand-sub">Wallet</span>
-        </div>
-      </div>
-    </div>
-    <div class="sidebar-profile">
-      <div class="avatar">GL</div>
-      <div>
-        <div class="name" data-user-name>Customer</div>
-        <div class="tier muted">Standard</div>
-      </div>
-    </div>
-
       <a class="nav-link" data-page="dashboard" href="/dashboard">
         <i class="fa-solid fa-house"></i>
         Home
