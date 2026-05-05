@@ -7,7 +7,7 @@ GLY VTU is a Nigeria-focused fintech platform for bill payments, wallet transfer
 - **Portfolio:** oyinlola.site  
 - **Tech Firm:** telente.site  
 
-## Features
+## Features 
 - User and admin web apps (responsive for mobile/tablet/desktop)
 - JWT + refresh tokens with device verification OTP
 - Admin role management and permissions
